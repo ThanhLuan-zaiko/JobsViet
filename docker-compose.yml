@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  Server:
+    build:
+      context: ./Server
+      dockerfile: Dockerfile
+    container_name: Server
+    ports:
+      - "5174:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=User Id=JOBVIET;Password=123456;Data Source=oracle:1521/FREEPDB1
+    depends_on:
+      - oracle
+
+  Client:
+    build:
+      context: ./Client
+      dockerfile: Dockerfile
+    container_name: Client
+    ports:
+      - "5173:80"
+    depends_on:
+      - Server
+
+  oracle:
+    image: gvenzl/oracle-free:23ai
+    container_name: oracle
+    environment:
+      ORACLE_PASSWORD: "123456"
+      APP_USER: "JOBVIET"
+      APP_USER_PASSWORD: "123456"
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+
+volumes:
+  oracle_data:

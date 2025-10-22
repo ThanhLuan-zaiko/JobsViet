@@ -1,0 +1,43 @@
+# ========================
+# Client (React)
+# ========================
+# dependencies
+/Client/node_modules/
+
+# production
+/Client/build/
+/Client/dist/
+
+# misc
+/Client/.DS_Store
+/Client/npm-debug.log*
+/Client/yarn-debug.log*
+/Client/yarn-error.log*
+
+# ========================
+# Server (ASP.NET Core)
+# ========================
+# User-specific files
+/Server/.vs/
+/Server/*.user
+/Server/*.suo
+
+# Build output
+/Server/bin/
+/Server/obj/
+
+# Environment and config
+
+# Logs
+/Server/*.log
+
+# ========================
+# GLOBAL
+# ========================
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+TODO.md
