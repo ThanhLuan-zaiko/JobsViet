@@ -589,3 +589,111 @@ BEGIN
 END PauseJobByUser;
 /
 SHOW ERRORS PROCEDURE PauseJobByUser
+
+INSERT INTO Roles (Name, Description)
+VALUES ('User', 'Người dùng thông thường');
+
+INSERT INTO Roles (Name, Description)
+VALUES ('Moderator', 'Người kiểm duyệt nội dung');
+
+INSERT INTO Roles (Name, Description)
+VALUES ('Admin', 'Quản trị hệ thống');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('EditProfile', 'Chỉnh sửa hồ sơ cá nhân');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('UploadResume', 'Tải lên CV');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('ApplyJob', 'Ứng tuyển công việc');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('WithdrawApplication', 'Rút hồ sơ ứng tuyển');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('ViewApplicationStatus', 'Xem trạng thái ứng tuyển');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('CreateJobPost', 'Tạo tin tuyển dụng');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('EditJobPost', 'Chỉnh sửa tin tuyển dụng');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('DeleteJobPost', 'Xóa tin tuyển dụng');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('ViewApplicants', 'Xem danh sách ứng viên');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('ApproveCandidate', 'Duyệt ứng viên');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('RejectCandidate', 'Từ chối ứng viên');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('ScheduleInterview', 'Lên lịch phỏng vấn');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('SendOffer', 'Gửi thư mời nhận việc');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('RejectOffer', 'Từ chối ứng viên sau phỏng vấn');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('CreatePost', 'Tạo bài viết diễn đàn');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('EditPost', 'Chỉnh sửa bài viết');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('DeletePost', 'Xóa bài viết');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('ReportContent', 'Báo cáo nội dung vi phạm');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('ApproveJobPost', 'Duyệt tin tuyển dụng');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('RejectJobPost', 'Từ chối tin tuyển dụng');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('ManageUsers', 'Quản lý người dùng');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('AssignRoles', 'Gán vai trò cho người dùng');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('ViewReports', 'Xem báo cáo thống kê');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('BanUser', 'Khóa tài khoản người dùng');
+
+INSERT INTO Permissions (PermissionKey, Description)
+VALUES ('UnbanUser', 'Mở khóa tài khoản người dùng');
+
+INSERT INTO RolePermissions (RoleId, PermissionId)
+SELECT r.RoleId, p.PermissionId
+FROM Roles r, Permissions p
+WHERE r.Name = 'User'
+  AND p.PermissionKey IN (
+    'EditProfile','UploadResume','ApplyJob','WithdrawApplication','ViewApplicationStatus',
+    'CreateJobPost','EditJobPost','DeleteJobPost','ViewApplicants',
+    'ApproveCandidate','RejectCandidate','ScheduleInterview','SendOffer','RejectOffer',
+    'CreatePost','EditPost','DeletePost','ReportContent'
+  );
+
+INSERT INTO RolePermissions (RoleId, PermissionId)
+SELECT r.RoleId, p.PermissionId
+FROM Roles r, Permissions p
+WHERE r.Name = 'Moderator'
+  AND p.PermissionKey IN (
+    'ApproveJobPost','RejectJobPost','DeletePost','ReportContent'
+  );
+
+INSERT INTO RolePermissions (RoleId, PermissionId)
+SELECT r.RoleId, p.PermissionId
+FROM Roles r, Permissions p
+WHERE r.Name = 'Admin';
