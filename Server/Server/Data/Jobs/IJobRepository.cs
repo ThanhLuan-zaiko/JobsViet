@@ -6,5 +6,6 @@ namespace Server.Data.Jobs
     {
         Task<List<Job>> GetAllJobsAsync();
         Task<(List<Job> Jobs, int TotalCount)> GetJobsAsync(int page, int pageSize, string? search, string? category);
+        Task CreateJobAsync(Job job);
     }
 }

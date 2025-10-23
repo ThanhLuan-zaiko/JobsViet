@@ -6,6 +6,7 @@ namespace Server.Data.Jobs
     public interface IUnitOfWork : IDisposable
     {
         IJobRepository JobRepository { get; }
+        IJobCategoryRepository JobCategoryRepository { get; }
         Task<int> SaveChangesAsync();
         Task BeginTransactionAsync();
         Task CommitTransactionAsync();
@@ -21,9 +22,11 @@ namespace Server.Data.Jobs
         {
             _context = context;
             JobRepository = new JobRepository(_context);
+            JobCategoryRepository = new JobCategoryRepository(_context);
         }
 
         public IJobRepository JobRepository { get; }
+        public IJobCategoryRepository JobCategoryRepository { get; }
 
         public async Task<int> SaveChangesAsync()
         {

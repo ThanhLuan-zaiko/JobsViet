@@ -11,6 +11,7 @@ namespace Server.Data.Jobs
 
         public DbSet<User> Users { get; set; }
         public DbSet<Job> Jobs { get; set; }
+        public DbSet<JobCategory> JobCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -54,6 +55,17 @@ namespace Server.Data.Jobs
                 entity.Property(e => e.GenderPreference).HasColumnName("GENDERPREFERENCE");
                 entity.Property(e => e.SkillsRequired).HasColumnName("SKILLSREQUIRED");
                 entity.Property(e => e.CategoryId).HasColumnName("CATEGORYID");
+            });
+
+            modelBuilder.Entity<JobCategory>(entity =>
+            {
+                entity.ToTable("JOBCATEGORIES");
+                entity.HasKey(e => e.CategoryId);
+                entity.Property(e => e.CategoryId).HasColumnName("CATEGORYID");
+                entity.Property(e => e.Name).HasColumnName("NAME").IsRequired().HasMaxLength(255);
+                entity.Property(e => e.Description).HasColumnName("DESCRIPTION");
+                entity.Property(e => e.IsActive).HasColumnName("ISACTIVE");
+                entity.Property(e => e.CreatedAt).HasColumnName("CREATEDAT");
             });
         }
     }

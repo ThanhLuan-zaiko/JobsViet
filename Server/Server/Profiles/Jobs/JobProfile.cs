@@ -9,6 +9,8 @@ namespace Server.Profiles.Jobs
         public JobProfile()
         {
             CreateMap<Job, JobDto>();
+            CreateMap<JobCreateDto, Job>();
+            CreateMap<JobCategory, JobCategoryDto>();
         }
     }
 }

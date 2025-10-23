@@ -3,6 +3,7 @@ using Server.Data.Jobs;
 using Server.DTOs.Jobs;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
+using Server.Models.Jobs;
 
 namespace Server.Services.Jobs
 {
@@ -54,14 +55,32 @@ namespace Server.Services.Jobs
 
             return cachedResult!;
         }
+
+        public async Task<JobDto> CreateJobAsync(JobCreateDto jobCreateDto, Guid userId)
+        {
+            _logger.LogInformation("Creating job for user {UserId}", userId);
+
+            // Check if user has employer profile or is admin/moderator
+            // For simplicity, assume user can post if authenticated; in real app, check roles
+            // Here, we'll set EmployerProfileId if exists, else null
+
+            var job = _mapper.Map<Job>(jobCreateDto);
+            job.JobId = Guid.NewGuid();
+            job.JobGuid = Guid.NewGuid();
+            job.PostedByUserId = userId;
+            job.HiringStatus = "PENDING_APPROVAL"; // Default as per schema
+            job.IsActive = 0; // Pending approval
+            job.CreatedAt = DateTime.UtcNow;
+            job.EmployerProfileId = null; // TODO: Fetch from user profile
+            job.CompanyId = jobCreateDto.CompanyId; // Optional
+
+            await _unitOfWork.JobRepository.CreateJobAsync(job);
+            await _unitOfWork.SaveChangesAsync();
+
+            var jobDto = _mapper.Map<JobDto>(job);
+            return jobDto;
+        }
     }
 
-    public class PaginatedResult<T>
-    {
-        public List<T> Data { get; set; } = new();
-        public int TotalCount { get; set; }
-        public int Page { get; set; }
-        public int PageSize { get; set; }
-        public int TotalPages { get; set; }
-    }
+
 }

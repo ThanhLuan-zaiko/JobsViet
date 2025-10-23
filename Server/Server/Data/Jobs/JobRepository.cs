@@ -45,5 +45,10 @@ namespace Server.Data.Jobs
 
             return (jobs, totalCount);
         }
+
+        public async Task CreateJobAsync(Job job)
+        {
+            await _context.Jobs.AddAsync(job);
+        }
     }
 }

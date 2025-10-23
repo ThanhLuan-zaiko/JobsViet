@@ -111,6 +111,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Server.Controllers.Jobs.JobCategoryController",
+    "Method": "GetCategories",
+    "RelativePath": "api/v{version}/categories",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "version",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Server.Controllers.Jobs.JobsController",
     "Method": "GetJobs",
     "RelativePath": "api/v{version}/Jobs",
@@ -137,6 +153,27 @@
         "Name": "Category",
         "Type": "System.String",
         "IsRequired": false
+      },
+      {
+        "Name": "version",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Server.Controllers.Jobs.JobsController",
+    "Method": "CreateJob",
+    "RelativePath": "api/v{version}/Jobs",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "jobCreateDto",
+        "Type": "Server.DTOs.Jobs.JobCreateDto",
+        "IsRequired": true
       },
       {
         "Name": "version",

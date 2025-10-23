@@ -113,7 +113,7 @@ namespace Server.Controllers
                     });
                 }
 
-                var user = await _authService.RegisterAsync(request.Email, request.Password, "Moderator", request.Name);
+                var user = await _authService.RegisterAsync(request.Email, request.Password, "User", request.Name);
 
                 // Store user in session after registration
                 await HttpContext.Session.LoadAsync();

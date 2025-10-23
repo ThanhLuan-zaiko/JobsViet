@@ -1,0 +1,1020 @@
+2025-10-23 15:48:16.550 +07:00 [INF] User profile is available. Using 'C:\Users\Luan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-23 15:48:16.882 +07:00 [INF] Now listening on: http://localhost:5174
+2025-10-23 15:48:16.944 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 15:48:16.947 +07:00 [INF] Hosting environment: Development
+2025-10-23 15:48:16.948 +07:00 [INF] Content root path: D:\hoctap\React\JobsViet\Server\Server
+2025-10-23 15:49:45.677 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 15:49:45.677 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - null null
+2025-10-23 15:49:45.708 +07:00 [WRN] Failed to determine the https port for redirect.
+2025-10-23 15:49:45.738 +07:00 [INF] CORS policy execution successful.
+2025-10-23 15:49:45.738 +07:00 [INF] CORS policy execution successful.
+2025-10-23 15:49:45.778 +07:00 [INF] Incoming request: GET /api/v1.0/jobs
+2025-10-23 15:49:45.778 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 15:49:45.781 +07:00 [INF] Executing endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 15:49:45.782 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 15:49:45.784 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 15:49:45.796 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 15:49:45.797 +07:00 [INF] Route matched with {action = "GetJobs", controller = "Jobs"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetJobs(Server.DTOs.Jobs.JobQueryDto) on controller Server.Controllers.Jobs.JobsController (Server).
+2025-10-23 15:49:46.565 +07:00 [INF] Executing UnauthorizedObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-23 15:49:46.589 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 788.8822ms
+2025-10-23 15:49:46.590 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 15:49:46.594 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 15:49:46.597 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 401 - Duration: 820ms
+2025-10-23 15:49:46.598 +07:00 [INF] CORS policy execution successful.
+2025-10-23 15:49:46.603 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 15:49:46.605 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 15:49:46.606 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 15:49:46.607 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 15:49:46.608 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 401 in 874.9685 ms
+2025-10-23 15:49:46.611 +07:00 [INF] Executing UnauthorizedObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-23 15:49:46.612 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 3.5301ms
+2025-10-23 15:49:46.614 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 15:49:46.615 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 401 null application/json; charset=utf-8 942.4569ms
+2025-10-23 15:49:46.615 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 401 - Duration: 11ms
+2025-10-23 15:49:46.620 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 401 in 22.2207 ms
+2025-10-23 15:49:46.622 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 401 null application/json; charset=utf-8 31.7634ms
+2025-10-23 15:49:46.678 +07:00 [INF] Fetching jobs from database for query: {"Page":1,"PageSize":10,"Search":null,"Category":null,"$type":"JobQueryDto"}
+2025-10-23 15:49:48.571 +07:00 [INF] Executed DbCommand (117ms) [Parameters=[], CommandType='"Text"', CommandTimeout='0']
+SELECT COUNT(*)
+FROM "JOBS" "j"
+WHERE "j"."ISACTIVE" = 1
+2025-10-23 15:49:48.683 +07:00 [INF] Executed DbCommand (34ms) [Parameters=[:p_0='?' (DbType = Int32), :p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='0']
+SELECT "j"."JOBID", "j"."CATEGORYID", "j"."COMPANYID", "j"."CREATEDAT", "j"."DEADLINEDATE", "j"."DESCRIPTION", "j"."EMPLOYERPROFILEID", "j"."EMPLOYMENTTYPE", "j"."GENDERPREFERENCE", "j"."HIRINGSTATUS", "j"."ISACTIVE", "j"."JOBGUID", "j"."MAXAGE", "j"."MINAGE", "j"."POSITIONSFILLED", "j"."POSITIONSNEEDED", "j"."POSTEDBYUSERID", "j"."REQUIREDDEGREE", "j"."REQUIREDEXPERIENCEYEARS", "j"."SALARYFROM", "j"."SALARYTO", "j"."SKILLSREQUIRED", "j"."TITLE"
+FROM "JOBS" "j"
+WHERE "j"."ISACTIVE" = 1
+ORDER BY "j"."CREATEDAT" DESC, "j"."JOBID"
+OFFSET :p_0 ROWS FETCH NEXT :p_1 ROWS ONLY
+2025-10-23 15:49:48.706 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.Services.Jobs.PaginatedResult`1[[Server.DTOs.Jobs.JobDto, Server, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-23 15:49:48.726 +07:00 [INF] Executed action Server.Controllers.Jobs.JobsController.GetJobs (Server) in 2927.1282ms
+2025-10-23 15:49:48.728 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - null null
+2025-10-23 15:49:48.729 +07:00 [INF] Executed endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 15:49:48.731 +07:00 [INF] CORS policy execution successful.
+2025-10-23 15:49:48.732 +07:00 [INF] Request completed: GET /api/v1.0/jobs - Status: 200 - Duration: 2955ms
+2025-10-23 15:49:48.734 +07:00 [INF] Incoming request: GET /api/v1.0/jobs
+2025-10-23 15:49:48.735 +07:00 [INF] HTTP GET /api/v1.0/jobs responded 200 in 3003.7431 ms
+2025-10-23 15:49:48.735 +07:00 [INF] Executing endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 15:49:48.738 +07:00 [INF] Route matched with {action = "GetJobs", controller = "Jobs"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetJobs(Server.DTOs.Jobs.JobQueryDto) on controller Server.Controllers.Jobs.JobsController (Server).
+2025-10-23 15:49:48.741 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - 200 null application/json; charset=utf-8 3069.0491ms
+2025-10-23 15:49:48.742 +07:00 [INF] Returning cached jobs for key: jobs_1_10__
+2025-10-23 15:49:48.746 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.Services.Jobs.PaginatedResult`1[[Server.DTOs.Jobs.JobDto, Server, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-23 15:49:48.747 +07:00 [INF] Executed action Server.Controllers.Jobs.JobsController.GetJobs (Server) in 7.62ms
+2025-10-23 15:49:48.749 +07:00 [INF] Executed endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 15:49:48.749 +07:00 [INF] Request completed: GET /api/v1.0/jobs - Status: 200 - Duration: 15ms
+2025-10-23 15:49:48.752 +07:00 [INF] HTTP GET /api/v1.0/jobs responded 200 in 20.9727 ms
+2025-10-23 15:49:48.754 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - 200 null application/json; charset=utf-8 26.3537ms
+2025-10-23 15:49:50.752 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - null null
+2025-10-23 15:49:50.757 +07:00 [INF] CORS policy execution successful.
+2025-10-23 15:49:50.762 +07:00 [INF] Incoming request: GET /api/v1.0/jobs
+2025-10-23 15:49:50.764 +07:00 [INF] Executing endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 15:49:50.765 +07:00 [INF] Route matched with {action = "GetJobs", controller = "Jobs"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetJobs(Server.DTOs.Jobs.JobQueryDto) on controller Server.Controllers.Jobs.JobsController (Server).
+2025-10-23 15:49:50.771 +07:00 [INF] Returning cached jobs for key: jobs_1_10__
+2025-10-23 15:49:50.772 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.Services.Jobs.PaginatedResult`1[[Server.DTOs.Jobs.JobDto, Server, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-23 15:49:50.773 +07:00 [INF] Executed action Server.Controllers.Jobs.JobsController.GetJobs (Server) in 6.4266ms
+2025-10-23 15:49:50.774 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - null null
+2025-10-23 15:49:50.774 +07:00 [INF] Executed endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 15:49:50.776 +07:00 [INF] CORS policy execution successful.
+2025-10-23 15:49:50.777 +07:00 [INF] Request completed: GET /api/v1.0/jobs - Status: 200 - Duration: 14ms
+2025-10-23 15:49:50.778 +07:00 [INF] Incoming request: GET /api/v1.0/jobs
+2025-10-23 15:49:50.780 +07:00 [INF] HTTP GET /api/v1.0/jobs responded 200 in 22.4772 ms
+2025-10-23 15:49:50.780 +07:00 [INF] Executing endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 15:49:50.781 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - 200 null application/json; charset=utf-8 28.9042ms
+2025-10-23 15:49:50.782 +07:00 [INF] Route matched with {action = "GetJobs", controller = "Jobs"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetJobs(Server.DTOs.Jobs.JobQueryDto) on controller Server.Controllers.Jobs.JobsController (Server).
+2025-10-23 15:49:50.786 +07:00 [INF] Returning cached jobs for key: jobs_1_10__
+2025-10-23 15:49:50.787 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.Services.Jobs.PaginatedResult`1[[Server.DTOs.Jobs.JobDto, Server, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-23 15:49:50.788 +07:00 [INF] Executed action Server.Controllers.Jobs.JobsController.GetJobs (Server) in 2.5936ms
+2025-10-23 15:49:50.789 +07:00 [INF] Executed endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 15:49:50.790 +07:00 [INF] Request completed: GET /api/v1.0/jobs - Status: 200 - Duration: 11ms
+2025-10-23 15:49:50.795 +07:00 [INF] HTTP GET /api/v1.0/jobs responded 200 in 19.2906 ms
+2025-10-23 15:49:50.796 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - 200 null application/json; charset=utf-8 22.8452ms
+2025-10-23 20:08:13.956 +07:00 [INF] User profile is available. Using 'C:\Users\Luan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-23 20:08:14.350 +07:00 [INF] Now listening on: http://localhost:5174
+2025-10-23 20:08:14.392 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 20:08:14.393 +07:00 [INF] Hosting environment: Development
+2025-10-23 20:08:14.395 +07:00 [INF] Content root path: D:\hoctap\React\JobsViet\Server\Server
+2025-10-23 20:08:55.590 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 20:08:55.590 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - null null
+2025-10-23 20:08:55.686 +07:00 [WRN] Failed to determine the https port for redirect.
+2025-10-23 20:08:55.720 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:08:55.720 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:09:45.935 +07:00 [INF] User profile is available. Using 'C:\Users\Luan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-23 20:09:46.192 +07:00 [INF] Now listening on: http://localhost:5174
+2025-10-23 20:09:46.322 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 20:09:46.324 +07:00 [INF] Hosting environment: Development
+2025-10-23 20:09:46.328 +07:00 [INF] Content root path: D:\hoctap\React\JobsViet\Server\Server
+2025-10-23 20:10:11.011 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - null null
+2025-10-23 20:10:11.011 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 20:10:11.110 +07:00 [WRN] Failed to determine the https port for redirect.
+2025-10-23 20:10:11.165 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:10:11.165 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:10:11.203 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 20:10:11.203 +07:00 [INF] Incoming request: GET /api/v1.0/jobs
+2025-10-23 20:10:11.207 +07:00 [INF] Executing endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 20:10:11.206 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 20:10:11.209 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 20:10:11.224 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 20:10:11.224 +07:00 [INF] Route matched with {action = "GetJobs", controller = "Jobs"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetJobs(Server.DTOs.Jobs.JobQueryDto) on controller Server.Controllers.Jobs.JobsController (Server).
+2025-10-23 20:10:11.842 +07:00 [INF] Executing UnauthorizedObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-23 20:10:11.868 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 639.9185ms
+2025-10-23 20:10:11.869 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 20:10:11.872 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 20:10:11.875 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 401 - Duration: 672ms
+2025-10-23 20:10:11.877 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:10:11.881 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 20:10:11.883 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 20:10:11.884 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 20:10:11.886 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 20:10:11.886 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 401 in 727.7075 ms
+2025-10-23 20:10:11.890 +07:00 [INF] Executing UnauthorizedObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-23 20:10:11.891 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 4.1276ms
+2025-10-23 20:10:11.893 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 20:10:11.894 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 401 - Duration: 12ms
+2025-10-23 20:10:11.894 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 401 null application/json; charset=utf-8 892.18ms
+2025-10-23 20:10:11.897 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 401 in 20.7664 ms
+2025-10-23 20:10:11.900 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 401 null application/json; charset=utf-8 31.647ms
+2025-10-23 20:10:11.984 +07:00 [INF] Fetching jobs from database for query: {"Page":1,"PageSize":10,"Search":null,"Category":null,"$type":"JobQueryDto"}
+2025-10-23 20:10:13.985 +07:00 [INF] Executed DbCommand (108ms) [Parameters=[], CommandType='"Text"', CommandTimeout='0']
+SELECT COUNT(*)
+FROM "JOBS" "j"
+WHERE "j"."ISACTIVE" = 1
+2025-10-23 20:10:14.198 +07:00 [INF] Executed DbCommand (44ms) [Parameters=[:p_0='?' (DbType = Int32), :p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='0']
+SELECT "j"."JOBID", "j"."CATEGORYID", "j"."COMPANYID", "j"."CREATEDAT", "j"."DEADLINEDATE", "j"."DESCRIPTION", "j"."EMPLOYERPROFILEID", "j"."EMPLOYMENTTYPE", "j"."GENDERPREFERENCE", "j"."HIRINGSTATUS", "j"."ISACTIVE", "j"."JOBGUID", "j"."MAXAGE", "j"."MINAGE", "j"."POSITIONSFILLED", "j"."POSITIONSNEEDED", "j"."POSTEDBYUSERID", "j"."REQUIREDDEGREE", "j"."REQUIREDEXPERIENCEYEARS", "j"."SALARYFROM", "j"."SALARYTO", "j"."SKILLSREQUIRED", "j"."TITLE"
+FROM "JOBS" "j"
+WHERE "j"."ISACTIVE" = 1
+ORDER BY "j"."CREATEDAT" DESC, "j"."JOBID"
+OFFSET :p_0 ROWS FETCH NEXT :p_1 ROWS ONLY
+2025-10-23 20:10:14.224 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.Services.Jobs.PaginatedResult`1[[Server.DTOs.Jobs.JobDto, Server, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-23 20:10:14.246 +07:00 [INF] Executed action Server.Controllers.Jobs.JobsController.GetJobs (Server) in 3019.0283ms
+2025-10-23 20:10:14.248 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - null null
+2025-10-23 20:10:14.249 +07:00 [INF] Executed endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 20:10:14.251 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:10:14.252 +07:00 [INF] Request completed: GET /api/v1.0/jobs - Status: 200 - Duration: 3049ms
+2025-10-23 20:10:14.254 +07:00 [INF] Incoming request: GET /api/v1.0/jobs
+2025-10-23 20:10:14.255 +07:00 [INF] HTTP GET /api/v1.0/jobs responded 200 in 3098.7929 ms
+2025-10-23 20:10:14.255 +07:00 [INF] Executing endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 20:10:14.258 +07:00 [INF] Route matched with {action = "GetJobs", controller = "Jobs"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetJobs(Server.DTOs.Jobs.JobQueryDto) on controller Server.Controllers.Jobs.JobsController (Server).
+2025-10-23 20:10:14.261 +07:00 [INF] Returning cached jobs for key: jobs_1_10__
+2025-10-23 20:10:14.262 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.Services.Jobs.PaginatedResult`1[[Server.DTOs.Jobs.JobDto, Server, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-23 20:10:14.264 +07:00 [INF] Executed action Server.Controllers.Jobs.JobsController.GetJobs (Server) in 4.0257ms
+2025-10-23 20:10:14.265 +07:00 [INF] Executed endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 20:10:14.266 +07:00 [INF] Request completed: GET /api/v1.0/jobs - Status: 200 - Duration: 12ms
+2025-10-23 20:10:14.270 +07:00 [INF] HTTP GET /api/v1.0/jobs responded 200 in 19.2523 ms
+2025-10-23 20:10:14.271 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - 200 null application/json; charset=utf-8 3269.171ms
+2025-10-23 20:10:14.272 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - 200 null application/json; charset=utf-8 24.5105ms
+2025-10-23 20:11:00.409 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/auth/register - null null
+2025-10-23 20:11:00.413 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:11:00.414 +07:00 [INF] HTTP OPTIONS /api/v1.0/auth/register responded 204 in 1.4393 ms
+2025-10-23 20:11:00.416 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/auth/register - 204 null null 6.8577ms
+2025-10-23 20:11:00.422 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1.0/auth/register - application/json 120
+2025-10-23 20:11:00.425 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:11:00.427 +07:00 [INF] Incoming request: POST /api/v1.0/auth/register
+2025-10-23 20:11:00.428 +07:00 [INF] Auth request: POST /api/v1.0/auth/register from ::1
+2025-10-23 20:11:00.429 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.Register (Server)'
+2025-10-23 20:11:00.433 +07:00 [INF] Route matched with {action = "Register", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Register(Server.DTOs.Auth.RegisterRequest) on controller Server.Controllers.AuthController (Server).
+2025-10-23 20:11:00.549 +07:00 [INF] Executed DbCommand (20ms) [Parameters=[:email_0='?' (Size = 200)], CommandType='"Text"', CommandTimeout='0']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM "USERS" "u"
+        WHERE "u"."EMAIL" = :email_0) THEN True
+    ELSE False
+END FROM DUAL
+2025-10-23 20:11:00.572 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[:email_0='?' (Size = 200)], CommandType='"Text"', CommandTimeout='0']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM "USERS" "u"
+        WHERE "u"."EMAIL" = :email_0) THEN True
+    ELSE False
+END FROM DUAL
+2025-10-23 20:11:00.772 +07:00 [INF] Executed DbCommand (25ms) [Parameters=[:p0='?' (DbType = Binary), :p1='?' (DbType = DateTime), :p2='?' (Size = 200), :p3='?' (DbType = Boolean), :p4='?' (Size = 256), :p5='?' (Size = 50), :p6='?' (Size = 200)], CommandType='"Text"', CommandTimeout='0']
+DECLARE
+
+
+BEGIN
+
+INSERT INTO "USERS" ("USERID", "CREATEDAT", "EMAIL", "ISACTIVE", "PASSWORDHASH", "ROLE", "USERNAME")
+VALUES (:p0, :p1, :p2, :p3, :p4, :p5, :p6);
+
+END;
+2025-10-23 20:11:00.808 +07:00 [INF] Session started; Key:d0c672c2-868f-d1ea-e53e-9f8210587de7, Id:14e46ee7-71b0-fb10-5f00-6c30f46afc89
+2025-10-23 20:11:00.836 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.DTOs.Auth.AuthResponse'.
+2025-10-23 20:11:00.843 +07:00 [INF] Executed action Server.Controllers.AuthController.Register (Server) in 408.0224ms
+2025-10-23 20:11:00.844 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.Register (Server)'
+2025-10-23 20:11:00.845 +07:00 [INF] Request completed: POST /api/v1.0/auth/register - Status: 200 - Duration: 418ms
+2025-10-23 20:11:00.850 +07:00 [INF] HTTP POST /api/v1.0/auth/register responded 200 in 425.2855 ms
+2025-10-23 20:11:00.852 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1.0/auth/register - 200 null application/json; charset=utf-8 429.5905ms
+2025-10-23 20:24:22.867 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/api/v1/jobs - null null
+2025-10-23 20:24:22.874 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:24:22.875 +07:00 [INF] HTTP OPTIONS /api/v1.0/api/v1/jobs responded 204 in 1.3513 ms
+2025-10-23 20:24:22.877 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/api/v1/jobs - 204 null null 10.0875ms
+2025-10-23 20:24:22.907 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1.0/api/v1/jobs - application/json 334
+2025-10-23 20:24:22.911 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:24:22.917 +07:00 [INF] Incoming request: POST /api/v1.0/api/v1/jobs
+2025-10-23 20:24:22.918 +07:00 [INF] Request completed: POST /api/v1.0/api/v1/jobs - Status: 404 - Duration: 1ms
+2025-10-23 20:24:22.921 +07:00 [INF] HTTP POST /api/v1.0/api/v1/jobs responded 404 in 9.7024 ms
+2025-10-23 20:24:22.923 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1.0/api/v1/jobs - 404 0 null 15.8267ms
+2025-10-23 20:24:22.927 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: POST http://localhost:5174/api/v1.0/api/v1/jobs, Response status code: 404
+2025-10-23 20:24:55.326 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/api/v1/jobs - null null
+2025-10-23 20:24:55.330 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:24:55.331 +07:00 [INF] HTTP OPTIONS /api/v1.0/api/v1/jobs responded 204 in 1.0325 ms
+2025-10-23 20:24:55.332 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/api/v1/jobs - 204 null null 6.5138ms
+2025-10-23 20:24:55.334 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1.0/api/v1/jobs - application/json 334
+2025-10-23 20:24:55.341 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:24:55.343 +07:00 [INF] Incoming request: POST /api/v1.0/api/v1/jobs
+2025-10-23 20:24:55.344 +07:00 [INF] Request completed: POST /api/v1.0/api/v1/jobs - Status: 404 - Duration: 0ms
+2025-10-23 20:24:55.346 +07:00 [INF] HTTP POST /api/v1.0/api/v1/jobs responded 404 in 5.5537 ms
+2025-10-23 20:24:55.348 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1.0/api/v1/jobs - 404 0 null 14.299ms
+2025-10-23 20:24:55.350 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: POST http://localhost:5174/api/v1.0/api/v1/jobs, Response status code: 404
+2025-10-23 20:55:54.757 +07:00 [INF] User profile is available. Using 'C:\Users\Luan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-23 20:55:54.964 +07:00 [INF] Now listening on: http://localhost:5174
+2025-10-23 20:55:54.999 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 20:55:55.001 +07:00 [INF] Hosting environment: Development
+2025-10-23 20:55:55.003 +07:00 [INF] Content root path: D:\hoctap\React\JobsViet\Server\Server
+2025-10-23 20:57:17.097 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 20:57:17.133 +07:00 [WRN] Failed to determine the https port for redirect.
+2025-10-23 20:57:17.166 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:57:17.194 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 20:57:17.196 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 20:57:17.199 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 20:57:17.211 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 20:57:17.834 +07:00 [INF] Accessing expired session, Key:d0c672c2-868f-d1ea-e53e-9f8210587de7
+2025-10-23 20:57:17.841 +07:00 [INF] Executing UnauthorizedObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-23 20:57:17.858 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 642.7497ms
+2025-10-23 20:57:17.858 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 20:57:17.862 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 20:57:17.864 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 401 - Duration: 671ms
+2025-10-23 20:57:17.865 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:57:17.868 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 20:57:17.869 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 20:57:17.870 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 20:57:17.872 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 20:57:17.873 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 401 in 707.8334 ms
+2025-10-23 20:57:17.879 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 401 null application/json; charset=utf-8 787.2832ms
+2025-10-23 20:57:17.880 +07:00 [INF] Accessing expired session, Key:d0c672c2-868f-d1ea-e53e-9f8210587de7
+2025-10-23 20:57:17.883 +07:00 [INF] Executing UnauthorizedObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-23 20:57:17.884 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 10.848ms
+2025-10-23 20:57:17.885 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 20:57:17.886 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 401 - Duration: 17ms
+2025-10-23 20:57:17.888 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 401 in 23.6318 ms
+2025-10-23 20:57:17.890 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 401 null application/json; charset=utf-8 32.3132ms
+2025-10-23 20:57:22.465 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 20:57:22.468 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:57:22.471 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 20:57:22.472 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 20:57:22.473 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 20:57:22.474 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 20:57:22.481 +07:00 [INF] Accessing expired session, Key:d0c672c2-868f-d1ea-e53e-9f8210587de7
+2025-10-23 20:57:22.482 +07:00 [INF] Executing UnauthorizedObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-23 20:57:22.483 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 6.7141ms
+2025-10-23 20:57:22.484 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 20:57:22.485 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 20:57:22.487 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:57:22.488 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 401 - Duration: 16ms
+2025-10-23 20:57:22.491 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 20:57:22.493 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 20:57:22.493 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 401 in 25.3699 ms
+2025-10-23 20:57:22.495 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 20:57:22.497 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 401 null application/json; charset=utf-8 31.8747ms
+2025-10-23 20:57:22.498 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 20:57:22.503 +07:00 [INF] Accessing expired session, Key:d0c672c2-868f-d1ea-e53e-9f8210587de7
+2025-10-23 20:57:22.504 +07:00 [INF] Executing UnauthorizedObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-23 20:57:22.505 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 3.1607ms
+2025-10-23 20:57:22.506 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 20:57:22.507 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 401 - Duration: 16ms
+2025-10-23 20:57:22.510 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 401 in 22.8223 ms
+2025-10-23 20:57:22.512 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 401 null application/json; charset=utf-8 28.0507ms
+2025-10-23 20:57:24.021 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 20:57:24.024 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:57:24.026 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 20:57:24.027 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 20:57:24.028 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 20:57:24.029 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 20:57:24.032 +07:00 [INF] Accessing expired session, Key:d0c672c2-868f-d1ea-e53e-9f8210587de7
+2025-10-23 20:57:24.033 +07:00 [INF] Executing UnauthorizedObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-23 20:57:24.034 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 3.8436ms
+2025-10-23 20:57:24.036 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 20:57:24.036 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 20:57:24.039 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:57:24.040 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 401 - Duration: 13ms
+2025-10-23 20:57:24.042 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 20:57:24.044 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 401 in 19.8767 ms
+2025-10-23 20:57:24.044 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 20:57:24.045 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 401 null application/json; charset=utf-8 24.7052ms
+2025-10-23 20:57:24.047 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 20:57:24.049 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 20:57:24.052 +07:00 [INF] Accessing expired session, Key:d0c672c2-868f-d1ea-e53e-9f8210587de7
+2025-10-23 20:57:24.053 +07:00 [INF] Executing UnauthorizedObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-23 20:57:24.054 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 2.8916ms
+2025-10-23 20:57:24.055 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 20:57:24.055 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 401 - Duration: 12ms
+2025-10-23 20:57:24.058 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 401 in 18.5689 ms
+2025-10-23 20:57:24.060 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 401 null application/json; charset=utf-8 24.0233ms
+2025-10-23 20:58:38.563 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/auth/login - null null
+2025-10-23 20:58:38.568 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:58:38.571 +07:00 [INF] HTTP OPTIONS /api/v1.0/auth/login responded 204 in 2.7095 ms
+2025-10-23 20:58:38.574 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/auth/login - 204 null null 10.3651ms
+2025-10-23 20:58:38.581 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1.0/auth/login - application/json 52
+2025-10-23 20:58:38.585 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:58:38.588 +07:00 [INF] Incoming request: POST /api/v1.0/auth/login
+2025-10-23 20:58:38.590 +07:00 [INF] Auth request: POST /api/v1.0/auth/login from ::1
+2025-10-23 20:58:38.591 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.Login (Server)'
+2025-10-23 20:58:38.600 +07:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(Server.DTOs.Auth.LoginRequest) on controller Server.Controllers.AuthController (Server).
+2025-10-23 20:58:40.174 +07:00 [INF] Executed DbCommand (88ms) [Parameters=[:email_0='?' (Size = 200)], CommandType='"Text"', CommandTimeout='0']
+SELECT "u"."USERID", "u"."CREATEDAT", "u"."EMAIL", "u"."ISACTIVE", "u"."PASSWORDHASH", "u"."ROLE", "u"."USERNAME"
+FROM "USERS" "u"
+WHERE (("u"."EMAIL" = :email_0) AND ("u"."ISACTIVE" <> False))
+FETCH FIRST 1 ROWS ONLY
+2025-10-23 20:58:40.251 +07:00 [INF] Accessing expired session, Key:d0c672c2-868f-d1ea-e53e-9f8210587de7
+2025-10-23 20:58:40.255 +07:00 [INF] Session started; Key:d0c672c2-868f-d1ea-e53e-9f8210587de7, Id:9bfa4830-4d97-74af-a4c7-178efa566a20
+2025-10-23 20:58:40.264 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.DTOs.Auth.AuthResponse'.
+2025-10-23 20:58:40.268 +07:00 [INF] Executed action Server.Controllers.AuthController.Login (Server) in 1666.3106ms
+2025-10-23 20:58:40.269 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.Login (Server)'
+2025-10-23 20:58:40.271 +07:00 [WRN] Login attempt: POST /api/v1.0/auth/login from ::1 - Status: 200
+2025-10-23 20:58:40.273 +07:00 [INF] Request completed: POST /api/v1.0/auth/login - Status: 200 - Duration: 1684ms
+2025-10-23 20:58:40.277 +07:00 [INF] HTTP POST /api/v1.0/auth/login responded 200 in 1691.9871 ms
+2025-10-23 20:58:40.282 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1.0/auth/login - 200 null application/json; charset=utf-8 1700.5806ms
+2025-10-23 20:59:43.192 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/api/v1/jobs - null null
+2025-10-23 20:59:43.197 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:59:43.198 +07:00 [INF] HTTP OPTIONS /api/v1.0/api/v1/jobs responded 204 in 1.5475 ms
+2025-10-23 20:59:43.200 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/api/v1/jobs - 204 null null 8.1206ms
+2025-10-23 20:59:43.201 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1.0/api/v1/jobs - application/json 361
+2025-10-23 20:59:43.208 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:59:43.211 +07:00 [INF] Incoming request: POST /api/v1.0/api/v1/jobs
+2025-10-23 20:59:43.212 +07:00 [INF] Request completed: POST /api/v1.0/api/v1/jobs - Status: 404 - Duration: 1ms
+2025-10-23 20:59:43.215 +07:00 [INF] HTTP POST /api/v1.0/api/v1/jobs responded 404 in 6.8903 ms
+2025-10-23 20:59:43.217 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1.0/api/v1/jobs - 404 0 null 15.5527ms
+2025-10-23 20:59:43.221 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: POST http://localhost:5174/api/v1.0/api/v1/jobs, Response status code: 404
+2025-10-23 20:59:49.543 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/api/v1/jobs - null null
+2025-10-23 20:59:49.548 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:59:49.549 +07:00 [INF] HTTP OPTIONS /api/v1.0/api/v1/jobs responded 204 in 0.8069 ms
+2025-10-23 20:59:49.551 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/api/v1/jobs - 204 null null 7.5612ms
+2025-10-23 20:59:49.552 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1.0/api/v1/jobs - application/json 361
+2025-10-23 20:59:49.556 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:59:49.558 +07:00 [INF] Incoming request: POST /api/v1.0/api/v1/jobs
+2025-10-23 20:59:49.559 +07:00 [INF] Request completed: POST /api/v1.0/api/v1/jobs - Status: 404 - Duration: 1ms
+2025-10-23 20:59:49.563 +07:00 [INF] HTTP POST /api/v1.0/api/v1/jobs responded 404 in 7.4941 ms
+2025-10-23 20:59:49.565 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1.0/api/v1/jobs - 404 0 null 13.1254ms
+2025-10-23 20:59:49.567 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: POST http://localhost:5174/api/v1.0/api/v1/jobs, Response status code: 404
+2025-10-23 20:59:51.824 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1.0/api/v1/jobs - application/json 361
+2025-10-23 20:59:51.827 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:59:51.829 +07:00 [INF] Incoming request: POST /api/v1.0/api/v1/jobs
+2025-10-23 20:59:51.831 +07:00 [INF] Request completed: POST /api/v1.0/api/v1/jobs - Status: 404 - Duration: 1ms
+2025-10-23 20:59:51.836 +07:00 [INF] HTTP POST /api/v1.0/api/v1/jobs responded 404 in 9.7070 ms
+2025-10-23 20:59:51.838 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1.0/api/v1/jobs - 404 0 null 14.4511ms
+2025-10-23 20:59:51.842 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: POST http://localhost:5174/api/v1.0/api/v1/jobs, Response status code: 404
+2025-10-23 20:59:53.487 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1.0/api/v1/jobs - application/json 361
+2025-10-23 20:59:53.491 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:59:53.493 +07:00 [INF] Incoming request: POST /api/v1.0/api/v1/jobs
+2025-10-23 20:59:53.494 +07:00 [INF] Request completed: POST /api/v1.0/api/v1/jobs - Status: 404 - Duration: 0ms
+2025-10-23 20:59:53.497 +07:00 [INF] HTTP POST /api/v1.0/api/v1/jobs responded 404 in 5.9748 ms
+2025-10-23 20:59:53.499 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1.0/api/v1/jobs - 404 0 null 11.6744ms
+2025-10-23 20:59:53.501 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: POST http://localhost:5174/api/v1.0/api/v1/jobs, Response status code: 404
+2025-10-23 20:59:55.230 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/api/v1/jobs - null null
+2025-10-23 20:59:55.234 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:59:55.235 +07:00 [INF] HTTP OPTIONS /api/v1.0/api/v1/jobs responded 204 in 0.9442 ms
+2025-10-23 20:59:55.237 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/api/v1/jobs - 204 null null 6.1024ms
+2025-10-23 20:59:55.237 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1.0/api/v1/jobs - application/json 361
+2025-10-23 20:59:55.241 +07:00 [INF] CORS policy execution successful.
+2025-10-23 20:59:55.242 +07:00 [INF] Incoming request: POST /api/v1.0/api/v1/jobs
+2025-10-23 20:59:55.243 +07:00 [INF] Request completed: POST /api/v1.0/api/v1/jobs - Status: 404 - Duration: 0ms
+2025-10-23 20:59:55.246 +07:00 [INF] HTTP POST /api/v1.0/api/v1/jobs responded 404 in 5.2851 ms
+2025-10-23 20:59:55.247 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1.0/api/v1/jobs - 404 0 null 10.039ms
+2025-10-23 20:59:55.250 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: POST http://localhost:5174/api/v1.0/api/v1/jobs, Response status code: 404
+2025-10-23 21:01:07.666 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/api/v1/jobs - null null
+2025-10-23 21:01:07.671 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:01:07.672 +07:00 [INF] HTTP OPTIONS /api/v1.0/api/v1/jobs responded 204 in 0.7422 ms
+2025-10-23 21:01:07.673 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/api/v1/jobs - 204 null null 6.9525ms
+2025-10-23 21:01:07.675 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1.0/api/v1/jobs - application/json 361
+2025-10-23 21:01:07.684 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:01:07.688 +07:00 [INF] Incoming request: POST /api/v1.0/api/v1/jobs
+2025-10-23 21:01:07.689 +07:00 [INF] Request completed: POST /api/v1.0/api/v1/jobs - Status: 404 - Duration: 1ms
+2025-10-23 21:01:07.692 +07:00 [INF] HTTP POST /api/v1.0/api/v1/jobs responded 404 in 8.5644 ms
+2025-10-23 21:01:07.694 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1.0/api/v1/jobs - 404 0 null 19.1981ms
+2025-10-23 21:01:07.697 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: POST http://localhost:5174/api/v1.0/api/v1/jobs, Response status code: 404
+2025-10-23 21:02:30.405 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 21:02:30.407 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:02:30.410 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 21:02:30.412 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 21:02:30.413 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:02:30.414 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 21:02:30.419 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.DTOs.Auth.UserDto'.
+2025-10-23 21:02:30.421 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 5.6648ms
+2025-10-23 21:02:30.422 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:02:30.422 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 21:02:30.423 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 200 - Duration: 13ms
+2025-10-23 21:02:30.425 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:02:30.428 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 200 in 20.7637 ms
+2025-10-23 21:02:30.428 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 21:02:30.430 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 200 null application/json; charset=utf-8 24.9196ms
+2025-10-23 21:02:30.431 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 21:02:30.435 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:02:30.436 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 21:02:30.439 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.DTOs.Auth.UserDto'.
+2025-10-23 21:02:30.440 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 3.3798ms
+2025-10-23 21:02:30.441 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:02:30.442 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 200 - Duration: 14ms
+2025-10-23 21:02:30.447 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 200 in 21.8392 ms
+2025-10-23 21:02:30.448 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 200 null application/json; charset=utf-8 26.3779ms
+2025-10-23 21:03:49.879 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/jobs - null null
+2025-10-23 21:03:49.884 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:03:49.885 +07:00 [INF] HTTP OPTIONS /api/v1.0/jobs responded 204 in 1.0138 ms
+2025-10-23 21:03:49.887 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/jobs - 204 null null 7.7493ms
+2025-10-23 21:03:49.888 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1.0/jobs - application/json 336
+2025-10-23 21:03:49.895 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:03:49.901 +07:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-23 21:03:49.904 +07:00 [INF] AuthenticationScheme: Cookies was challenged.
+2025-10-23 21:03:49.905 +07:00 [INF] HTTP POST /api/v1.0/jobs responded 302 in 9.9372 ms
+2025-10-23 21:03:49.906 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1.0/jobs - 302 0 null 18.1569ms
+2025-10-23 21:03:49.909 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/auth/login?ReturnUrl=%2Fapi%2Fv1.0%2Fjobs - null null
+2025-10-23 21:03:49.910 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:03:49.914 +07:00 [INF] Incoming request: GET /auth/login
+2025-10-23 21:03:49.914 +07:00 [INF] Request completed: GET /auth/login - Status: 404 - Duration: 0ms
+2025-10-23 21:03:49.917 +07:00 [INF] HTTP GET /auth/login responded 404 in 6.8155 ms
+2025-10-23 21:03:49.919 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/auth/login?ReturnUrl=%2Fapi%2Fv1.0%2Fjobs - 404 0 null 9.9439ms
+2025-10-23 21:03:49.921 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5174/auth/login, Response status code: 404
+2025-10-23 21:06:27.633 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/jobs - null null
+2025-10-23 21:06:27.637 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:06:27.638 +07:00 [INF] HTTP OPTIONS /api/v1.0/jobs responded 204 in 0.9937 ms
+2025-10-23 21:06:27.639 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/jobs - 204 null null 6.5684ms
+2025-10-23 21:06:27.641 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1.0/jobs - application/json 336
+2025-10-23 21:06:27.650 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:06:27.651 +07:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-23 21:06:27.652 +07:00 [INF] AuthenticationScheme: Cookies was challenged.
+2025-10-23 21:06:27.653 +07:00 [INF] HTTP POST /api/v1.0/jobs responded 302 in 2.8204 ms
+2025-10-23 21:06:27.654 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1.0/jobs - 302 0 null 12.7714ms
+2025-10-23 21:06:27.657 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/auth/login?ReturnUrl=%2Fapi%2Fv1.0%2Fjobs - null null
+2025-10-23 21:06:27.659 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:06:27.661 +07:00 [INF] Incoming request: GET /auth/login
+2025-10-23 21:06:27.662 +07:00 [INF] Request completed: GET /auth/login - Status: 404 - Duration: 0ms
+2025-10-23 21:06:27.665 +07:00 [INF] HTTP GET /auth/login responded 404 in 6.1474 ms
+2025-10-23 21:06:27.666 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/auth/login?ReturnUrl=%2Fapi%2Fv1.0%2Fjobs - 404 0 null 9.5293ms
+2025-10-23 21:06:27.669 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5174/auth/login, Response status code: 404
+2025-10-23 21:06:40.139 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 21:06:40.144 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:06:40.147 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 21:06:40.151 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 21:06:40.153 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:06:40.156 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 21:06:40.168 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.DTOs.Auth.UserDto'.
+2025-10-23 21:06:40.170 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 5.8459ms
+2025-10-23 21:06:40.172 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 21:06:40.172 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:06:40.178 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:06:40.179 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 200 - Duration: 31ms
+2025-10-23 21:06:40.180 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 21:06:40.182 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 21:06:40.183 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 200 in 39.2137 ms
+2025-10-23 21:06:40.183 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:06:40.185 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 200 null application/json; charset=utf-8 46.0062ms
+2025-10-23 21:06:40.186 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 21:06:40.194 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.DTOs.Auth.UserDto'.
+2025-10-23 21:06:40.195 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 3.8485ms
+2025-10-23 21:06:40.196 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:06:40.197 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 200 - Duration: 16ms
+2025-10-23 21:06:40.200 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 200 in 22.2368 ms
+2025-10-23 21:06:40.202 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 200 null application/json; charset=utf-8 30.3363ms
+2025-10-23 21:07:35.239 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/jobs - null null
+2025-10-23 21:07:35.245 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:07:35.246 +07:00 [INF] HTTP OPTIONS /api/v1.0/jobs responded 204 in 0.8644 ms
+2025-10-23 21:07:35.247 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/jobs - 204 null null 8.0059ms
+2025-10-23 21:07:35.248 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1.0/jobs - application/json 353
+2025-10-23 21:07:35.255 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:07:35.257 +07:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-23 21:07:35.258 +07:00 [INF] AuthenticationScheme: Cookies was challenged.
+2025-10-23 21:07:35.258 +07:00 [INF] HTTP POST /api/v1.0/jobs responded 302 in 3.1007 ms
+2025-10-23 21:07:35.260 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1.0/jobs - 302 0 null 11.6013ms
+2025-10-23 21:07:35.262 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/auth/login?ReturnUrl=%2Fapi%2Fv1.0%2Fjobs - null null
+2025-10-23 21:07:35.264 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:07:35.267 +07:00 [INF] Incoming request: GET /auth/login
+2025-10-23 21:07:35.268 +07:00 [INF] Request completed: GET /auth/login - Status: 404 - Duration: 1ms
+2025-10-23 21:07:35.271 +07:00 [INF] HTTP GET /auth/login responded 404 in 6.5685 ms
+2025-10-23 21:07:35.273 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/auth/login?ReturnUrl=%2Fapi%2Fv1.0%2Fjobs - 404 0 null 10.2355ms
+2025-10-23 21:07:35.275 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5174/auth/login, Response status code: 404
+2025-10-23 21:10:55.423 +07:00 [INF] User profile is available. Using 'C:\Users\Luan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-23 21:10:55.545 +07:00 [INF] Now listening on: http://localhost:5174
+2025-10-23 21:10:55.548 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 21:10:55.549 +07:00 [INF] Hosting environment: Development
+2025-10-23 21:10:55.550 +07:00 [INF] Content root path: D:\hoctap\React\JobsViet\Server\Server
+2025-10-23 21:11:34.366 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1/jobs - application/json 359
+2025-10-23 21:11:34.380 +07:00 [WRN] Failed to determine the https port for redirect.
+2025-10-23 21:11:34.402 +07:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-23 21:11:34.406 +07:00 [INF] AuthenticationScheme: Cookies was challenged.
+2025-10-23 21:11:34.408 +07:00 [INF] HTTP POST /api/v1/jobs responded 302 in 13.9970 ms
+2025-10-23 21:11:34.413 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1/jobs - 302 0 null 48.4554ms
+2025-10-23 21:11:47.455 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1/auth/login - application/json 53
+2025-10-23 21:11:47.482 +07:00 [INF] Incoming request: POST /api/v1/auth/login
+2025-10-23 21:11:47.485 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.Login (Server)'
+2025-10-23 21:11:47.499 +07:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(Server.DTOs.Auth.LoginRequest) on controller Server.Controllers.AuthController (Server).
+2025-10-23 21:11:47.609 +07:00 [INF] Executing BadRequestObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ValidationProblemDetails'.
+2025-10-23 21:11:47.631 +07:00 [INF] Executed action Server.Controllers.AuthController.Login (Server) in 127.0074ms
+2025-10-23 21:11:47.633 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.Login (Server)'
+2025-10-23 21:11:47.635 +07:00 [INF] Request completed: POST /api/v1/auth/login - Status: 400 - Duration: 154ms
+2025-10-23 21:11:47.674 +07:00 [INF] HTTP POST /api/v1/auth/login responded 400 in 215.6081 ms
+2025-10-23 21:11:47.679 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1/auth/login - 400 null application/problem+json; charset=utf-8 224.1965ms
+2025-10-23 21:12:04.436 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1/auth/register - application/json 118
+2025-10-23 21:12:04.442 +07:00 [INF] Incoming request: POST /api/v1/auth/register
+2025-10-23 21:12:04.443 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.Register (Server)'
+2025-10-23 21:12:04.448 +07:00 [INF] Route matched with {action = "Register", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Register(Server.DTOs.Auth.RegisterRequest) on controller Server.Controllers.AuthController (Server).
+2025-10-23 21:12:04.461 +07:00 [INF] Executing BadRequestObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ValidationProblemDetails'.
+2025-10-23 21:12:04.463 +07:00 [INF] Executed action Server.Controllers.AuthController.Register (Server) in 13.7388ms
+2025-10-23 21:12:04.464 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.Register (Server)'
+2025-10-23 21:12:04.465 +07:00 [INF] Request completed: POST /api/v1/auth/register - Status: 400 - Duration: 22ms
+2025-10-23 21:12:04.468 +07:00 [INF] HTTP POST /api/v1/auth/register responded 400 in 27.6828 ms
+2025-10-23 21:12:04.469 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1/auth/register - 400 null application/problem+json; charset=utf-8 33.047ms
+2025-10-23 21:12:13.981 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1/auth/register - application/json 120
+2025-10-23 21:12:13.984 +07:00 [INF] Incoming request: POST /api/v1/auth/register
+2025-10-23 21:12:13.985 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.Register (Server)'
+2025-10-23 21:12:13.986 +07:00 [INF] Route matched with {action = "Register", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Register(Server.DTOs.Auth.RegisterRequest) on controller Server.Controllers.AuthController (Server).
+2025-10-23 21:12:14.750 +07:00 [INF] Executed DbCommand (76ms) [Parameters=[:email_0='?' (Size = 200)], CommandType='"Text"', CommandTimeout='0']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM "USERS" "u"
+        WHERE "u"."EMAIL" = :email_0) THEN True
+    ELSE False
+END FROM DUAL
+2025-10-23 21:12:14.784 +07:00 [INF] Executed DbCommand (7ms) [Parameters=[:email_0='?' (Size = 200)], CommandType='"Text"', CommandTimeout='0']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM "USERS" "u"
+        WHERE "u"."EMAIL" = :email_0) THEN True
+    ELSE False
+END FROM DUAL
+2025-10-23 21:12:14.899 +07:00 [INF] Executed DbCommand (7ms) [Parameters=[:p0='?' (DbType = Binary), :p1='?' (DbType = DateTime), :p2='?' (Size = 200), :p3='?' (DbType = Boolean), :p4='?' (Size = 256), :p5='?' (Size = 50), :p6='?' (Size = 200)], CommandType='"Text"', CommandTimeout='0']
+DECLARE
+
+
+BEGIN
+
+INSERT INTO "USERS" ("USERID", "CREATEDAT", "EMAIL", "ISACTIVE", "PASSWORDHASH", "ROLE", "USERNAME")
+VALUES (:p0, :p1, :p2, :p3, :p4, :p5, :p6);
+
+END;
+2025-10-23 21:12:14.919 +07:00 [INF] Session started; Key:468ea020-4eef-1261-f216-d620b0aaf434, Id:31c2c991-cf1e-5da8-68b1-2534335bbdef
+2025-10-23 21:12:14.927 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.DTOs.Auth.AuthResponse'.
+2025-10-23 21:12:14.932 +07:00 [INF] Executed action Server.Controllers.AuthController.Register (Server) in 944.928ms
+2025-10-23 21:12:14.934 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.Register (Server)'
+2025-10-23 21:12:14.934 +07:00 [INF] Request completed: POST /api/v1/auth/register - Status: 200 - Duration: 950ms
+2025-10-23 21:12:14.939 +07:00 [INF] HTTP POST /api/v1/auth/register responded 200 in 956.4811 ms
+2025-10-23 21:12:14.944 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1/auth/register - 200 null application/json; charset=utf-8 963.3961ms
+2025-10-23 21:12:20.897 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1/auth/login - application/json 54
+2025-10-23 21:12:20.901 +07:00 [INF] Incoming request: POST /api/v1/auth/login
+2025-10-23 21:12:20.903 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.Login (Server)'
+2025-10-23 21:12:20.904 +07:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(Server.DTOs.Auth.LoginRequest) on controller Server.Controllers.AuthController (Server).
+2025-10-23 21:12:20.946 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[:email_0='?' (Size = 200)], CommandType='"Text"', CommandTimeout='0']
+SELECT "u"."USERID", "u"."CREATEDAT", "u"."EMAIL", "u"."ISACTIVE", "u"."PASSWORDHASH", "u"."ROLE", "u"."USERNAME"
+FROM "USERS" "u"
+WHERE (("u"."EMAIL" = :email_0) AND ("u"."ISACTIVE" <> False))
+FETCH FIRST 1 ROWS ONLY
+2025-10-23 21:12:20.964 +07:00 [INF] Session started; Key:5a0155e0-5667-ebac-5966-b421ce097d72, Id:95f3fec3-40aa-f885-9af9-0c23c7ae37c1
+2025-10-23 21:12:20.967 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.DTOs.Auth.AuthResponse'.
+2025-10-23 21:12:20.968 +07:00 [INF] Executed action Server.Controllers.AuthController.Login (Server) in 63.0596ms
+2025-10-23 21:12:20.969 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.Login (Server)'
+2025-10-23 21:12:20.970 +07:00 [INF] Request completed: POST /api/v1/auth/login - Status: 200 - Duration: 68ms
+2025-10-23 21:12:20.973 +07:00 [INF] HTTP POST /api/v1/auth/login responded 200 in 73.2992 ms
+2025-10-23 21:12:20.974 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1/auth/login - 200 null application/json; charset=utf-8 77.6679ms
+2025-10-23 21:12:30.713 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1/jobs - application/json 359
+2025-10-23 21:12:30.718 +07:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-23 21:12:30.719 +07:00 [INF] AuthenticationScheme: Cookies was challenged.
+2025-10-23 21:12:30.721 +07:00 [INF] HTTP POST /api/v1/jobs responded 302 in 4.4579 ms
+2025-10-23 21:12:30.722 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1/jobs - 302 0 null 8.9617ms
+2025-10-23 21:12:52.679 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 21:12:52.683 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:12:52.690 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 21:12:52.693 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 21:12:52.698 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:12:52.702 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 21:12:52.710 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.DTOs.Auth.UserDto'.
+2025-10-23 21:12:52.713 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 8.5907ms
+2025-10-23 21:12:52.715 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:12:52.716 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 21:12:52.716 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 200 - Duration: 26ms
+2025-10-23 21:12:52.719 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:12:52.723 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 200 in 40.9705 ms
+2025-10-23 21:12:52.723 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 21:12:52.726 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 200 null application/json; charset=utf-8 47.3745ms
+2025-10-23 21:12:52.729 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 21:12:52.735 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:12:52.736 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 21:12:52.741 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.DTOs.Auth.UserDto'.
+2025-10-23 21:12:52.742 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 4.7453ms
+2025-10-23 21:12:52.743 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:12:52.745 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 200 - Duration: 21ms
+2025-10-23 21:12:52.750 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 200 in 31.1201 ms
+2025-10-23 21:12:52.751 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 200 null application/json; charset=utf-8 35.4747ms
+2025-10-23 21:13:00.236 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1/jobs - application/json 359
+2025-10-23 21:13:00.239 +07:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-23 21:13:00.240 +07:00 [INF] AuthenticationScheme: Cookies was challenged.
+2025-10-23 21:13:00.240 +07:00 [INF] HTTP POST /api/v1/jobs responded 302 in 2.2559 ms
+2025-10-23 21:13:00.242 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1/jobs - 302 0 null 5.5131ms
+2025-10-23 21:13:06.523 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1/auth/me - null null
+2025-10-23 21:13:06.526 +07:00 [INF] Incoming request: GET /api/v1/auth/me
+2025-10-23 21:13:06.527 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:13:06.528 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 21:13:06.532 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.DTOs.Auth.UserDto'.
+2025-10-23 21:13:06.533 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 3.3639ms
+2025-10-23 21:13:06.534 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:13:06.534 +07:00 [INF] Request completed: GET /api/v1/auth/me - Status: 200 - Duration: 8ms
+2025-10-23 21:13:06.537 +07:00 [INF] HTTP GET /api/v1/auth/me responded 200 in 12.4559 ms
+2025-10-23 21:13:06.538 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1/auth/me - 200 null application/json; charset=utf-8 15.5452ms
+2025-10-23 21:13:13.705 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1/jobs - application/json 359
+2025-10-23 21:13:13.707 +07:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-23 21:13:13.708 +07:00 [INF] AuthenticationScheme: Cookies was challenged.
+2025-10-23 21:13:13.709 +07:00 [INF] HTTP POST /api/v1/jobs responded 302 in 1.9690 ms
+2025-10-23 21:13:13.710 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1/jobs - 302 0 null 5.5947ms
+2025-10-23 21:13:29.490 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1/jobs - application/json 359
+2025-10-23 21:13:29.492 +07:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-23 21:13:29.495 +07:00 [INF] AuthenticationScheme: Cookies was challenged.
+2025-10-23 21:13:29.496 +07:00 [INF] HTTP POST /api/v1/jobs responded 302 in 4.0412 ms
+2025-10-23 21:13:29.498 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1/jobs - 302 0 null 8.265ms
+2025-10-23 21:13:29.501 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/auth/login?ReturnUrl=%2Fapi%2Fv1%2Fjobs - application/json null
+2025-10-23 21:13:29.505 +07:00 [INF] Incoming request: POST /auth/login
+2025-10-23 21:13:29.507 +07:00 [INF] Request completed: POST /auth/login - Status: 404 - Duration: 1ms
+2025-10-23 21:13:29.512 +07:00 [INF] HTTP POST /auth/login responded 404 in 8.0348 ms
+2025-10-23 21:13:29.514 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/auth/login?ReturnUrl=%2Fapi%2Fv1%2Fjobs - 404 0 null 12.6863ms
+2025-10-23 21:13:29.517 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: POST http://localhost:5174/auth/login, Response status code: 404
+2025-10-23 21:14:06.731 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1/jobs - application/json 359
+2025-10-23 21:14:06.734 +07:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-23 21:14:06.735 +07:00 [INF] AuthenticationScheme: Cookies was challenged.
+2025-10-23 21:14:06.735 +07:00 [INF] HTTP POST /api/v1/jobs responded 302 in 1.8512 ms
+2025-10-23 21:14:06.737 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1/jobs - 302 0 null 5.3296ms
+2025-10-23 21:14:06.756 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/auth/login?ReturnUrl=%2Fapi%2Fv1%2Fjobs - application/json null
+2025-10-23 21:14:06.760 +07:00 [INF] Incoming request: POST /auth/login
+2025-10-23 21:14:06.761 +07:00 [INF] Request completed: POST /auth/login - Status: 404 - Duration: 0ms
+2025-10-23 21:14:06.765 +07:00 [INF] HTTP POST /auth/login responded 404 in 7.3266 ms
+2025-10-23 21:14:06.766 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/auth/login?ReturnUrl=%2Fapi%2Fv1%2Fjobs - 404 0 null 10.5258ms
+2025-10-23 21:14:06.768 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: POST http://localhost:5174/auth/login, Response status code: 404
+2025-10-23 21:14:31.041 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1/jobs - application/json 359
+2025-10-23 21:14:31.043 +07:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-23 21:14:31.044 +07:00 [INF] AuthenticationScheme: Cookies was challenged.
+2025-10-23 21:14:31.045 +07:00 [INF] HTTP POST /api/v1/jobs responded 302 in 2.0185 ms
+2025-10-23 21:14:31.047 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1/jobs - 302 0 null 5.4226ms
+2025-10-23 21:14:37.646 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1/auth/me - null null
+2025-10-23 21:14:37.650 +07:00 [INF] Incoming request: GET /api/v1/auth/me
+2025-10-23 21:14:37.650 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:14:37.651 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 21:14:37.655 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.DTOs.Auth.UserDto'.
+2025-10-23 21:14:37.657 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 3.6811ms
+2025-10-23 21:14:37.658 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:14:37.660 +07:00 [INF] Request completed: GET /api/v1/auth/me - Status: 200 - Duration: 9ms
+2025-10-23 21:14:37.663 +07:00 [INF] HTTP GET /api/v1/auth/me responded 200 in 14.7374 ms
+2025-10-23 21:14:37.664 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1/auth/me - 200 null application/json; charset=utf-8 18.0349ms
+2025-10-23 21:16:31.923 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1/jobs - application/json 359
+2025-10-23 21:16:31.925 +07:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-23 21:16:31.926 +07:00 [INF] AuthenticationScheme: Cookies was challenged.
+2025-10-23 21:16:31.927 +07:00 [INF] HTTP POST /api/v1/jobs responded 302 in 1.4967 ms
+2025-10-23 21:16:31.928 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1/jobs - 302 0 null 4.821ms
+2025-10-23 21:16:38.676 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1/auth/me - null null
+2025-10-23 21:16:38.680 +07:00 [INF] Incoming request: GET /api/v1/auth/me
+2025-10-23 21:16:38.681 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:16:38.682 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 21:16:38.685 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.DTOs.Auth.UserDto'.
+2025-10-23 21:16:38.686 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 3.0621ms
+2025-10-23 21:16:38.687 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:16:38.689 +07:00 [INF] Request completed: GET /api/v1/auth/me - Status: 200 - Duration: 8ms
+2025-10-23 21:16:38.692 +07:00 [INF] HTTP GET /api/v1/auth/me responded 200 in 14.7240 ms
+2025-10-23 21:16:38.694 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1/auth/me - 200 null application/json; charset=utf-8 18.1861ms
+2025-10-23 21:16:47.251 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1/jobs - null null
+2025-10-23 21:16:47.255 +07:00 [INF] Incoming request: GET /api/v1/jobs
+2025-10-23 21:16:47.256 +07:00 [INF] Executing endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 21:16:47.262 +07:00 [INF] Route matched with {action = "GetJobs", controller = "Jobs"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetJobs(Server.DTOs.Jobs.JobQueryDto) on controller Server.Controllers.Jobs.JobsController (Server).
+2025-10-23 21:16:47.332 +07:00 [INF] Fetching jobs from database for query: {"Page":1,"PageSize":10,"Search":null,"Category":null,"$type":"JobQueryDto"}
+2025-10-23 21:16:47.425 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='0']
+SELECT COUNT(*)
+FROM "JOBS" "j"
+WHERE "j"."ISACTIVE" = 1
+2025-10-23 21:16:47.454 +07:00 [INF] Executed DbCommand (15ms) [Parameters=[:p_0='?' (DbType = Int32), :p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='0']
+SELECT "j"."JOBID", "j"."CATEGORYID", "j"."COMPANYID", "j"."CREATEDAT", "j"."DEADLINEDATE", "j"."DESCRIPTION", "j"."EMPLOYERPROFILEID", "j"."EMPLOYMENTTYPE", "j"."GENDERPREFERENCE", "j"."HIRINGSTATUS", "j"."ISACTIVE", "j"."JOBGUID", "j"."MAXAGE", "j"."MINAGE", "j"."POSITIONSFILLED", "j"."POSITIONSNEEDED", "j"."POSTEDBYUSERID", "j"."REQUIREDDEGREE", "j"."REQUIREDEXPERIENCEYEARS", "j"."SALARYFROM", "j"."SALARYTO", "j"."SKILLSREQUIRED", "j"."TITLE"
+FROM "JOBS" "j"
+WHERE "j"."ISACTIVE" = 1
+ORDER BY "j"."CREATEDAT" DESC, "j"."JOBID"
+OFFSET :p_0 ROWS FETCH NEXT :p_1 ROWS ONLY
+2025-10-23 21:16:47.473 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.Services.Jobs.PaginatedResult`1[[Server.DTOs.Jobs.JobDto, Server, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-23 21:16:47.485 +07:00 [INF] Executed action Server.Controllers.Jobs.JobsController.GetJobs (Server) in 221.1977ms
+2025-10-23 21:16:47.488 +07:00 [INF] Executed endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 21:16:47.489 +07:00 [INF] Request completed: GET /api/v1/jobs - Status: 200 - Duration: 233ms
+2025-10-23 21:16:47.492 +07:00 [INF] HTTP GET /api/v1/jobs responded 200 in 238.5484 ms
+2025-10-23 21:16:47.493 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1/jobs - 200 null application/json; charset=utf-8 242.0308ms
+2025-10-23 21:17:02.677 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1/jobs - application/json 359
+2025-10-23 21:17:02.680 +07:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-23 21:17:02.681 +07:00 [INF] AuthenticationScheme: Cookies was challenged.
+2025-10-23 21:17:02.682 +07:00 [INF] HTTP POST /api/v1/jobs responded 302 in 2.1768 ms
+2025-10-23 21:17:02.684 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1/jobs - 302 0 null 6.4988ms
+2025-10-23 21:29:45.730 +07:00 [INF] User profile is available. Using 'C:\Users\Luan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-23 21:29:45.834 +07:00 [INF] Now listening on: http://localhost:5174
+2025-10-23 21:29:45.838 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 21:29:45.840 +07:00 [INF] Hosting environment: Development
+2025-10-23 21:29:45.841 +07:00 [INF] Content root path: D:\hoctap\React\JobsViet\Server\Server
+2025-10-23 21:29:57.862 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1/categories - null null
+2025-10-23 21:29:57.876 +07:00 [WRN] Failed to determine the https port for redirect.
+2025-10-23 21:29:57.920 +07:00 [INF] Incoming request: GET /api/v1/categories
+2025-10-23 21:29:57.923 +07:00 [INF] Request completed: GET /api/v1/categories - Status: 404 - Duration: 3ms
+2025-10-23 21:29:57.945 +07:00 [INF] HTTP GET /api/v1/categories responded 404 in 54.9547 ms
+2025-10-23 21:29:57.951 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1/categories - 404 0 null 90.7563ms
+2025-10-23 21:29:57.955 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5174/api/v1/categories, Response status code: 404
+2025-10-23 21:30:02.597 +07:00 [INF] Application is shutting down...
+2025-10-23 21:52:43.347 +07:00 [INF] User profile is available. Using 'C:\Users\Luan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-23 21:52:43.595 +07:00 [INF] Now listening on: http://localhost:5174
+2025-10-23 21:52:43.665 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 21:52:43.667 +07:00 [INF] Hosting environment: Development
+2025-10-23 21:52:43.667 +07:00 [INF] Content root path: D:\hoctap\React\JobsViet\Server\Server
+2025-10-23 21:53:12.551 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - null null
+2025-10-23 21:53:12.551 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 21:53:12.594 +07:00 [WRN] Failed to determine the https port for redirect.
+2025-10-23 21:53:12.638 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:53:12.638 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:53:12.698 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 21:53:12.698 +07:00 [INF] Incoming request: GET /api/v1.0/jobs
+2025-10-23 21:53:12.702 +07:00 [INF] Executing endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 21:53:12.702 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 21:53:12.706 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:53:12.715 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 21:53:12.716 +07:00 [INF] Route matched with {action = "GetJobs", controller = "Jobs"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetJobs(Server.DTOs.Jobs.JobQueryDto) on controller Server.Controllers.Jobs.JobsController (Server).
+2025-10-23 21:53:12.852 +07:00 [INF] Accessing expired session, Key:d0c672c2-868f-d1ea-e53e-9f8210587de7
+2025-10-23 21:53:12.859 +07:00 [INF] Executing UnauthorizedObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-23 21:53:12.877 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 157.1262ms
+2025-10-23 21:53:12.877 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 21:53:12.880 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:53:12.883 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 401 - Duration: 186ms
+2025-10-23 21:53:12.885 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:53:12.889 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 21:53:12.891 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 21:53:12.892 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:53:12.894 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 21:53:12.894 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 401 in 264.4534 ms
+2025-10-23 21:53:12.897 +07:00 [INF] Accessing expired session, Key:d0c672c2-868f-d1ea-e53e-9f8210587de7
+2025-10-23 21:53:12.898 +07:00 [INF] Executing UnauthorizedObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-23 21:53:12.900 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 5.2823ms
+2025-10-23 21:53:12.902 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 401 null application/json; charset=utf-8 357.0293ms
+2025-10-23 21:53:12.902 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 21:53:12.906 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 401 - Duration: 16ms
+2025-10-23 21:53:12.909 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 401 in 24.4565 ms
+2025-10-23 21:53:12.911 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 401 null application/json; charset=utf-8 33.1663ms
+2025-10-23 21:53:12.963 +07:00 [INF] Fetching jobs from database for query: {"Page":1,"PageSize":10,"Search":null,"Category":null,"$type":"JobQueryDto"}
+2025-10-23 21:53:13.949 +07:00 [INF] Executed DbCommand (84ms) [Parameters=[], CommandType='"Text"', CommandTimeout='0']
+SELECT COUNT(*)
+FROM "JOBS" "j"
+WHERE "j"."ISACTIVE" = 1
+2025-10-23 21:53:14.056 +07:00 [INF] Executed DbCommand (28ms) [Parameters=[:p_0='?' (DbType = Int32), :p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='0']
+SELECT "j"."JOBID", "j"."CATEGORYID", "j"."COMPANYID", "j"."CREATEDAT", "j"."DEADLINEDATE", "j"."DESCRIPTION", "j"."EMPLOYERPROFILEID", "j"."EMPLOYMENTTYPE", "j"."GENDERPREFERENCE", "j"."HIRINGSTATUS", "j"."ISACTIVE", "j"."JOBGUID", "j"."MAXAGE", "j"."MINAGE", "j"."POSITIONSFILLED", "j"."POSITIONSNEEDED", "j"."POSTEDBYUSERID", "j"."REQUIREDDEGREE", "j"."REQUIREDEXPERIENCEYEARS", "j"."SALARYFROM", "j"."SALARYTO", "j"."SKILLSREQUIRED", "j"."TITLE"
+FROM "JOBS" "j"
+WHERE "j"."ISACTIVE" = 1
+ORDER BY "j"."CREATEDAT" DESC, "j"."JOBID"
+OFFSET :p_0 ROWS FETCH NEXT :p_1 ROWS ONLY
+2025-10-23 21:53:14.081 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.Services.Jobs.PaginatedResult`1[[Server.DTOs.Jobs.JobDto, Server, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-23 21:53:14.101 +07:00 [INF] Executed action Server.Controllers.Jobs.JobsController.GetJobs (Server) in 1381.9428ms
+2025-10-23 21:53:14.103 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - null null
+2025-10-23 21:53:14.104 +07:00 [INF] Executed endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 21:53:14.107 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:53:14.107 +07:00 [INF] Request completed: GET /api/v1.0/jobs - Status: 200 - Duration: 1410ms
+2025-10-23 21:53:14.109 +07:00 [INF] Incoming request: GET /api/v1.0/jobs
+2025-10-23 21:53:14.111 +07:00 [INF] HTTP GET /api/v1.0/jobs responded 200 in 1483.0082 ms
+2025-10-23 21:53:14.111 +07:00 [INF] Executing endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 21:53:14.113 +07:00 [INF] Route matched with {action = "GetJobs", controller = "Jobs"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetJobs(Server.DTOs.Jobs.JobQueryDto) on controller Server.Controllers.Jobs.JobsController (Server).
+2025-10-23 21:53:14.115 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - 200 null application/json; charset=utf-8 1570.7599ms
+2025-10-23 21:53:14.118 +07:00 [INF] Returning cached jobs for key: jobs_1_10__
+2025-10-23 21:53:14.121 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.Services.Jobs.PaginatedResult`1[[Server.DTOs.Jobs.JobDto, Server, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-23 21:53:14.123 +07:00 [INF] Executed action Server.Controllers.Jobs.JobsController.GetJobs (Server) in 7.3176ms
+2025-10-23 21:53:14.125 +07:00 [INF] Executed endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 21:53:14.126 +07:00 [INF] Request completed: GET /api/v1.0/jobs - Status: 200 - Duration: 16ms
+2025-10-23 21:53:14.130 +07:00 [INF] HTTP GET /api/v1.0/jobs responded 200 in 23.0500 ms
+2025-10-23 21:53:14.132 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - 200 null application/json; charset=utf-8 29.3876ms
+2025-10-23 21:53:57.229 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/auth/login - null null
+2025-10-23 21:53:57.235 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:53:57.237 +07:00 [INF] HTTP OPTIONS /api/v1.0/auth/login responded 204 in 2.0795 ms
+2025-10-23 21:53:57.238 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/auth/login - 204 null null 9.1714ms
+2025-10-23 21:53:57.240 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1.0/auth/login - application/json 52
+2025-10-23 21:53:57.243 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:53:57.245 +07:00 [INF] Incoming request: POST /api/v1.0/auth/login
+2025-10-23 21:53:57.247 +07:00 [INF] Auth request: POST /api/v1.0/auth/login from ::1
+2025-10-23 21:53:57.248 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.Login (Server)'
+2025-10-23 21:53:57.253 +07:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(Server.DTOs.Auth.LoginRequest) on controller Server.Controllers.AuthController (Server).
+2025-10-23 21:53:57.338 +07:00 [INF] Executed DbCommand (4ms) [Parameters=[:email_0='?' (Size = 200)], CommandType='"Text"', CommandTimeout='0']
+SELECT "u"."USERID", "u"."CREATEDAT", "u"."EMAIL", "u"."ISACTIVE", "u"."PASSWORDHASH", "u"."ROLE", "u"."USERNAME"
+FROM "USERS" "u"
+WHERE (("u"."EMAIL" = :email_0) AND ("u"."ISACTIVE" <> False))
+FETCH FIRST 1 ROWS ONLY
+2025-10-23 21:53:57.393 +07:00 [INF] Accessing expired session, Key:d0c672c2-868f-d1ea-e53e-9f8210587de7
+2025-10-23 21:53:57.397 +07:00 [INF] Session started; Key:d0c672c2-868f-d1ea-e53e-9f8210587de7, Id:836a8758-05fd-b95d-0e91-c0c955d72043
+2025-10-23 21:53:57.404 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.DTOs.Auth.AuthResponse'.
+2025-10-23 21:53:57.407 +07:00 [INF] Executed action Server.Controllers.AuthController.Login (Server) in 152.6002ms
+2025-10-23 21:53:57.408 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.Login (Server)'
+2025-10-23 21:53:57.410 +07:00 [WRN] Login attempt: POST /api/v1.0/auth/login from ::1 - Status: 200
+2025-10-23 21:53:57.411 +07:00 [INF] Request completed: POST /api/v1.0/auth/login - Status: 200 - Duration: 165ms
+2025-10-23 21:53:57.415 +07:00 [INF] HTTP POST /api/v1.0/auth/login responded 200 in 172.2744 ms
+2025-10-23 21:53:57.417 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1.0/auth/login - 200 null application/json; charset=utf-8 177.4882ms
+2025-10-23 21:53:59.814 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/categories - null null
+2025-10-23 21:53:59.819 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:53:59.821 +07:00 [INF] Incoming request: GET /api/v1.0/categories
+2025-10-23 21:53:59.823 +07:00 [INF] Request completed: GET /api/v1.0/categories - Status: 404 - Duration: 1ms
+2025-10-23 21:53:59.826 +07:00 [INF] HTTP GET /api/v1.0/categories responded 404 in 7.4278 ms
+2025-10-23 21:53:59.828 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/categories - 404 0 null 14.012ms
+2025-10-23 21:53:59.831 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5174/api/v1.0/categories, Response status code: 404
+2025-10-23 21:53:59.833 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/categories - null null
+2025-10-23 21:53:59.836 +07:00 [INF] CORS policy execution successful.
+2025-10-23 21:53:59.838 +07:00 [INF] Incoming request: GET /api/v1.0/categories
+2025-10-23 21:53:59.839 +07:00 [INF] Request completed: GET /api/v1.0/categories - Status: 404 - Duration: 1ms
+2025-10-23 21:53:59.842 +07:00 [INF] HTTP GET /api/v1.0/categories responded 404 in 6.0392 ms
+2025-10-23 21:53:59.843 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/categories - 404 0 null 10.1869ms
+2025-10-23 21:53:59.847 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5174/api/v1.0/categories, Response status code: 404
+2025-10-23 21:58:07.078 +07:00 [INF] User profile is available. Using 'C:\Users\Luan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-23 21:58:07.189 +07:00 [INF] Now listening on: http://localhost:5174
+2025-10-23 21:58:07.192 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 21:58:07.193 +07:00 [INF] Hosting environment: Development
+2025-10-23 21:58:07.194 +07:00 [INF] Content root path: D:\hoctap\React\JobsViet\Server\Server
+2025-10-23 21:58:18.556 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1/categories - null null
+2025-10-23 21:58:18.571 +07:00 [WRN] Failed to determine the https port for redirect.
+2025-10-23 21:58:18.630 +07:00 [INF] Incoming request: GET /api/v1/categories
+2025-10-23 21:58:18.634 +07:00 [INF] Request completed: GET /api/v1/categories - Status: 404 - Duration: 4ms
+2025-10-23 21:58:18.656 +07:00 [INF] HTTP GET /api/v1/categories responded 404 in 72.9739 ms
+2025-10-23 21:58:18.663 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1/categories - 404 0 null 107.6189ms
+2025-10-23 21:58:18.666 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5174/api/v1/categories, Response status code: 404
+2025-10-23 21:59:06.683 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1/categories - null null
+2025-10-23 21:59:06.691 +07:00 [INF] Incoming request: GET /api/v1/categories
+2025-10-23 21:59:06.692 +07:00 [INF] Request completed: GET /api/v1/categories - Status: 404 - Duration: 1ms
+2025-10-23 21:59:06.695 +07:00 [INF] HTTP GET /api/v1/categories responded 404 in 6.8924 ms
+2025-10-23 21:59:06.697 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1/categories - 404 0 null 13.8402ms
+2025-10-23 21:59:06.700 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5174/api/v1/categories, Response status code: 404
+2025-10-23 22:00:58.958 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1/categories - null null
+2025-10-23 22:00:58.967 +07:00 [INF] Incoming request: GET /api/v1/categories
+2025-10-23 22:00:58.968 +07:00 [INF] Request completed: GET /api/v1/categories - Status: 404 - Duration: 1ms
+2025-10-23 22:00:58.971 +07:00 [INF] HTTP GET /api/v1/categories responded 404 in 9.5724 ms
+2025-10-23 22:00:58.973 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1/categories - 404 0 null 15.2367ms
+2025-10-23 22:00:58.976 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5174/api/v1/categories, Response status code: 404
+2025-10-23 22:01:14.691 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1/categories - null null
+2025-10-23 22:01:14.695 +07:00 [INF] Incoming request: GET /api/v1/categories
+2025-10-23 22:01:14.696 +07:00 [INF] Request completed: GET /api/v1/categories - Status: 404 - Duration: 1ms
+2025-10-23 22:01:14.698 +07:00 [INF] HTTP GET /api/v1/categories responded 404 in 5.0732 ms
+2025-10-23 22:01:14.700 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1/categories - 404 0 null 8.5917ms
+2025-10-23 22:01:14.702 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5174/api/v1/categories, Response status code: 404
+2025-10-23 22:01:43.346 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1/categories - null null
+2025-10-23 22:01:43.351 +07:00 [INF] Incoming request: GET /api/v1/categories
+2025-10-23 22:01:43.352 +07:00 [INF] Request completed: GET /api/v1/categories - Status: 404 - Duration: 0ms
+2025-10-23 22:01:43.355 +07:00 [INF] HTTP GET /api/v1/categories responded 404 in 5.5457 ms
+2025-10-23 22:01:43.356 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1/categories - 404 0 null 10.2558ms
+2025-10-23 22:01:43.359 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5174/api/v1/categories, Response status code: 404
+2025-10-23 22:08:35.479 +07:00 [INF] User profile is available. Using 'C:\Users\Luan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-23 22:08:35.703 +07:00 [INF] Now listening on: http://localhost:5174
+2025-10-23 22:08:35.768 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 22:08:35.769 +07:00 [INF] Hosting environment: Development
+2025-10-23 22:08:35.770 +07:00 [INF] Content root path: D:\hoctap\React\JobsViet\Server\Server
+2025-10-23 22:09:18.480 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - null null
+2025-10-23 22:09:18.480 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 22:09:18.526 +07:00 [WRN] Failed to determine the https port for redirect.
+2025-10-23 22:09:18.589 +07:00 [INF] CORS policy execution successful.
+2025-10-23 22:09:18.589 +07:00 [INF] CORS policy execution successful.
+2025-10-23 22:09:18.617 +07:00 [INF] Incoming request: GET /api/v1.0/jobs
+2025-10-23 22:09:18.617 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 22:09:18.620 +07:00 [INF] Executing endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 22:09:18.620 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 22:09:18.622 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 22:09:18.631 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 22:09:18.633 +07:00 [INF] Route matched with {action = "GetJobs", controller = "Jobs"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetJobs(Server.DTOs.Jobs.JobQueryDto) on controller Server.Controllers.Jobs.JobsController (Server).
+2025-10-23 22:09:18.769 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.DTOs.Auth.UserDto'.
+2025-10-23 22:09:18.788 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 152.2924ms
+2025-10-23 22:09:18.788 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - null null
+2025-10-23 22:09:18.792 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 22:09:18.795 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 200 - Duration: 178ms
+2025-10-23 22:09:18.796 +07:00 [INF] CORS policy execution successful.
+2025-10-23 22:09:18.800 +07:00 [INF] Incoming request: GET /api/v1.0/auth/me
+2025-10-23 22:09:18.801 +07:00 [INF] Auth request: GET /api/v1.0/auth/me from ::1
+2025-10-23 22:09:18.803 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 22:09:18.804 +07:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetCurrentUser() on controller Server.Controllers.AuthController (Server).
+2025-10-23 22:09:18.806 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 200 in 257.1610 ms
+2025-10-23 22:09:18.809 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.DTOs.Auth.UserDto'.
+2025-10-23 22:09:18.812 +07:00 [INF] Executed action Server.Controllers.AuthController.GetCurrentUser (Server) in 5.2712ms
+2025-10-23 22:09:18.813 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.GetCurrentUser (Server)'
+2025-10-23 22:09:18.814 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 200 null application/json; charset=utf-8 339.5415ms
+2025-10-23 22:09:18.815 +07:00 [INF] Request completed: GET /api/v1.0/auth/me - Status: 200 - Duration: 14ms
+2025-10-23 22:09:18.821 +07:00 [INF] HTTP GET /api/v1.0/auth/me responded 200 in 25.6893 ms
+2025-10-23 22:09:18.824 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/auth/me - 200 null application/json; charset=utf-8 35.5343ms
+2025-10-23 22:09:18.871 +07:00 [INF] Fetching jobs from database for query: {"Page":1,"PageSize":10,"Search":null,"Category":null,"$type":"JobQueryDto"}
+2025-10-23 22:09:19.877 +07:00 [INF] Executed DbCommand (82ms) [Parameters=[], CommandType='"Text"', CommandTimeout='0']
+SELECT COUNT(*)
+FROM "JOBS" "j"
+WHERE "j"."ISACTIVE" = 1
+2025-10-23 22:09:19.983 +07:00 [INF] Executed DbCommand (28ms) [Parameters=[:p_0='?' (DbType = Int32), :p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='0']
+SELECT "j"."JOBID", "j"."CATEGORYID", "j"."COMPANYID", "j"."CREATEDAT", "j"."DEADLINEDATE", "j"."DESCRIPTION", "j"."EMPLOYERPROFILEID", "j"."EMPLOYMENTTYPE", "j"."GENDERPREFERENCE", "j"."HIRINGSTATUS", "j"."ISACTIVE", "j"."JOBGUID", "j"."MAXAGE", "j"."MINAGE", "j"."POSITIONSFILLED", "j"."POSITIONSNEEDED", "j"."POSTEDBYUSERID", "j"."REQUIREDDEGREE", "j"."REQUIREDEXPERIENCEYEARS", "j"."SALARYFROM", "j"."SALARYTO", "j"."SKILLSREQUIRED", "j"."TITLE"
+FROM "JOBS" "j"
+WHERE "j"."ISACTIVE" = 1
+ORDER BY "j"."CREATEDAT" DESC, "j"."JOBID"
+OFFSET :p_0 ROWS FETCH NEXT :p_1 ROWS ONLY
+2025-10-23 22:09:20.007 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.Services.Jobs.PaginatedResult`1[[Server.DTOs.Jobs.JobDto, Server, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-23 22:09:20.026 +07:00 [INF] Executed action Server.Controllers.Jobs.JobsController.GetJobs (Server) in 1391.377ms
+2025-10-23 22:09:20.028 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - null null
+2025-10-23 22:09:20.030 +07:00 [INF] Executed endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 22:09:20.033 +07:00 [INF] CORS policy execution successful.
+2025-10-23 22:09:20.034 +07:00 [INF] Request completed: GET /api/v1.0/jobs - Status: 200 - Duration: 1417ms
+2025-10-23 22:09:20.036 +07:00 [INF] Incoming request: GET /api/v1.0/jobs
+2025-10-23 22:09:20.038 +07:00 [INF] Executing endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 22:09:20.038 +07:00 [INF] HTTP GET /api/v1.0/jobs responded 200 in 1490.2284 ms
+2025-10-23 22:09:20.039 +07:00 [INF] Route matched with {action = "GetJobs", controller = "Jobs"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetJobs(Server.DTOs.Jobs.JobQueryDto) on controller Server.Controllers.Jobs.JobsController (Server).
+2025-10-23 22:09:20.047 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - 200 null application/json; charset=utf-8 1573.6625ms
+2025-10-23 22:09:20.048 +07:00 [INF] Returning cached jobs for key: jobs_1_10__
+2025-10-23 22:09:20.052 +07:00 [INF] Executing OkObjectResult, writing value of type 'Server.Services.Jobs.PaginatedResult`1[[Server.DTOs.Jobs.JobDto, Server, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-23 22:09:20.053 +07:00 [INF] Executed action Server.Controllers.Jobs.JobsController.GetJobs (Server) in 10.3885ms
+2025-10-23 22:09:20.055 +07:00 [INF] Executed endpoint 'Server.Controllers.Jobs.JobsController.GetJobs (Server)'
+2025-10-23 22:09:20.057 +07:00 [INF] Request completed: GET /api/v1.0/jobs - Status: 200 - Duration: 20ms
+2025-10-23 22:09:20.060 +07:00 [INF] HTTP GET /api/v1.0/jobs responded 200 in 27.0383 ms
+2025-10-23 22:09:20.063 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/jobs?page=1&pageSize=10 - 200 null application/json; charset=utf-8 34.4969ms
+2025-10-23 22:09:25.834 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/categories - null null
+2025-10-23 22:09:25.841 +07:00 [INF] CORS policy execution successful.
+2025-10-23 22:09:25.845 +07:00 [INF] Incoming request: GET /api/v1.0/categories
+2025-10-23 22:09:25.847 +07:00 [INF] Executing endpoint 'Server.Controllers.Jobs.JobCategoryController.GetCategories (Server)'
+2025-10-23 22:09:25.851 +07:00 [INF] Route matched with {action = "GetCategories", controller = "JobCategory"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCategories() on controller Server.Controllers.Jobs.JobCategoryController (Server).
+2025-10-23 22:09:25.855 +07:00 [INF] Fetching active job categories
+2025-10-23 22:09:25.883 +07:00 [INF] Executed DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='0']
+SELECT "j"."CATEGORYID", "j"."CREATEDAT", "j"."DESCRIPTION", "j"."ISACTIVE", "j"."NAME"
+FROM "JOBCATEGORIES" "j"
+WHERE "j"."ISACTIVE" = 1
+ORDER BY "j"."NAME"
+2025-10-23 22:09:25.931 +07:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[Server.DTOs.Jobs.JobCategoryDto, Server, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-23 22:09:25.936 +07:00 [INF] Executed action Server.Controllers.Jobs.JobCategoryController.GetCategories (Server) in 83.1793ms
+2025-10-23 22:09:25.937 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1.0/categories - null null
+2025-10-23 22:09:25.938 +07:00 [INF] Executed endpoint 'Server.Controllers.Jobs.JobCategoryController.GetCategories (Server)'
+2025-10-23 22:09:25.940 +07:00 [INF] CORS policy execution successful.
+2025-10-23 22:09:25.941 +07:00 [INF] Request completed: GET /api/v1.0/categories - Status: 200 - Duration: 95ms
+2025-10-23 22:09:25.943 +07:00 [INF] Incoming request: GET /api/v1.0/categories
+2025-10-23 22:09:25.945 +07:00 [INF] Executing endpoint 'Server.Controllers.Jobs.JobCategoryController.GetCategories (Server)'
+2025-10-23 22:09:25.945 +07:00 [INF] HTTP GET /api/v1.0/categories responded 200 in 103.6324 ms
+2025-10-23 22:09:25.946 +07:00 [INF] Route matched with {action = "GetCategories", controller = "JobCategory"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCategories() on controller Server.Controllers.Jobs.JobCategoryController (Server).
+2025-10-23 22:09:25.947 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/categories - 200 null application/json; charset=utf-8 113.03ms
+2025-10-23 22:09:25.949 +07:00 [INF] Fetching active job categories
+2025-10-23 22:09:26.001 +07:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='0']
+SELECT "j"."CATEGORYID", "j"."CREATEDAT", "j"."DESCRIPTION", "j"."ISACTIVE", "j"."NAME"
+FROM "JOBCATEGORIES" "j"
+WHERE "j"."ISACTIVE" = 1
+ORDER BY "j"."NAME"
+2025-10-23 22:09:26.005 +07:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[Server.DTOs.Jobs.JobCategoryDto, Server, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-23 22:09:26.006 +07:00 [INF] Executed action Server.Controllers.Jobs.JobCategoryController.GetCategories (Server) in 57.6204ms
+2025-10-23 22:09:26.008 +07:00 [INF] Executed endpoint 'Server.Controllers.Jobs.JobCategoryController.GetCategories (Server)'
+2025-10-23 22:09:26.009 +07:00 [INF] Request completed: GET /api/v1.0/categories - Status: 200 - Duration: 65ms
+2025-10-23 22:09:26.012 +07:00 [INF] HTTP GET /api/v1.0/categories responded 200 in 71.5608 ms
+2025-10-23 22:09:26.014 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1.0/categories - 200 null application/json; charset=utf-8 76.7683ms
+2025-10-23 22:10:57.304 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/jobs - null null
+2025-10-23 22:10:57.308 +07:00 [INF] CORS policy execution successful.
+2025-10-23 22:10:57.310 +07:00 [INF] HTTP OPTIONS /api/v1.0/jobs responded 204 in 1.7893 ms
+2025-10-23 22:10:57.312 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/jobs - 204 null null 7.6351ms
+2025-10-23 22:10:57.318 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1.0/jobs - application/json 388
+2025-10-23 22:10:57.320 +07:00 [INF] CORS policy execution successful.
+2025-10-23 22:10:57.324 +07:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-23 22:10:57.327 +07:00 [INF] AuthenticationScheme: Cookies was challenged.
+2025-10-23 22:10:57.328 +07:00 [INF] HTTP POST /api/v1.0/jobs responded 302 in 8.2418 ms
+2025-10-23 22:10:57.330 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1.0/jobs - 302 0 null 12.0591ms
+2025-10-23 22:10:57.332 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/auth/login?ReturnUrl=%2Fapi%2Fv1.0%2Fjobs - null null
+2025-10-23 22:10:57.335 +07:00 [INF] CORS policy execution successful.
+2025-10-23 22:10:57.337 +07:00 [INF] Incoming request: GET /auth/login
+2025-10-23 22:10:57.338 +07:00 [INF] Request completed: GET /auth/login - Status: 404 - Duration: 1ms
+2025-10-23 22:10:57.342 +07:00 [INF] HTTP GET /auth/login responded 404 in 6.9437 ms
+2025-10-23 22:10:57.343 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/auth/login?ReturnUrl=%2Fapi%2Fv1.0%2Fjobs - 404 0 null 10.7564ms
+2025-10-23 22:10:57.346 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5174/auth/login, Response status code: 404
+2025-10-23 22:11:06.504 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/jobs - null null
+2025-10-23 22:11:06.508 +07:00 [INF] CORS policy execution successful.
+2025-10-23 22:11:06.509 +07:00 [INF] HTTP OPTIONS /api/v1.0/jobs responded 204 in 1.2378 ms
+2025-10-23 22:11:06.511 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/jobs - 204 null null 7.3142ms
+2025-10-23 22:11:06.512 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1.0/jobs - application/json 388
+2025-10-23 22:11:06.515 +07:00 [INF] CORS policy execution successful.
+2025-10-23 22:11:06.516 +07:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-23 22:11:06.517 +07:00 [INF] AuthenticationScheme: Cookies was challenged.
+2025-10-23 22:11:06.518 +07:00 [INF] HTTP POST /api/v1.0/jobs responded 302 in 2.3389 ms
+2025-10-23 22:11:06.519 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1.0/jobs - 302 0 null 6.7734ms
+2025-10-23 22:11:06.521 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/auth/login?ReturnUrl=%2Fapi%2Fv1.0%2Fjobs - null null
+2025-10-23 22:11:06.523 +07:00 [INF] CORS policy execution successful.
+2025-10-23 22:11:06.525 +07:00 [INF] Incoming request: GET /auth/login
+2025-10-23 22:11:06.526 +07:00 [INF] Request completed: GET /auth/login - Status: 404 - Duration: 1ms
+2025-10-23 22:11:06.530 +07:00 [INF] HTTP GET /auth/login responded 404 in 6.4691 ms
+2025-10-23 22:11:06.531 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/auth/login?ReturnUrl=%2Fapi%2Fv1.0%2Fjobs - 404 0 null 9.7556ms
+2025-10-23 22:11:06.534 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5174/auth/login, Response status code: 404
+2025-10-23 22:11:19.839 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/jobs - null null
+2025-10-23 22:11:19.844 +07:00 [INF] CORS policy execution successful.
+2025-10-23 22:11:19.845 +07:00 [INF] HTTP OPTIONS /api/v1.0/jobs responded 204 in 1.5809 ms
+2025-10-23 22:11:19.848 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5174/api/v1.0/jobs - 204 null null 8.7632ms
+2025-10-23 22:11:19.849 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1.0/jobs - application/json 388
+2025-10-23 22:11:19.853 +07:00 [INF] CORS policy execution successful.
+2025-10-23 22:11:19.853 +07:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-23 22:11:19.854 +07:00 [INF] AuthenticationScheme: Cookies was challenged.
+2025-10-23 22:11:19.855 +07:00 [INF] HTTP POST /api/v1.0/jobs responded 302 in 2.2770 ms
+2025-10-23 22:11:19.856 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1.0/jobs - 302 0 null 7.0666ms
+2025-10-23 22:11:19.859 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/auth/login?ReturnUrl=%2Fapi%2Fv1.0%2Fjobs - null null
+2025-10-23 22:11:19.861 +07:00 [INF] CORS policy execution successful.
+2025-10-23 22:11:19.863 +07:00 [INF] Incoming request: GET /auth/login
+2025-10-23 22:11:19.864 +07:00 [INF] Request completed: GET /auth/login - Status: 404 - Duration: 0ms
+2025-10-23 22:11:19.867 +07:00 [INF] HTTP GET /auth/login responded 404 in 5.8262 ms
+2025-10-23 22:11:19.868 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/auth/login?ReturnUrl=%2Fapi%2Fv1.0%2Fjobs - 404 0 null 9.3259ms
+2025-10-23 22:11:19.871 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5174/auth/login, Response status code: 404

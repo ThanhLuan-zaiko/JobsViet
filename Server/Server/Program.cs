@@ -20,6 +20,7 @@ using System.Threading.RateLimiting;
 using StackExchange.Redis;
 using FluentValidation.AspNetCore;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc.Versioning;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -99,12 +100,14 @@ builder.Services.AddDbContext<Server.Data.Auth.ApplicationDbContext>(options =>
 // Register Unit of Work and Repositories
 builder.Services.AddScoped<Server.Data.Jobs.IUnitOfWork, Server.Data.Jobs.UnitOfWork>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
+builder.Services.AddScoped<IJobCategoryRepository, JobCategoryRepository>();
 
 // Register Auth Unit of Work
 builder.Services.AddScoped<Server.Data.Auth.IUnitOfWork, Server.Data.Auth.UnitOfWork>();
 
 // Register Services
 builder.Services.AddScoped<IJobService, JobService>();
+builder.Services.AddScoped<IJobCategoryService, JobCategoryService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Add JWT Service
@@ -126,6 +129,7 @@ builder.Services.AddApiVersioning(options =>
     options.DefaultApiVersion = new(1, 0);
     options.AssumeDefaultVersionWhenUnspecified = true;
     options.ReportApiVersions = true;
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
 });
 
 // Add Swagger with JWT
