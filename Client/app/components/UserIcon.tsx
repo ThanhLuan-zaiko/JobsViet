@@ -38,7 +38,7 @@ const UserIcon: React.FC = () => {
       if (!formData.email) {
         newErrors.email = "Mail là bắt buộc";
       } else if (
-        /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(
+        !/^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(
           formData.email
         )
       ) {
@@ -47,7 +47,7 @@ const UserIcon: React.FC = () => {
 
       if (!formData.password) {
         newErrors.password = "Mật khẩu là bắt buộc";
-      } else if (formData.password.trim.length < 6) {
+      } else if (formData.password.trim().length < 6) {
         newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự";
       }
     }
@@ -55,7 +55,7 @@ const UserIcon: React.FC = () => {
     if (activeTab === "register") {
       if (!formData.name) {
         newErrors.name = "Tên là bắt buộc";
-      } else if (formData.name.trim.length < 3) {
+      } else if (formData.name.trim().length < 3) {
         newErrors.name = "Tên phải có ít nhất 3 ký tự";
       } else if (!/^[a-zA-Z\sÀ-ỹà-ỹ]+$/.test(formData.name)) {
         newErrors.name = "Tên chỉ được chứa chữ cái và khoảng trắng";
@@ -64,7 +64,7 @@ const UserIcon: React.FC = () => {
       if (!formData.email) {
         newErrors.email = "Mail là bắt buộc";
       } else if (
-        /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(
+        !/^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(
           formData.email
         )
       ) {
@@ -73,10 +73,10 @@ const UserIcon: React.FC = () => {
 
       if (!formData.password) {
         newErrors.password = "Mật khẩu là bắt buộc";
-      } else if (formData.password.trim.length < 6) {
+      } else if (formData.password.trim().length < 6) {
         newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự";
       } else if (
-        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/.test(
+        !/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/.test(
           formData.password
         )
       ) {
@@ -97,6 +97,11 @@ const UserIcon: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
     setIsLoading(true);
     try {
       await login(formData.email, formData.password);

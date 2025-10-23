@@ -12,7 +12,8 @@ namespace Server.Validators.Auth
 
             RuleFor(x => x.NewPassword)
                 .NotEmpty().WithMessage("Mật khẩu mới là bắt buộc")
-                .MinimumLength(6).WithMessage("Mật khẩu mới phải có ít nhất 6 ký tự");
+                .MinimumLength(6).WithMessage("Mật khẩu mới phải có ít nhất 6 ký tự")
+                .Matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$").WithMessage("Mật khẩu phải có ký tự hoa, thường, đặc biệt và số!");
 
             RuleFor(x => x.ConfirmNewPassword)
                 .NotEmpty().WithMessage("Xác nhận mật khẩu mới là bắt buộc")
