@@ -697,3 +697,63 @@ INSERT INTO RolePermissions (RoleId, PermissionId)
 SELECT r.RoleId, p.PermissionId
 FROM Roles r, Permissions p
 WHERE r.Name = 'Admin';
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Information Technology', 'Ngành CNTT: lập trình, hệ thống, bảo mật, AI, dữ liệu', 1);
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Marketing', 'Ngành tiếp thị: quảng cáo, nội dung, SEO, truyền thông', 1);
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Sales', 'Ngành bán hàng: tư vấn, chăm sóc khách hàng, phát triển thị trường', 1);
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Finance and Accounting', 'Ngành tài chính: kế toán, kiểm toán, phân tích đầu tư', 1);
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Human Resources', 'Ngành nhân sự: tuyển dụng, đào tạo, quản lý nhân sự', 1);
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Design and Creative', 'Ngành thiết kế: đồ họa, UI/UX, sáng tạo nội dung', 1);
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Education and Training', 'Ngành giáo dục: giảng dạy, đào tạo, phát triển kỹ năng', 1);
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Healthcare', 'Ngành y tế: bác sĩ, điều dưỡng, dược sĩ, chăm sóc sức khỏe', 1);
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Construction and Engineering', 'Ngành xây dựng: kỹ sư, kiến trúc, giám sát công trình', 1);
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Logistics and Supply Chain', 'Ngành hậu cần: vận chuyển, kho bãi, chuỗi cung ứng', 1);
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Legal and Compliance', 'Ngành pháp lý: luật sư, tư vấn pháp luật, kiểm soát nội bộ', 1);
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Customer Service', 'Ngành dịch vụ khách hàng: tổng đài, hỗ trợ kỹ thuật, chăm sóc khách hàng', 1);
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Hospitality and Tourism', 'Ngành du lịch: khách sạn, nhà hàng, hướng dẫn viên, tổ chức sự kiện', 1);
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Manufacturing', 'Ngành sản xuất: vận hành máy móc, quản lý dây chuyền, kiểm tra chất lượng', 1);
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Agriculture and Environment', 'Ngành nông nghiệp: trồng trọt, chăn nuôi, môi trường, sinh thái', 1);
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Media and Entertainment', 'Ngành truyền thông: báo chí, truyền hình, sản xuất nội dung số', 1);
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Real Estate', 'Ngành bất động sản: môi giới, quản lý tài sản, đầu tư nhà đất', 1);
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Data Science and AI', 'Ngành dữ liệu: phân tích, học máy, trí tuệ nhân tạo', 1);
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Blockchain and Web3', 'Ngành công nghệ chuỗi khối: phát triển hợp đồng thông minh, NFT, crypto', 1);
+
+INSERT INTO JobCategories (Name, Description, IsActive)
+VALUES ('Game Development', 'Ngành phát triển game: thiết kế, lập trình, đồ họa, âm thanh', 1);
