@@ -12,11 +12,14 @@ using Server.Middleware.Auth;
 using Server.Services;
 using Server.Services.Auth;
 using Server.Services.Jobs;
+using Server.Validators.Auth;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 using StackExchange.Redis;
+using FluentValidation.AspNetCore;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -109,6 +112,10 @@ builder.Services.AddScoped<JwtService>();
 
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
+
+// Add FluentValidation
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssembly(typeof(LoginRequestValidator).Assembly, includeInternalTypes: true);
 
 // Add Caching
 builder.Services.AddMemoryCache();

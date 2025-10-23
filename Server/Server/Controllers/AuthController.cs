@@ -6,6 +6,8 @@ using Server.Services.Auth;
 using Server;
 using Server.Models;
 using Microsoft.AspNetCore.Http;
+using FluentValidation;
+using Server.Validators.Auth;
 
 namespace Server.Controllers
 {
@@ -31,11 +33,14 @@ namespace Server.Controllers
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+                // Validate request using FluentValidation
+                var validator = new LoginRequestValidator();
+                var validationResult = await validator.ValidateAsync(request);
+                if (!validationResult.IsValid)
                 {
                     return Ok(new AuthResponse
                     {
-                        Message = "Email và mật khẩu không được để trống",
+                        Message = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage)),
                         MessageType = "warning"
                     });
                 }
@@ -87,11 +92,14 @@ namespace Server.Controllers
         {
             try
             {
-                if (request.Password != request.ConfirmPassword)
+                // Validate request using FluentValidation
+                var validator = new RegisterRequestValidator();
+                var validationResult = await validator.ValidateAsync(request);
+                if (!validationResult.IsValid)
                 {
                     return Ok(new AuthResponse
                     {
-                        Message = "Mật khẩu xác nhận không khớp",
+                        Message = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage)),
                         MessageType = "warning"
                     });
                 }
@@ -105,7 +113,7 @@ namespace Server.Controllers
                     });
                 }
 
-                var user = await _authService.RegisterAsync(request.Email, request.Password, "Admin", request.Name);
+                var user = await _authService.RegisterAsync(request.Email, request.Password, "Moderator", request.Name);
 
                 // Store user in session after registration
                 await HttpContext.Session.LoadAsync();
@@ -176,14 +184,16 @@ namespace Server.Controllers
                     return Ok(new { Message = "Phiên đăng nhập không hợp lệ", MessageType = "error" });
                 }
 
-                if (request.NewPassword != request.ConfirmNewPassword)
+                // Validate request using FluentValidation
+                var validator = new ChangePasswordRequestValidator();
+                var validationResult = await validator.ValidateAsync(request);
+                if (!validationResult.IsValid)
                 {
-                    return Ok(new { Message = "Mật khẩu xác nhận không khớp", MessageType = "error" });
-                }
-
-                if (request.OldPassword == request.NewPassword)
-                {
-                    return Ok(new { Message = "Mật khẩu không thay đổi", MessageType = "info" });
+                    return Ok(new
+                    {
+                        Message = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage)),
+                        MessageType = "warning"
+                    });
                 }
 
                 var success = await _authService.ChangePasswordAsync(userId, request.OldPassword, request.NewPassword);
