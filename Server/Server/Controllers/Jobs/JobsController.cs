@@ -5,6 +5,8 @@ using Server.DTOs.Jobs;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.Antiforgery;
 using System.Security.Claims;
+using FluentValidation;
+using Server.Validators.Jobs;
 
 namespace Server.Controllers.Jobs
 {
@@ -27,10 +29,12 @@ namespace Server.Controllers.Jobs
         [AllowAnonymous]
         public async Task<IActionResult> GetJobs([FromQuery] JobQueryDto query)
         {
-            if (!ModelState.IsValid)
+            var validator = new JobQueryValidator();
+            var validationResult = await validator.ValidateAsync(query);
+            if (!validationResult.IsValid)
             {
-                _logger.LogWarning("Invalid query parameters: {Errors}", ModelState.Values.SelectMany(v => v.Errors));
-                return BadRequest(ModelState);
+                _logger.LogWarning("Invalid query parameters: {Errors}", validationResult.Errors);
+                return BadRequest(validationResult.Errors);
             }
 
             var result = await _jobService.GetJobsAsync(query);
@@ -39,12 +43,15 @@ namespace Server.Controllers.Jobs
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> CreateJob([FromBody] JobCreateDto jobCreateDto)
         {
-            if (!ModelState.IsValid)
+            var validator = new JobCreateValidator();
+            var validationResult = await validator.ValidateAsync(jobCreateDto);
+            if (!validationResult.IsValid)
             {
-                _logger.LogWarning("Invalid job creation data: {Errors}", ModelState.Values.SelectMany(v => v.Errors));
-                return BadRequest(ModelState);
+                _logger.LogWarning("Invalid job creation data: {Errors}", validationResult.Errors);
+                return BadRequest(validationResult.Errors);
             }
 
             // Get user ID from session instead of claims

@@ -6,6 +6,22 @@ import axios from "axios";
 const PostJobForm: React.FC = () => {
   const { user, setNotification } = useAuth();
   const [categories, setCategories] = useState<CategoryDto[]>([]);
+  const [companies, setCompanies] = useState<
+    { companyId: string; name: string }[]
+  >([
+    {
+      companyId: "550e8400-e29b-41d4-a716-446655440000",
+      name: "Công ty TNHH ABC",
+    },
+    {
+      companyId: "550e8400-e29b-41d4-a716-446655440001",
+      name: "Công ty CP XYZ",
+    },
+    {
+      companyId: "550e8400-e29b-41d4-a716-446655440002",
+      name: "Công ty TNHH DEF",
+    },
+  ]);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<JobCreateRequest>({
     title: "",
@@ -65,47 +81,57 @@ const PostJobForm: React.FC = () => {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.title.trim()) newErrors.title = "Title is required.";
+    if (!formData.title.trim()) newErrors.title = "Tiêu đề là bắt buộc.";
     if (formData.title.length > 400)
-      newErrors.title = "Title cannot exceed 400 characters.";
+      newErrors.title = "Tiêu đề không được vượt quá 400 ký tự.";
     if (formData.description && formData.description.length > 4000)
-      newErrors.description = "Description cannot exceed 4000 characters.";
+      newErrors.description = "Mô tả không được vượt quá 4000 ký tự.";
     if (formData.employmentType && formData.employmentType.length > 50)
-      newErrors.employmentType = "Employment type cannot exceed 50 characters.";
+      newErrors.employmentType = "Loại công việc không được vượt quá 50 ký tự.";
     if (formData.salaryFrom && formData.salaryFrom < 0)
-      newErrors.salaryFrom = "Salary from must be positive.";
+      newErrors.salaryFrom = "Lương từ phải là số dương.";
     if (formData.salaryTo && formData.salaryTo < 0)
-      newErrors.salaryTo = "Salary to must be positive.";
+      newErrors.salaryTo = "Lương đến phải là số dương.";
     if (
       formData.salaryFrom &&
       formData.salaryTo &&
       formData.salaryFrom > formData.salaryTo
     )
-      newErrors.salaryTo = "Salary to must be greater than salary from.";
+      newErrors.salaryTo = "Lương đến phải lớn hơn lương từ.";
     if (formData.positionsNeeded < 1)
-      newErrors.positionsNeeded = "Positions needed must be at least 1.";
+      newErrors.positionsNeeded = "Số lượng cần tuyển phải ít nhất là 1.";
     if (formData.deadlineDate && new Date(formData.deadlineDate) <= new Date())
-      newErrors.deadlineDate = "Deadline must be in the future.";
+      newErrors.deadlineDate = "Hạn nộp hồ sơ phải là ngày trong tương lai.";
     if (formData.minAge && (formData.minAge < 16 || formData.minAge > 100))
-      newErrors.minAge = "Min age must be between 16 and 100.";
+      newErrors.minAge = "Tuổi tối thiểu phải từ 16 đến 100.";
     if (formData.maxAge && (formData.maxAge < 16 || formData.maxAge > 100))
-      newErrors.maxAge = "Max age must be between 16 and 100.";
+      newErrors.maxAge = "Tuổi tối đa phải từ 16 đến 100.";
     if (formData.minAge && formData.maxAge && formData.minAge > formData.maxAge)
-      newErrors.maxAge = "Max age must be greater than min age.";
+      newErrors.maxAge = "Tuổi tối đa phải lớn hơn tuổi tối thiểu.";
     if (
       formData.requiredExperienceYears &&
       (formData.requiredExperienceYears < 0 ||
         formData.requiredExperienceYears > 50)
     )
       newErrors.requiredExperienceYears =
-        "Experience years must be between 0 and 50.";
+        "Kinh nghiệm yêu cầu phải từ 0 đến 50 năm.";
     if (formData.requiredDegree && formData.requiredDegree.length > 100)
       newErrors.requiredDegree =
-        "Required degree cannot exceed 100 characters.";
+        "Bằng cấp yêu cầu không được vượt quá 100 ký tự.";
     if (formData.skillsRequired && formData.skillsRequired.length > 500)
       newErrors.skillsRequired =
-        "Skills required cannot exceed 500 characters.";
-    if (!formData.categoryId) newErrors.categoryId = "Category is required.";
+        "Kỹ năng yêu cầu không được vượt quá 500 ký tự.";
+    if (!formData.categoryId) newErrors.categoryId = "Danh mục là bắt buộc.";
+    if (!formData.companyId) newErrors.companyId = "Công ty ID là bắt buộc.";
+    
+    // Validate GUID format
+    const guidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (formData.categoryId && !guidRegex.test(formData.categoryId)) {
+      newErrors.categoryId = "ID danh mục không hợp lệ.";
+    }
+    if (formData.companyId && !guidRegex.test(formData.companyId)) {
+      newErrors.companyId = "ID công ty không hợp lệ.";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -117,9 +143,20 @@ const PostJobForm: React.FC = () => {
 
     setLoading(true);
     try {
+      // Prepare data for submission - ensure categoryId is a valid GUID
+      const submitData = {
+        ...formData,
+        categoryId: formData.categoryId, // Already a string GUID from the select
+        deadlineDate: formData.deadlineDate
+          ? new Date(formData.deadlineDate).toISOString().split("T")[0]
+          : undefined,
+      };
+
+      console.log("Submitting job data:", submitData); // Debug log
+
       const response = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/jobs`,
-        formData,
+        submitData,
         { withCredentials: true }
       );
 
@@ -146,6 +183,10 @@ const PostJobForm: React.FC = () => {
         companyId: "",
       });
     } catch (error: any) {
+      console.error(
+        "Error posting job:",
+        error.response?.data || error.message
+      );
       const message = error.response?.data?.message || "Failed to post job.";
       setNotification({ message, type: "error" });
     } finally {
@@ -394,6 +435,24 @@ const PostJobForm: React.FC = () => {
         </div>
 
         {/* Category */}
+        {/* Company */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Công ty ID *
+          </label>
+          <input
+            type="text"
+            name="companyId"
+            value={formData.companyId}
+            onChange={handleChange}
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            placeholder="Nhập ID công ty (GUID)"
+            required
+          />
+          {errors.companyId && (
+            <p className="text-red-500 text-sm">{errors.companyId}</p>
+          )}
+        </div>
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Danh mục *

@@ -12,7 +12,7 @@ export interface JobCreateRequest {
   requiredDegree?: string;
   genderPreference?: "Nam" | "Nữ" | "Không yêu cầu";
   skillsRequired?: string;
-  categoryId: string;
+  categoryId: string; // This should be a valid GUID string
   companyId?: string;
 }
 

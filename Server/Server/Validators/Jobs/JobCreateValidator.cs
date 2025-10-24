@@ -1,4 +1,4 @@
-using FluentValidation;
+﻿using FluentValidation;
 using Server.DTOs.Jobs;
 
 namespace Server.Validators.Jobs
@@ -61,6 +61,10 @@ namespace Server.Validators.Jobs
             RuleFor(x => x.SkillsRequired)
                 .MaximumLength(500).WithMessage("SkillsRequired cannot exceed 500 characters.")
                 .When(x => !string.IsNullOrEmpty(x.SkillsRequired));
+
+            RuleFor(x => x.CompanyId)
+                .NotNull().WithMessage("CompanyId is required.")
+                .When(x => x.CompanyId.HasValue);
 
             RuleFor(x => x.CategoryId)
                 .NotEmpty().WithMessage("CategoryId is required.");

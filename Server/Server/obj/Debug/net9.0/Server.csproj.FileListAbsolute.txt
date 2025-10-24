@@ -173,4 +173,3 @@ D:\hoctap\React\JobsViet\Server\Server\bin\Debug\net9.0\Microsoft.Extensions.Cac
 D:\hoctap\React\JobsViet\Server\Server\bin\Debug\net9.0\Pipelines.Sockets.Unofficial.dll
 D:\hoctap\React\JobsViet\Server\Server\bin\Debug\net9.0\StackExchange.Redis.dll
 D:\hoctap\React\JobsViet\Server\Server\obj\Debug\net9.0\Server.sourcelink.json
-D:\hoctap\React\JobsViet\Server\Server\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt

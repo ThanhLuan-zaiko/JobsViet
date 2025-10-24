@@ -1018,3 +1018,53 @@ DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
 2025-10-23 22:11:19.867 +07:00 [INF] HTTP GET /auth/login responded 404 in 5.8262 ms
 2025-10-23 22:11:19.868 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/auth/login?ReturnUrl=%2Fapi%2Fv1.0%2Fjobs - 404 0 null 9.3259ms
 2025-10-23 22:11:19.871 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5174/auth/login, Response status code: 404
+2025-10-23 22:36:26.551 +07:00 [INF] User profile is available. Using 'C:\Users\Luan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-23 22:36:26.648 +07:00 [INF] Now listening on: http://localhost:5174
+2025-10-23 22:36:26.652 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 22:36:26.654 +07:00 [INF] Hosting environment: Development
+2025-10-23 22:36:26.654 +07:00 [INF] Content root path: D:\hoctap\React\JobsViet\Server\Server
+2025-10-23 22:36:39.152 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:5174/api/v1/categories - null null
+2025-10-23 22:36:39.166 +07:00 [WRN] Failed to determine the https port for redirect.
+2025-10-23 22:36:39.207 +07:00 [INF] Incoming request: GET /api/v1/categories
+2025-10-23 22:36:39.210 +07:00 [INF] Executing endpoint 'Server.Controllers.Jobs.JobCategoryController.GetCategories (Server)'
+2025-10-23 22:36:39.221 +07:00 [INF] Route matched with {action = "GetCategories", controller = "JobCategory"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCategories() on controller Server.Controllers.Jobs.JobCategoryController (Server).
+2025-10-23 22:36:39.338 +07:00 [INF] Fetching active job categories
+2025-10-23 22:36:40.098 +07:00 [INF] Executed DbCommand (70ms) [Parameters=[], CommandType='"Text"', CommandTimeout='0']
+SELECT "j"."CATEGORYID", "j"."CREATEDAT", "j"."DESCRIPTION", "j"."ISACTIVE", "j"."NAME"
+FROM "JOBCATEGORIES" "j"
+WHERE "j"."ISACTIVE" = 1
+ORDER BY "j"."NAME"
+2025-10-23 22:36:40.169 +07:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[Server.DTOs.Jobs.JobCategoryDto, Server, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-23 22:36:40.188 +07:00 [INF] Executed action Server.Controllers.Jobs.JobCategoryController.GetCategories (Server) in 963.8325ms
+2025-10-23 22:36:40.192 +07:00 [INF] Executed endpoint 'Server.Controllers.Jobs.JobCategoryController.GetCategories (Server)'
+2025-10-23 22:36:40.194 +07:00 [INF] Request completed: GET /api/v1/categories - Status: 200 - Duration: 987ms
+2025-10-23 22:36:40.220 +07:00 [INF] HTTP GET /api/v1/categories responded 200 in 1038.6163 ms
+2025-10-23 22:36:40.229 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:5174/api/v1/categories - 200 null application/json; charset=utf-8 1078.0575ms
+2025-10-23 22:37:03.783 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1/jobs - application/json 125
+2025-10-23 22:37:03.792 +07:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-23 22:37:03.795 +07:00 [INF] AuthenticationScheme: Cookies was challenged.
+2025-10-23 22:37:03.796 +07:00 [INF] HTTP POST /api/v1/jobs responded 302 in 8.1856 ms
+2025-10-23 22:37:03.797 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1/jobs - 302 0 null 13.9146ms
+2025-10-23 22:39:02.473 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1/jobs - application/json 153
+2025-10-23 22:39:02.477 +07:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-23 22:39:02.478 +07:00 [INF] AuthenticationScheme: Cookies was challenged.
+2025-10-23 22:39:02.478 +07:00 [INF] HTTP POST /api/v1/jobs responded 302 in 3.5015 ms
+2025-10-23 22:39:02.480 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1/jobs - 302 0 null 7.4362ms
+2025-10-23 22:39:08.955 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1/auth/login - application/json 50
+2025-10-23 22:39:08.960 +07:00 [INF] Incoming request: POST /api/v1/auth/login
+2025-10-23 22:39:08.961 +07:00 [INF] Executing endpoint 'Server.Controllers.AuthController.Login (Server)'
+2025-10-23 22:39:08.968 +07:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(Server.DTOs.Auth.LoginRequest) on controller Server.Controllers.AuthController (Server).
+2025-10-23 22:39:09.010 +07:00 [INF] Executing BadRequestObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ValidationProblemDetails'.
+2025-10-23 22:39:09.024 +07:00 [INF] Executed action Server.Controllers.AuthController.Login (Server) in 54.6107ms
+2025-10-23 22:39:09.027 +07:00 [INF] Executed endpoint 'Server.Controllers.AuthController.Login (Server)'
+2025-10-23 22:39:09.028 +07:00 [INF] Request completed: POST /api/v1/auth/login - Status: 400 - Duration: 68ms
+2025-10-23 22:39:09.031 +07:00 [INF] HTTP POST /api/v1/auth/login responded 400 in 73.4402 ms
+2025-10-23 22:39:09.032 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1/auth/login - 400 null application/problem+json; charset=utf-8 77.1574ms
+2025-10-23 22:39:15.873 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:5174/api/v1/jobs - application/json 153
+2025-10-23 22:39:15.876 +07:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-23 22:39:15.877 +07:00 [INF] AuthenticationScheme: Cookies was challenged.
+2025-10-23 22:39:15.878 +07:00 [INF] HTTP POST /api/v1/jobs responded 302 in 2.4023 ms
+2025-10-23 22:39:15.880 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:5174/api/v1/jobs - 302 0 null 6.7353ms

@@ -5,7 +5,7 @@ CREATE TABLE Users (
   UserId RAW(16) DEFAULT SYS_GUID() PRIMARY KEY, -- PK UUID
   UserName VARCHAR2(200) NOT NULL,
   Email VARCHAR2(200) NOT NULL UNIQUE,           -- Email duy nhất
-  PasswordHash VARCHAR2(256) NOT NULL,           -- Mật khẩu đã hash
+  PasswordHash VARCHAR2(10000) NOT NULL,           -- Mật khẩu đã hash
   Role VARCHAR2(50) DEFAULT 'User' NOT NULL,     -- User, Admin, Moderator
   IsActive NUMBER(1) DEFAULT 1 NOT NULL,         -- 1=active, 0=inactive
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL
@@ -120,7 +120,7 @@ CREATE TABLE EmployerCompanies (
 CREATE TABLE JobCategories (
   CategoryId RAW(16) DEFAULT SYS_GUID() PRIMARY KEY,
   Name VARCHAR2(100) NOT NULL UNIQUE,             -- Tên category (IT, Marketing, etc.)
-  Description VARCHAR2(300),                      -- Mô tả category
+  Description VARCHAR2(10000),                      -- Mô tả category
   IsActive NUMBER(1) DEFAULT 1 NOT NULL,          -- 1=active, 0=inactive
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL
 );
@@ -134,7 +134,7 @@ CREATE TABLE Jobs (
   PostedByUserId RAW(16) NOT NULL,               -- Ai đăng tin
   EmployerProfileId RAW(16),
   CompanyId RAW(16),
-  Title VARCHAR2(400) NOT NULL,
+  Title VARCHAR2(10000) NOT NULL,
   Description CLOB,
   EmploymentType VARCHAR2(50),
   SalaryFrom NUMBER,
@@ -157,9 +157,9 @@ ALTER TABLE Jobs ADD (
   MinAge NUMBER,                                     -- Tuổi tối thiểu
   MaxAge NUMBER,                                     -- Tuổi tối đa
   RequiredExperienceYears NUMBER,                    -- Kinh nghiệm tối thiểu
-  RequiredDegree VARCHAR2(100),                      -- Bằng cấp yêu cầu
+  RequiredDegree VARCHAR2(1000),                      -- Bằng cấp yêu cầu
   GenderPreference VARCHAR2(20),                     -- Nam/Nữ/Không yêu cầu
-  SkillsRequired VARCHAR2(500),                      -- Kỹ năng yêu cầu (text)
+  SkillsRequired VARCHAR2(10000),                      -- Kỹ năng yêu cầu (text)
   CategoryId RAW(16),                                -- FK tới JobCategories
   CONSTRAINT FkJobsCategory FOREIGN KEY (CategoryId) REFERENCES JobCategories(CategoryId)
 );
@@ -242,7 +242,7 @@ CREATE TABLE JobReviews (
   JobId RAW(16) NOT NULL,                        -- Tin tuyển dụng được đánh giá
   ReviewerUserId RAW(16) NOT NULL,               -- Người đánh giá
   Rating NUMBER(1) NOT NULL CHECK (Rating BETWEEN 1 AND 5), -- Điểm 1-5
-  Comments VARCHAR2(1000),                       -- Nhận xét chi tiết
+  Comments VARCHAR2(10000),                       -- Nhận xét chi tiết
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
   CONSTRAINT FkJobReviewsJob FOREIGN KEY (JobId) REFERENCES Jobs(JobId),
   CONSTRAINT FkJobReviewsUser FOREIGN KEY (ReviewerUserId) REFERENCES Users(UserId),
@@ -257,9 +257,9 @@ CREATE TABLE CompanyReviews (
   CompanyId RAW(16) NOT NULL,                    -- Công ty được đánh giá
   ReviewerUserId RAW(16) NOT NULL,
   Rating NUMBER(1) NOT NULL CHECK (Rating BETWEEN 1 AND 5),
-  Pros VARCHAR2(1000),                           -- Điểm mạnh
-  Cons VARCHAR2(1000),                           -- Điểm yếu
-  Comments VARCHAR2(1000),
+  Pros VARCHAR2(10000),                           -- Điểm mạnh
+  Cons VARCHAR2(10000),                           -- Điểm yếu
+  Comments VARCHAR2(10000),
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
   CONSTRAINT FkCompanyReviewsCompany FOREIGN KEY (CompanyId) REFERENCES Companies(CompanyId),
   CONSTRAINT FkCompanyReviewsUser FOREIGN KEY (ReviewerUserId) REFERENCES Users(UserId),
