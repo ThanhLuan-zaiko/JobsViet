@@ -5,7 +5,7 @@ CREATE TABLE Users (
   UserId RAW(16) DEFAULT SYS_GUID() PRIMARY KEY, -- PK UUID
   UserName VARCHAR2(200) NOT NULL,
   Email VARCHAR2(200) NOT NULL UNIQUE,           -- Email duy nhất
-  PasswordHash VARCHAR2(10000) NOT NULL,           -- Mật khẩu đã hash
+  PasswordHash VARCHAR2(4000) NOT NULL,           -- Mật khẩu đã hash
   Role VARCHAR2(50) DEFAULT 'User' NOT NULL,     -- User, Admin, Moderator
   IsActive NUMBER(1) DEFAULT 1 NOT NULL,         -- 1=active, 0=inactive
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL
@@ -73,8 +73,39 @@ CREATE TABLE CandidateProfiles (
   FullName VARCHAR2(200),
   Phone VARCHAR2(50),
   Headline VARCHAR2(300),
+  DateOfBirth DATE,                              -- Ngày sinh
+  Gender VARCHAR2(20),                           -- Giới tính (Male, Female, Other)
+  Address VARCHAR2(500),                         -- Địa chỉ
+  EducationLevel VARCHAR2(100),                  -- Trình độ học vấn (Bachelor, Master, etc.)
+  ExperienceYears NUMBER,                        -- Số năm kinh nghiệm
+  Skills VARCHAR2(2000),                         -- Kỹ năng (danh sách cách nhau bởi dấu phẩy)
+  LinkedInProfile VARCHAR2(300),                 -- Liên kết LinkedIn
+  PortfolioURL VARCHAR2(300),                    -- Liên kết portfolio
+  Bio CLOB,                                      -- Tiểu sử chi tiết
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
+  UpdatedAt TIMESTAMP,
   CONSTRAINT FkCandidateUser FOREIGN KEY (UserId) REFERENCES Users(UserId)
+);
+
+------------------------------------------------------------
+-- CANDIDATE IMAGES
+------------------------------------------------------------
+CREATE TABLE CandidateImages (
+  CandidateImageId RAW(16) DEFAULT SYS_GUID() PRIMARY KEY,
+  CandidateId RAW(16) NOT NULL,                   -- FK tới CandidateProfiles
+  FilePath VARCHAR2(500) NOT NULL,               -- Đường dẫn file/URL
+  FileName VARCHAR2(255),                        -- Tên file gốc
+  FileType VARCHAR2(100),                        -- MIME type (image/jpeg…)
+  FileSize NUMBER,                               -- Dung lượng (bytes)
+  Caption VARCHAR2(300),                         -- Mô tả ảnh
+  SortOrder NUMBER DEFAULT 0,                    -- Thứ tự hiển thị
+  IsPrimary NUMBER(1) DEFAULT 0,                 -- 1 = ảnh chính
+  IsActive NUMBER(1) DEFAULT 1,                  -- 1 = hiển thị, 0 = ẩn
+  UploadedByUserId RAW(16),                      -- Ai upload
+  CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
+  UpdatedAt TIMESTAMP,
+  CONSTRAINT FkCandidateImagesCandidate FOREIGN KEY (CandidateId) REFERENCES CandidateProfiles(CandidateId),
+  CONSTRAINT FkCandidateImagesUser FOREIGN KEY (UploadedByUserId) REFERENCES Users(UserId)
 );
 
 ------------------------------------------------------------
@@ -85,8 +116,36 @@ CREATE TABLE EmployerProfiles (
   UserId RAW(16) NOT NULL UNIQUE,                -- Liên kết 1-1 với Users
   DisplayName VARCHAR2(200),
   ContactPhone VARCHAR2(50),
+  Bio CLOB,                                      -- Tiểu sử nhà tuyển dụng
+  Industry VARCHAR2(100),                        -- Ngành nghề
+  Position VARCHAR2(100),                        -- Chức vụ
+  YearsOfExperience NUMBER,                      -- Số năm kinh nghiệm
+  LinkedInProfile VARCHAR2(300),                 -- Liên kết LinkedIn
+  Website VARCHAR2(300),                         -- Website cá nhân
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
+  UpdatedAt TIMESTAMP,
   CONSTRAINT FkEmployerUser FOREIGN KEY (UserId) REFERENCES Users(UserId)
+);
+
+------------------------------------------------------------
+-- EMPLOYER IMAGES
+------------------------------------------------------------
+CREATE TABLE EmployerImages (
+  EmployerImageId RAW(16) DEFAULT SYS_GUID() PRIMARY KEY,
+  EmployerProfileId RAW(16) NOT NULL,            -- FK tới EmployerProfiles
+  FilePath VARCHAR2(500) NOT NULL,               -- Đường dẫn file/URL
+  FileName VARCHAR2(255),                        -- Tên file gốc
+  FileType VARCHAR2(100),                        -- MIME type (image/jpeg…)
+  FileSize NUMBER,                               -- Dung lượng (bytes)
+  Caption VARCHAR2(300),                         -- Mô tả ảnh
+  SortOrder NUMBER DEFAULT 0,                    -- Thứ tự hiển thị
+  IsPrimary NUMBER(1) DEFAULT 0,                 -- 1 = ảnh chính
+  IsActive NUMBER(1) DEFAULT 1,                  -- 1 = hiển thị, 0 = ẩn
+  UploadedByUserId RAW(16),                      -- Ai upload
+  CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
+  UpdatedAt TIMESTAMP,
+  CONSTRAINT FkEmployerImagesEmployer FOREIGN KEY (EmployerProfileId) REFERENCES EmployerProfiles(EmployerProfileId),
+  CONSTRAINT FkEmployerImagesUser FOREIGN KEY (UploadedByUserId) REFERENCES Users(UserId)
 );
 
 ------------------------------------------------------------
@@ -97,7 +156,36 @@ CREATE TABLE Companies (
   Name VARCHAR2(300) NOT NULL,
   CompanyCode VARCHAR2(100) UNIQUE,              -- Mã công ty duy nhất
   Website VARCHAR2(300),
-  CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL
+  Description CLOB,                              -- Mô tả công ty
+  Industry VARCHAR2(100),                        -- Ngành nghề
+  CompanySize VARCHAR2(50),                      -- Quy mô công ty (Small, Medium, Large)
+  FoundedYear NUMBER,                            -- Năm thành lập
+  LogoURL VARCHAR2(300),                         -- URL logo công ty
+  Address VARCHAR2(500),                         -- Địa chỉ công ty
+  ContactEmail VARCHAR2(200),                    -- Email liên hệ
+  CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
+  UpdatedAt TIMESTAMP
+);
+
+------------------------------------------------------------
+-- COMPANY IMAGES
+------------------------------------------------------------
+CREATE TABLE CompanyImages (
+  CompanyImageId RAW(16) DEFAULT SYS_GUID() PRIMARY KEY,
+  CompanyId RAW(16) NOT NULL,                     -- FK tới Companies
+  FilePath VARCHAR2(500) NOT NULL,               -- Đường dẫn file/URL
+  FileName VARCHAR2(255),                        -- Tên file gốc
+  FileType VARCHAR2(100),                        -- MIME type (image/jpeg…)
+  FileSize NUMBER,                               -- Dung lượng (bytes)
+  Caption VARCHAR2(300),                         -- Mô tả ảnh
+  SortOrder NUMBER DEFAULT 0,                    -- Thứ tự hiển thị
+  IsPrimary NUMBER(1) DEFAULT 0,                 -- 1 = ảnh chính
+  IsActive NUMBER(1) DEFAULT 1,                  -- 1 = hiển thị, 0 = ẩn
+  UploadedByUserId RAW(16),                      -- Ai upload
+  CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
+  UpdatedAt TIMESTAMP,
+  CONSTRAINT FkCompanyImagesCompany FOREIGN KEY (CompanyId) REFERENCES Companies(CompanyId),
+  CONSTRAINT FkCompanyImagesUser FOREIGN KEY (UploadedByUserId) REFERENCES Users(UserId)
 );
 
 ------------------------------------------------------------
@@ -120,7 +208,7 @@ CREATE TABLE EmployerCompanies (
 CREATE TABLE JobCategories (
   CategoryId RAW(16) DEFAULT SYS_GUID() PRIMARY KEY,
   Name VARCHAR2(100) NOT NULL UNIQUE,             -- Tên category (IT, Marketing, etc.)
-  Description VARCHAR2(10000),                      -- Mô tả category
+  Description VARCHAR2(4000),                      -- Mô tả category
   IsActive NUMBER(1) DEFAULT 1 NOT NULL,          -- 1=active, 0=inactive
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL
 );
@@ -134,7 +222,7 @@ CREATE TABLE Jobs (
   PostedByUserId RAW(16) NOT NULL,               -- Ai đăng tin
   EmployerProfileId RAW(16),
   CompanyId RAW(16),
-  Title VARCHAR2(10000) NOT NULL,
+  Title VARCHAR2(4000) NOT NULL,
   Description CLOB,
   EmploymentType VARCHAR2(50),
   SalaryFrom NUMBER,
@@ -159,7 +247,7 @@ ALTER TABLE Jobs ADD (
   RequiredExperienceYears NUMBER,                    -- Kinh nghiệm tối thiểu
   RequiredDegree VARCHAR2(1000),                      -- Bằng cấp yêu cầu
   GenderPreference VARCHAR2(20),                     -- Nam/Nữ/Không yêu cầu
-  SkillsRequired VARCHAR2(10000),                      -- Kỹ năng yêu cầu (text)
+  SkillsRequired CLOB,                               -- Kỹ năng yêu cầu (text)
   CategoryId RAW(16),                                -- FK tới JobCategories
   CONSTRAINT FkJobsCategory FOREIGN KEY (CategoryId) REFERENCES JobCategories(CategoryId)
 );
@@ -242,7 +330,7 @@ CREATE TABLE JobReviews (
   JobId RAW(16) NOT NULL,                        -- Tin tuyển dụng được đánh giá
   ReviewerUserId RAW(16) NOT NULL,               -- Người đánh giá
   Rating NUMBER(1) NOT NULL CHECK (Rating BETWEEN 1 AND 5), -- Điểm 1-5
-  Comments VARCHAR2(10000),                       -- Nhận xét chi tiết
+  Comments CLOB,                                 -- Nhận xét chi tiết
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
   CONSTRAINT FkJobReviewsJob FOREIGN KEY (JobId) REFERENCES Jobs(JobId),
   CONSTRAINT FkJobReviewsUser FOREIGN KEY (ReviewerUserId) REFERENCES Users(UserId),
@@ -257,9 +345,9 @@ CREATE TABLE CompanyReviews (
   CompanyId RAW(16) NOT NULL,                    -- Công ty được đánh giá
   ReviewerUserId RAW(16) NOT NULL,
   Rating NUMBER(1) NOT NULL CHECK (Rating BETWEEN 1 AND 5),
-  Pros VARCHAR2(10000),                           -- Điểm mạnh
-  Cons VARCHAR2(10000),                           -- Điểm yếu
-  Comments VARCHAR2(10000),
+  Pros CLOB,                                     -- Điểm mạnh
+  Cons CLOB,                                     -- Điểm yếu
+  Comments CLOB,
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
   CONSTRAINT FkCompanyReviewsCompany FOREIGN KEY (CompanyId) REFERENCES Companies(CompanyId),
   CONSTRAINT FkCompanyReviewsUser FOREIGN KEY (ReviewerUserId) REFERENCES Users(UserId),
@@ -385,6 +473,12 @@ CREATE INDEX IxBlogsAuthorUserId ON Blogs (AuthorUserId);
 CREATE INDEX IxBlogsIsPublished ON Blogs (IsPublished);
 CREATE INDEX IxBlogImagesBlogId ON BlogImages (BlogId);
 CREATE INDEX IxBlogImagesUploadedByUserId ON BlogImages (UploadedByUserId);
+
+-- Indexes for image tables
+CREATE INDEX IxCandidateImagesCandidateId ON CandidateImages (CandidateId);
+CREATE INDEX IxCandidateImagesUploadedByUserId ON CandidateImages (UploadedByUserId);
+CREATE INDEX IxEmployerImagesEmployerProfileId ON EmployerImages (EmployerProfileId);
+CREATE INDEX IxEmployerImagesUploadedByUserId ON EmployerImages (UploadedByUserId);
 
 ------------------------------------------------------------
 -- DEPLOYMENT: TRIGGERS AND SCHEDULER JOB
