@@ -23,8 +23,8 @@
 /Server/*.suo
 
 # Build output
-/Server/bin/
-/Server/obj/
+/Server//Server/bin/
+/Server//Server/obj/
 
 # Environment and config
 
