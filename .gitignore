@@ -23,8 +23,9 @@
 /Server/*.suo
 
 # Build output
-/Server//Server/bin/
-/Server//Server/obj/
+/Server/Server/bin/
+/Server/Server/obj/
+/Server/Server/logs/
 
 # Environment and config
 
