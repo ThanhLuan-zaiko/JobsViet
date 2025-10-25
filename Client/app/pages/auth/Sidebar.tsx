@@ -9,6 +9,7 @@ import {
   FaPlusSquare,
   FaClipboardList,
   FaUserFriends,
+  FaUser,
   FaCog,
   FaSignOutAlt,
 } from "react-icons/fa";
@@ -31,6 +32,7 @@ const Sidebar: React.FC = () => {
       icon: <FaClipboardList />,
       label: "Quản lý tin đăng",
     },
+    { to: "/manage-profile", icon: <FaUser />, label: "Quản lý hồ sơ" },
     { to: "/applicants", icon: <FaUserFriends />, label: "Ứng viên ứng tuyển" },
   ];
 

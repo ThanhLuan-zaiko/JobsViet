@@ -167,10 +167,10 @@ D:\hoctap\React\JobsViet\Server\Server\obj\Debug\net9.0\staticwebassets.build.js
 D:\hoctap\React\JobsViet\Server\Server\obj\Debug\net9.0\staticwebassets.build.json.cache
 D:\hoctap\React\JobsViet\Server\Server\obj\Debug\net9.0\staticwebassets.development.json
 D:\hoctap\React\JobsViet\Server\Server\obj\Debug\net9.0\staticwebassets.build.endpoints.json
-D:\hoctap\React\JobsViet\Server\Server\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 D:\hoctap\React\JobsViet\Server\Server\obj\Debug\net9.0\Server.csproj.Up2Date
 D:\hoctap\React\JobsViet\Server\Server\obj\Debug\net9.0\Server.dll
 D:\hoctap\React\JobsViet\Server\Server\obj\Debug\net9.0\refint\Server.dll
 D:\hoctap\React\JobsViet\Server\Server\obj\Debug\net9.0\Server.pdb
 D:\hoctap\React\JobsViet\Server\Server\obj\Debug\net9.0\Server.genruntimeconfig.cache
 D:\hoctap\React\JobsViet\Server\Server\obj\Debug\net9.0\ref\Server.dll
+D:\hoctap\React\JobsViet\Server\Server\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt

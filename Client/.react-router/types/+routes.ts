@@ -34,6 +34,9 @@ type Pages = {
   "/manage-jobs": {
     params: {};
   };
+  "/manage-profile": {
+    params: {};
+  };
   "/applicants": {
     params: {};
   };
@@ -42,7 +45,7 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/home" | "/trending" | "/history" | "/suggested" | "/following" | "/post-job" | "/manage-jobs" | "/applicants";
+    page: "/" | "/home" | "/trending" | "/history" | "/suggested" | "/following" | "/post-job" | "/manage-jobs" | "/manage-profile" | "/applicants";
   };
   "routes/home.tsx": {
     id: "routes/home";
@@ -75,6 +78,10 @@ type RouteFiles = {
   "routes/manage-jobs.tsx": {
     id: "routes/manage-jobs";
     page: "/manage-jobs";
+  };
+  "pages/auth/ManageProfile.tsx": {
+    id: "pages/auth/ManageProfile";
+    page: "/manage-profile";
   };
   "routes/applicants.tsx": {
     id: "routes/applicants";

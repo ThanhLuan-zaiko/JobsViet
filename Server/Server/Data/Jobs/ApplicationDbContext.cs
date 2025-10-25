@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Server.Models;
 using Server.Models.Auth;
 using Server.Models.Jobs;
+using Server.Models.Profiles;
 
 namespace Server.Data.Jobs
 {
@@ -12,6 +13,17 @@ namespace Server.Data.Jobs
         public DbSet<User> Users { get; set; }
         public DbSet<Job> Jobs { get; set; }
         public DbSet<JobCategory> JobCategories { get; set; }
+
+        // Profile entities
+        public DbSet<CandidateProfile> CandidateProfiles { get; set; }
+        public DbSet<EmployerProfile> EmployerProfiles { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<EmployerCompany> EmployerCompanies { get; set; }
+
+        // Image entities
+        public DbSet<CandidateProfileImage> CandidateProfileImages { get; set; }
+        public DbSet<EmployerProfileImage> EmployerProfileImages { get; set; }
+        public DbSet<CompanyImage> CompanyImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -66,6 +78,119 @@ namespace Server.Data.Jobs
                 entity.Property(e => e.Description).HasColumnName("DESCRIPTION");
                 entity.Property(e => e.IsActive).HasColumnName("ISACTIVE");
                 entity.Property(e => e.CreatedAt).HasColumnName("CREATEDAT");
+            });
+
+            // Profile entities configuration
+            modelBuilder.Entity<CandidateProfile>(entity =>
+            {
+                entity.ToTable("CANDIDATEPROFILES");
+                entity.HasKey(e => e.CandidateId);
+                entity.Property(e => e.CandidateId).HasColumnName("CANDIDATEID");
+                entity.Property(e => e.UserId).HasColumnName("USERID");
+                entity.Property(e => e.FullName).HasColumnName("FULLNAME").HasMaxLength(255);
+                entity.Property(e => e.Phone).HasColumnName("PHONE").HasMaxLength(20);
+                entity.Property(e => e.Headline).HasColumnName("HEADLINE").HasMaxLength(500);
+                entity.Property(e => e.DateOfBirth).HasColumnName("DATEOFBIRTH");
+                entity.Property(e => e.Gender).HasColumnName("GENDER").HasMaxLength(10);
+                entity.Property(e => e.Address).HasColumnName("ADDRESS").HasMaxLength(500);
+                entity.Property(e => e.EducationLevel).HasColumnName("EDUCATIONLEVEL").HasMaxLength(100);
+                entity.Property(e => e.ExperienceYears).HasColumnName("EXPERIENCEYEARS");
+                entity.Property(e => e.Skills).HasColumnName("SKILLS").HasMaxLength(1000);
+                entity.Property(e => e.LinkedInProfile).HasColumnName("LINKEDINPROFILE").HasMaxLength(500);
+                entity.Property(e => e.PortfolioURL).HasColumnName("PORTFOLIOURL").HasMaxLength(500);
+                entity.Property(e => e.Bio).HasColumnName("BIO");
+                entity.Property(e => e.CreatedAt).HasColumnName("CREATEDAT");
+                entity.Property(e => e.UpdatedAt).HasColumnName("UPDATEDAT");
+            });
+
+            modelBuilder.Entity<EmployerProfile>(entity =>
+            {
+                entity.ToTable("EMPLOYERPROFILES");
+                entity.HasKey(e => e.EmployerId);
+                entity.Property(e => e.EmployerId).HasColumnName("EMPLOYERID");
+                entity.Property(e => e.UserId).HasColumnName("USERID");
+                entity.Property(e => e.DisplayName).HasColumnName("DISPLAYNAME").HasMaxLength(255);
+                entity.Property(e => e.ContactPhone).HasColumnName("CONTACTPHONE").HasMaxLength(20);
+                entity.Property(e => e.Bio).HasColumnName("BIO");
+                entity.Property(e => e.Industry).HasColumnName("INDUSTRY").HasMaxLength(255);
+                entity.Property(e => e.Position).HasColumnName("POSITION").HasMaxLength(255);
+                entity.Property(e => e.YearsOfExperience).HasColumnName("YEARSOFEXPERIENCE");
+                entity.Property(e => e.LinkedInProfile).HasColumnName("LINKEDINPROFILE").HasMaxLength(500);
+                entity.Property(e => e.Website).HasColumnName("WEBSITE").HasMaxLength(500);
+                entity.Property(e => e.CreatedAt).HasColumnName("CREATEDAT");
+                entity.Property(e => e.UpdatedAt).HasColumnName("UPDATEDAT");
+            });
+
+            modelBuilder.Entity<Company>(entity =>
+            {
+                entity.ToTable("COMPANIES");
+                entity.HasKey(e => e.CompanyId);
+                entity.Property(e => e.CompanyId).HasColumnName("COMPANYID");
+                entity.Property(e => e.Name).HasColumnName("NAME").IsRequired().HasMaxLength(255);
+                entity.Property(e => e.Website).HasColumnName("WEBSITE").HasMaxLength(500);
+                entity.Property(e => e.Description).HasColumnName("DESCRIPTION");
+                entity.Property(e => e.Industry).HasColumnName("INDUSTRY").HasMaxLength(255);
+                entity.Property(e => e.Size).HasColumnName("SIZE").HasMaxLength(50);
+                entity.Property(e => e.FoundedYear).HasColumnName("FOUNDEDYEAR");
+                entity.Property(e => e.Address).HasColumnName("ADDRESS").HasMaxLength(500);
+                entity.Property(e => e.ContactEmail).HasColumnName("CONTACTEMAIL").HasMaxLength(255);
+                entity.Property(e => e.CreatedAt).HasColumnName("CREATEDAT");
+                entity.Property(e => e.UpdatedAt).HasColumnName("UPDATEDAT");
+            });
+
+            modelBuilder.Entity<EmployerCompany>(entity =>
+            {
+                entity.ToTable("EMPLOYERCOMPANIES");
+                entity.HasKey(e => new { e.EmployerId, e.CompanyId });
+                entity.Property(e => e.EmployerId).HasColumnName("EMPLOYERID");
+                entity.Property(e => e.CompanyId).HasColumnName("COMPANYID");
+                entity.Property(e => e.CreatedAt).HasColumnName("CREATEDAT");
+            });
+
+            // Image entities configuration
+            modelBuilder.Entity<CandidateProfileImage>(entity =>
+            {
+                entity.ToTable("CANDIDATEPROFILEIMAGES");
+                entity.HasKey(e => e.ImageId);
+                entity.Property(e => e.ImageId).HasColumnName("IMAGEID");
+                entity.Property(e => e.CandidateId).HasColumnName("CANDIDATEID");
+                entity.Property(e => e.ImageType).HasColumnName("IMAGETYPE").HasMaxLength(50);
+                entity.Property(e => e.ImageUrl).HasColumnName("IMAGEURL").HasMaxLength(1000);
+                entity.Property(e => e.OriginalFileName).HasColumnName("ORIGINALFILENAME").HasMaxLength(255);
+                entity.Property(e => e.FileSize).HasColumnName("FILESIZE");
+                entity.Property(e => e.MimeType).HasColumnName("MIMETYPE").HasMaxLength(100);
+                entity.Property(e => e.CreatedAt).HasColumnName("CREATEDAT");
+                entity.Property(e => e.UpdatedAt).HasColumnName("UPDATEDAT");
+            });
+
+            modelBuilder.Entity<EmployerProfileImage>(entity =>
+            {
+                entity.ToTable("EMPLOYERPROFILEIMAGES");
+                entity.HasKey(e => e.ImageId);
+                entity.Property(e => e.ImageId).HasColumnName("IMAGEID");
+                entity.Property(e => e.EmployerId).HasColumnName("EMPLOYERID");
+                entity.Property(e => e.ImageType).HasColumnName("IMAGETYPE").HasMaxLength(50);
+                entity.Property(e => e.ImageUrl).HasColumnName("IMAGEURL").HasMaxLength(1000);
+                entity.Property(e => e.OriginalFileName).HasColumnName("ORIGINALFILENAME").HasMaxLength(255);
+                entity.Property(e => e.FileSize).HasColumnName("FILESIZE");
+                entity.Property(e => e.MimeType).HasColumnName("MIMETYPE").HasMaxLength(100);
+                entity.Property(e => e.CreatedAt).HasColumnName("CREATEDAT");
+                entity.Property(e => e.UpdatedAt).HasColumnName("UPDATEDAT");
+            });
+
+            modelBuilder.Entity<CompanyImage>(entity =>
+            {
+                entity.ToTable("COMPANYIMAGES");
+                entity.HasKey(e => e.ImageId);
+                entity.Property(e => e.ImageId).HasColumnName("IMAGEID");
+                entity.Property(e => e.CompanyId).HasColumnName("COMPANYID");
+                entity.Property(e => e.ImageType).HasColumnName("IMAGETYPE").HasMaxLength(50);
+                entity.Property(e => e.ImageUrl).HasColumnName("IMAGEURL").HasMaxLength(1000);
+                entity.Property(e => e.OriginalFileName).HasColumnName("ORIGINALFILENAME").HasMaxLength(255);
+                entity.Property(e => e.FileSize).HasColumnName("FILESIZE");
+                entity.Property(e => e.MimeType).HasColumnName("MIMETYPE").HasMaxLength(100);
+                entity.Property(e => e.CreatedAt).HasColumnName("CREATEDAT");
+                entity.Property(e => e.UpdatedAt).HasColumnName("UPDATEDAT");
             });
         }
     }
