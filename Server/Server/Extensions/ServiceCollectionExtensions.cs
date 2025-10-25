@@ -92,7 +92,7 @@ namespace Server.Extensions
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Change to Always in production with HTTPS
-                options.Cookie.SameSite = SameSiteMode.Lax; // Changed from Strict to Lax for better compatibility
+                options.Cookie.SameSite = SameSiteMode.None; // Changed to None for cross-origin requests in development
             });
             return services;
         }
@@ -123,6 +123,7 @@ namespace Server.Extensions
 
         public static IServiceCollection AddCustomServices(this IServiceCollection services)
         {
+            services.AddHttpClient();
             services.AddScoped<IJobService, JobService>();
             services.AddScoped<IJobCategoryService, JobCategoryService>();
             services.AddScoped<IAuthService, AuthService>();
@@ -222,7 +223,7 @@ namespace Server.Extensions
                 {
                     options.Cookie.HttpOnly = true;
                     options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Match session cookie settings
-                    options.Cookie.SameSite = SameSiteMode.Lax; // Match session cookie settings
+                    options.Cookie.SameSite = SameSiteMode.None; // Match session cookie settings
                     options.LoginPath = "/auth/login";
                     options.LogoutPath = "/auth/logout";
                     options.Events.OnRedirectToLogin = context =>
