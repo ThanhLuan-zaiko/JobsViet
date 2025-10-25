@@ -173,4 +173,3 @@ D:\hoctap\React\JobsViet\Server\Server\obj\Debug\net9.0\refint\Server.dll
 D:\hoctap\React\JobsViet\Server\Server\obj\Debug\net9.0\Server.pdb
 D:\hoctap\React\JobsViet\Server\Server\obj\Debug\net9.0\Server.genruntimeconfig.cache
 D:\hoctap\React\JobsViet\Server\Server\obj\Debug\net9.0\ref\Server.dll
-D:\hoctap\React\JobsViet\Server\Server\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt

@@ -23,8 +23,8 @@ namespace Server.Controllers.Profiles
         [HttpGet("candidate")]
         public async Task<IActionResult> GetCandidateProfile()
         {
-            var userIdClaim = User.FindFirst("UserId")?.Value;
-            if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
 
             var profile = await _profileService.GetCandidateProfileByUserIdAsync(userId);
@@ -40,8 +40,8 @@ namespace Server.Controllers.Profiles
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userIdClaim = User.FindFirst("UserId")?.Value;
-            if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
 
             try
@@ -61,8 +61,8 @@ namespace Server.Controllers.Profiles
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userIdClaim = User.FindFirst("UserId")?.Value;
-            if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
 
             try
@@ -80,8 +80,8 @@ namespace Server.Controllers.Profiles
         [HttpGet("employer")]
         public async Task<IActionResult> GetEmployerProfile()
         {
-            var userIdClaim = User.FindFirst("UserId")?.Value;
-            if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
 
             var profile = await _profileService.GetEmployerProfileByUserIdAsync(userId);
@@ -97,8 +97,8 @@ namespace Server.Controllers.Profiles
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userIdClaim = User.FindFirst("UserId")?.Value;
-            if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
 
             try
@@ -118,8 +118,8 @@ namespace Server.Controllers.Profiles
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userIdClaim = User.FindFirst("UserId")?.Value;
-            if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
 
             try
@@ -188,8 +188,8 @@ namespace Server.Controllers.Profiles
         [HttpGet("employer/companies")]
         public async Task<IActionResult> GetEmployerCompanies()
         {
-            var userIdClaim = User.FindFirst("UserId")?.Value;
-            if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
 
             // Get employer profile first to get employer ID
@@ -208,8 +208,8 @@ namespace Server.Controllers.Profiles
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userIdClaim = User.FindFirst("UserId")?.Value;
-            if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
 
             // Get candidate profile to get candidate ID
@@ -234,8 +234,8 @@ namespace Server.Controllers.Profiles
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userIdClaim = User.FindFirst("UserId")?.Value;
-            if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
 
             // Get employer profile to get employer ID
@@ -275,8 +275,8 @@ namespace Server.Controllers.Profiles
         [HttpGet("candidate/images")]
         public async Task<IActionResult> GetCandidateProfileImages()
         {
-            var userIdClaim = User.FindFirst("UserId")?.Value;
-            if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
 
             var candidateProfile = await _profileService.GetCandidateProfileByUserIdAsync(userId);
@@ -290,8 +290,8 @@ namespace Server.Controllers.Profiles
         [HttpGet("employer/images")]
         public async Task<IActionResult> GetEmployerProfileImages()
         {
-            var userIdClaim = User.FindFirst("UserId")?.Value;
-            if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
 
             var employerProfile = await _profileService.GetEmployerProfileByUserIdAsync(userId);
