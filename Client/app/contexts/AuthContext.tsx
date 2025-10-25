@@ -8,7 +8,6 @@ axios.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response?.status === 401) {
-      console.warn("Session expired or unauthorized request.");
       return Promise.resolve({ data: null }); // Avoid throwing error
     }
     return Promise.reject(err);
@@ -203,7 +202,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         });
       }
     } catch (error: any) {
-      console.warn("Logout warning:", error.response?.status || error.message);
       setUser(null);
       if (error.response?.data?.Message) {
         setNotification({
