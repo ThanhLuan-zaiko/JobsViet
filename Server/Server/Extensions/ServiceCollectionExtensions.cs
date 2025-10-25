@@ -14,6 +14,7 @@ using Server.Middleware;
 using Server.Services;
 using Server.Services.Auth;
 using Server.Services.Jobs;
+using Server.Services.Profiles;
 using Server.Validators.Auth;
 using StackExchange.Redis;
 using System.Text;
@@ -114,6 +115,8 @@ namespace Server.Extensions
             services.AddScoped<IJobCategoryRepository, JobCategoryRepository>();
 
             services.AddScoped<Server.Data.Auth.IUnitOfWork, Server.Data.Auth.UnitOfWork>();
+            services.AddScoped<Server.Data.Profiles.IProfileRepository, Server.Data.Profiles.ProfileRepository>();
+            services.AddScoped<Server.Data.Profiles.IProfileUnitOfWork, Server.Data.Profiles.ProfileUnitOfWork>();
 
             return services;
         }
@@ -124,6 +127,7 @@ namespace Server.Extensions
             services.AddScoped<IJobCategoryService, JobCategoryService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<JwtService>();
+            services.AddScoped<IProfileService, ProfileService>();
 
             return services;
         }
@@ -221,6 +225,17 @@ namespace Server.Extensions
                     options.Cookie.SameSite = SameSiteMode.Lax; // Match session cookie settings
                     options.LoginPath = "/auth/login";
                     options.LogoutPath = "/auth/logout";
+                    options.Events.OnRedirectToLogin = context =>
+                    {
+                        // For API requests, return 401 instead of redirecting to login page
+                        if (context.Request.Path.StartsWithSegments("/api"))
+                        {
+                            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            return Task.CompletedTask;
+                        }
+                        // For non-API requests, proceed with default redirect behavior
+                        return Task.CompletedTask;
+                    };
                 });
             return services;
         }
