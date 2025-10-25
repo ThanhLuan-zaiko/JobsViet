@@ -79,8 +79,8 @@ type RouteFiles = {
     id: "routes/manage-jobs";
     page: "/manage-jobs";
   };
-  "pages/auth/ManageProfile.tsx": {
-    id: "pages/auth/ManageProfile";
+  "routes/manage-profile.tsx": {
+    id: "routes/manage-profile";
     page: "/manage-profile";
   };
   "routes/applicants.tsx": {

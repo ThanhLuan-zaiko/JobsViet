@@ -9,6 +9,6 @@ export default [
   route("/following", "routes/following.tsx"),
   route("/post-job", "routes/post-job.tsx"),
   route("/manage-jobs", "routes/manage-jobs.tsx"),
-  route("/manage-profile", "pages/auth/ManageProfile.tsx"),
+  route("/manage-profile", "routes/manage-profile.tsx"),
   route("/applicants", "routes/applicants.tsx"),
 ] satisfies RouteConfig;
