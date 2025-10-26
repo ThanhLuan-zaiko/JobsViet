@@ -68,12 +68,12 @@ app.UseMiddleware<GlobalExceptionMiddleware>();
 // Add CORS
 app.UseCors();
 
+// Add Session
+app.UseSession();
+
 // Add Authentication & Authorization
 app.UseAuthentication();
 app.UseAuthorization();
-
-// Add Session
-app.UseSession();
 
 // Add Rate Limiting
 app.UseRateLimiter();

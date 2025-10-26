@@ -5,7 +5,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import Notification from "../../components/Message/Notification";
 
 const ManageProfile: React.FC = () => {
-  const { user, setNotification } = useAuth();
+  const { user, setNotification, logout } = useAuth();
 
   // Check if user is logged in
   if (!user) {
@@ -76,10 +76,19 @@ const ManageProfile: React.FC = () => {
       });
     } catch (error: any) {
       console.error("Error saving candidate profile:", error);
-      setNotification({
-        type: "error",
-        message: error.response?.data?.message || "Có lỗi xảy ra khi lưu hồ sơ",
-      });
+      if (error.response?.status === 401) {
+        logout();
+        setNotification({
+          type: "error",
+          message: "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại",
+        });
+      } else {
+        setNotification({
+          type: "error",
+          message:
+            error.response?.data?.message || "Có lỗi xảy ra khi lưu hồ sơ",
+        });
+      }
     } finally {
       setSaving(false);
     }
@@ -122,10 +131,19 @@ const ManageProfile: React.FC = () => {
       });
     } catch (error: any) {
       console.error("Error saving employer profile:", error);
-      setNotification({
-        type: "error",
-        message: error.response?.data?.message || "Có lỗi xảy ra khi lưu hồ sơ",
-      });
+      if (error.response?.status === 401) {
+        logout();
+        setNotification({
+          type: "error",
+          message: "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại",
+        });
+      } else {
+        setNotification({
+          type: "error",
+          message:
+            error.response?.data?.message || "Có lỗi xảy ra khi lưu hồ sơ",
+        });
+      }
     } finally {
       setSaving(false);
     }
