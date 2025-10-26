@@ -9,7 +9,6 @@ namespace Server.Controllers.Profiles
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
-    [Authorize]
     public class ProfilesController : ControllerBase
     {
         private readonly IProfileService _profileService;
