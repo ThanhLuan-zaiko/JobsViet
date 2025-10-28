@@ -92,7 +92,7 @@ namespace Server.Extensions
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Change to Always in production with HTTPS
-                options.Cookie.SameSite = SameSiteMode.Lax; // Changed to Lax for development compatibility; use None in production with HTTPS
+                options.Cookie.SameSite = SameSiteMode.Lax; // Lax for development
             });
             return services;
         }
@@ -223,7 +223,7 @@ namespace Server.Extensions
                 {
                     options.Cookie.HttpOnly = true;
                     options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Match session cookie settings
-                    options.Cookie.SameSite = SameSiteMode.None; // Match session cookie settings
+                    options.Cookie.SameSite = SameSiteMode.Lax; // Lax for development
                     options.LoginPath = "/auth/login";
                     options.LogoutPath = "/auth/logout";
                     options.Events.OnRedirectToLogin = context =>

@@ -37,6 +37,7 @@ namespace Server.Controllers.Profiles
         [HttpGet("candidate")]
         public async Task<IActionResult> GetCandidateProfile()
         {
+            await HttpContext.Session.LoadAsync();
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
@@ -55,6 +56,7 @@ namespace Server.Controllers.Profiles
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
+            await HttpContext.Session.LoadAsync();
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
@@ -77,6 +79,7 @@ namespace Server.Controllers.Profiles
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
+            await HttpContext.Session.LoadAsync();
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
@@ -96,6 +99,7 @@ namespace Server.Controllers.Profiles
         [HttpGet("employer")]
         public async Task<IActionResult> GetEmployerProfile()
         {
+            await HttpContext.Session.LoadAsync();
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
@@ -114,6 +118,7 @@ namespace Server.Controllers.Profiles
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
+            await HttpContext.Session.LoadAsync();
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
@@ -136,6 +141,7 @@ namespace Server.Controllers.Profiles
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
+            await HttpContext.Session.LoadAsync();
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
@@ -208,6 +214,7 @@ namespace Server.Controllers.Profiles
         [HttpGet("employer/companies")]
         public async Task<IActionResult> GetEmployerCompanies()
         {
+            await HttpContext.Session.LoadAsync();
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
@@ -228,6 +235,7 @@ namespace Server.Controllers.Profiles
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            await HttpContext.Session.LoadAsync();
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
@@ -254,6 +262,7 @@ namespace Server.Controllers.Profiles
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            await HttpContext.Session.LoadAsync();
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
@@ -295,6 +304,7 @@ namespace Server.Controllers.Profiles
         [HttpGet("candidate/images")]
         public async Task<IActionResult> GetCandidateProfileImages()
         {
+            await HttpContext.Session.LoadAsync();
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");
@@ -310,6 +320,7 @@ namespace Server.Controllers.Profiles
         [HttpGet("employer/images")]
         public async Task<IActionResult> GetEmployerProfileImages()
         {
+            await HttpContext.Session.LoadAsync();
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized("Invalid user ID");

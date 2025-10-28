@@ -8,6 +8,9 @@ using Server.Models;
 using Microsoft.AspNetCore.Http;
 using FluentValidation;
 using Server.Validators.Auth;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using System.Collections.Generic;
 
 namespace Server.Controllers
 {
@@ -62,6 +65,17 @@ namespace Server.Controllers
                 HttpContext.Session.SetString("Email", user.Email);
                 HttpContext.Session.SetString("Role", user.Role);
                 await HttpContext.Session.CommitAsync();
+
+                // Sign in the user for authentication
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.Email),
+                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                    new Claim(ClaimTypes.Role, user.Role)
+                };
+                var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                await HttpContext.SignInAsync("Cookies", claimsPrincipal);
 
                 return Ok(new AuthResponse
                 {
@@ -121,6 +135,17 @@ namespace Server.Controllers
                 HttpContext.Session.SetString("Email", user.Email);
                 HttpContext.Session.SetString("Role", user.Role);
                 await HttpContext.Session.CommitAsync();
+
+                // Sign in the user for authentication
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.Email),
+                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                    new Claim(ClaimTypes.Role, user.Role)
+                };
+                var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                await HttpContext.SignInAsync("Cookies", claimsPrincipal);
 
                 return Ok(new AuthResponse
                 {
@@ -215,6 +240,9 @@ namespace Server.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Logout()
         {
+            // Sign out the user
+            await HttpContext.SignOutAsync("Cookies");
+
             // Clear session for session-based auth
             HttpContext.Session.Clear();
 

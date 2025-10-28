@@ -81,6 +81,7 @@ namespace Server.Services.Profiles
             };
 
             var createdProfile = await _unitOfWork.ProfileRepository.CreateCandidateProfileAsync(profile);
+            await _unitOfWork.SaveChangesAsync();
             return await GetCandidateProfileByUserIdAsync(userId) ?? throw new Exception("Failed to create candidate profile");
         }
 
@@ -105,6 +106,7 @@ namespace Server.Services.Profiles
             existingProfile.UpdatedAt = DateTime.UtcNow;
 
             var updatedProfile = await _unitOfWork.ProfileRepository.UpdateCandidateProfileAsync(existingProfile);
+            await _unitOfWork.SaveChangesAsync();
             return await GetCandidateProfileByUserIdAsync(userId) ?? throw new Exception("Failed to update candidate profile");
         }
 
@@ -178,6 +180,7 @@ namespace Server.Services.Profiles
             };
 
             var createdProfile = await _unitOfWork.ProfileRepository.CreateEmployerProfileAsync(profile);
+            await _unitOfWork.SaveChangesAsync();
             return await GetEmployerProfileByUserIdAsync(userId) ?? throw new Exception("Failed to create employer profile");
         }
 
@@ -198,6 +201,7 @@ namespace Server.Services.Profiles
             existingProfile.UpdatedAt = DateTime.UtcNow;
 
             var updatedProfile = await _unitOfWork.ProfileRepository.UpdateEmployerProfileAsync(existingProfile);
+            await _unitOfWork.SaveChangesAsync();
             return await GetEmployerProfileByUserIdAsync(userId) ?? throw new Exception("Failed to update employer profile");
         }
 
@@ -219,6 +223,7 @@ namespace Server.Services.Profiles
             };
 
             var createdCompany = await _unitOfWork.ProfileRepository.CreateCompanyAsync(company);
+            await _unitOfWork.SaveChangesAsync();
             return new CompanyDto
             {
                 CompanyId = createdCompany.CompanyId,
@@ -252,6 +257,7 @@ namespace Server.Services.Profiles
             existingCompany.UpdatedAt = DateTime.UtcNow;
 
             var updatedCompany = await _unitOfWork.ProfileRepository.UpdateCompanyAsync(existingCompany);
+            await _unitOfWork.SaveChangesAsync();
             return new CompanyDto
             {
                 CompanyId = updatedCompany.CompanyId,
@@ -312,7 +318,7 @@ namespace Server.Services.Profiles
         public async Task<CandidateProfileImageDto> UploadCandidateProfileImageAsync(Guid candidateId, CandidateProfileImageCreateDto dto)
         {
             // Call Images service to upload the image
-            var imagesServiceUrl = _configuration["ImagesService:Url"] ?? "http://localhost:8000";
+            var imagesServiceUrl = _configuration["ImagesService:Url"];
             var uploadUrl = $"{imagesServiceUrl}/upload/candidate/{candidateId}";
 
             using var content = new MultipartFormDataContent();
@@ -339,6 +345,7 @@ namespace Server.Services.Profiles
             };
 
             var createdImage = await _unitOfWork.ProfileRepository.CreateCandidateProfileImageAsync(image);
+            await _unitOfWork.SaveChangesAsync();
             return new CandidateProfileImageDto
             {
                 ImageId = createdImage.ImageId,
@@ -356,7 +363,7 @@ namespace Server.Services.Profiles
         public async Task<EmployerProfileImageDto> UploadEmployerProfileImageAsync(Guid employerId, EmployerProfileImageCreateDto dto)
         {
             // Call Images service to upload the image
-            var imagesServiceUrl = _configuration["ImagesService:Url"] ?? "http://localhost:8000";
+            var imagesServiceUrl = _configuration["ImagesService:Url"];
             var uploadUrl = $"{imagesServiceUrl}/upload/employer/{employerId}";
 
             using var content = new MultipartFormDataContent();
@@ -383,6 +390,7 @@ namespace Server.Services.Profiles
             };
 
             var createdImage = await _unitOfWork.ProfileRepository.CreateEmployerProfileImageAsync(image);
+            await _unitOfWork.SaveChangesAsync();
             return new EmployerProfileImageDto
             {
                 ImageId = createdImage.ImageId,
@@ -400,7 +408,7 @@ namespace Server.Services.Profiles
         public async Task<CompanyImageDto> UploadCompanyImageAsync(Guid companyId, CompanyImageCreateDto dto)
         {
             // Call Images service to upload the image
-            var imagesServiceUrl = _configuration["ImagesService:Url"] ?? "http://localhost:8000";
+            var imagesServiceUrl = _configuration["ImagesService:Url"];
             var uploadUrl = $"{imagesServiceUrl}/upload/company/{companyId}";
 
             using var content = new MultipartFormDataContent();
@@ -427,6 +435,7 @@ namespace Server.Services.Profiles
             };
 
             var createdImage = await _unitOfWork.ProfileRepository.CreateCompanyImageAsync(image);
+            await _unitOfWork.SaveChangesAsync();
             return new CompanyImageDto
             {
                 ImageId = createdImage.ImageId,
