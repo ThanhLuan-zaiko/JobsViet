@@ -7,22 +7,6 @@ import Notification from "../../components/Message/Notification";
 const ManageProfile: React.FC = () => {
   const { user, setNotification, logout } = useAuth();
 
-  // Check if user is logged in
-  if (!user) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">
-            Vui lòng đăng nhập
-          </h2>
-          <p className="text-gray-600">
-            Bạn cần đăng nhập để sử dụng chức năng quản lý hồ sơ.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   const [activeTab, setActiveTab] = useState<"candidate" | "employer">(
     "candidate"
   );
@@ -34,6 +18,11 @@ const ManageProfile: React.FC = () => {
   // Load existing profiles on component mount
   useEffect(() => {
     const loadProfiles = async () => {
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
       try {
         const [candidateRes, employerRes] = await Promise.all([
           axios.get(`${import.meta.env.VITE_API_BASE_URL}/profiles/candidate`, {
@@ -58,7 +47,23 @@ const ManageProfile: React.FC = () => {
     };
 
     loadProfiles();
-  }, []);
+  }, [user]);
+
+  // Check if user is logged in
+  if (!user) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            Vui lòng đăng nhập
+          </h2>
+          <p className="text-gray-600">
+            Bạn cần đăng nhập để sử dụng chức năng quản lý hồ sơ.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const handleCandidateSubmit = async (formData: any) => {
     setSaving(true);
@@ -287,7 +292,7 @@ const CandidateProfileTab: React.FC<{
               value={formData.phone}
               onChange={handleInputChange}
               maxLength={50}
-              pattern="^\+?[1-9]\d{1,14}$"
+              pattern="^\+?[0-9]\d{1,14}$"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
