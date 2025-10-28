@@ -3,13 +3,13 @@ using Server.DTOs.Profiles;
 
 namespace Server.Validators.Profiles
 {
-    public class CandidateProfileCreateValidator : AbstractValidator<CandidateProfileCreateDto>
+    public class CandidateProfileUpdateValidator : AbstractValidator<CandidateProfileUpdateDto>
     {
-        public CandidateProfileCreateValidator()
+        public CandidateProfileUpdateValidator()
         {
             RuleFor(x => x.FullName)
-                .NotEmpty().WithMessage("Full name is required.")
-                .MaximumLength(200).WithMessage("Full name cannot exceed 200 characters.");
+                .MaximumLength(200).WithMessage("Full name cannot exceed 200 characters.")
+                .When(x => !string.IsNullOrEmpty(x.FullName));
 
             RuleFor(x => x.Phone)
                 .MaximumLength(50).WithMessage("Phone number cannot exceed 50 characters.")
@@ -17,7 +17,8 @@ namespace Server.Validators.Profiles
                 .When(x => !string.IsNullOrEmpty(x.Phone));
 
             RuleFor(x => x.Headline)
-                .MaximumLength(300).WithMessage("Headline cannot exceed 300 characters.");
+                .MaximumLength(300).WithMessage("Headline cannot exceed 300 characters.")
+                .When(x => !string.IsNullOrEmpty(x.Headline));
 
             RuleFor(x => x.DateOfBirth)
                 .LessThan(DateTime.Now.AddYears(-16)).WithMessage("Must be at least 16 years old.")
@@ -28,17 +29,20 @@ namespace Server.Validators.Profiles
                 .WithMessage("Gender must be 'Male', 'Female', or 'Other'.");
 
             RuleFor(x => x.Address)
-                .MaximumLength(500).WithMessage("Address cannot exceed 500 characters.");
+                .MaximumLength(500).WithMessage("Address cannot exceed 500 characters.")
+                .When(x => !string.IsNullOrEmpty(x.Address));
 
             RuleFor(x => x.EducationLevel)
-                .MaximumLength(100).WithMessage("Education level cannot exceed 100 characters.");
+                .MaximumLength(100).WithMessage("Education level cannot exceed 100 characters.")
+                .When(x => !string.IsNullOrEmpty(x.EducationLevel));
 
             RuleFor(x => x.ExperienceYears)
                 .InclusiveBetween(0, 50).WithMessage("Experience years must be between 0 and 50.")
                 .When(x => x.ExperienceYears.HasValue);
 
             RuleFor(x => x.Skills)
-                .MaximumLength(2000).WithMessage("Skills cannot exceed 2000 characters.");
+                .MaximumLength(2000).WithMessage("Skills cannot exceed 2000 characters.")
+                .When(x => !string.IsNullOrEmpty(x.Skills));
 
             RuleFor(x => x.LinkedInProfile)
                 .MaximumLength(300).WithMessage("LinkedIn profile URL cannot exceed 300 characters.")

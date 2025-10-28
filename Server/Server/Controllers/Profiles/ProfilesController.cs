@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Server.DTOs.Profiles;
 using Server.Services.Profiles;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using FluentValidation;
+using Server.Validators.Profiles;
 
 namespace Server.Controllers.Profiles
 {
@@ -13,10 +15,22 @@ namespace Server.Controllers.Profiles
     public class ProfilesController : ControllerBase
     {
         private readonly IProfileService _profileService;
+        private readonly CandidateProfileCreateValidator _candidateCreateValidator;
+        private readonly CandidateProfileUpdateValidator _candidateUpdateValidator;
+        private readonly EmployerProfileCreateValidator _employerCreateValidator;
+        private readonly EmployerProfileUpdateValidator _employerUpdateValidator;
+        private readonly CompanyCreateValidator _companyCreateValidator;
+        private readonly CompanyUpdateValidator _companyUpdateValidator;
 
         public ProfilesController(IProfileService profileService)
         {
             _profileService = profileService;
+            _candidateCreateValidator = new CandidateProfileCreateValidator();
+            _candidateUpdateValidator = new CandidateProfileUpdateValidator();
+            _employerCreateValidator = new EmployerProfileCreateValidator();
+            _employerUpdateValidator = new EmployerProfileUpdateValidator();
+            _companyCreateValidator = new CompanyCreateValidator();
+            _companyUpdateValidator = new CompanyUpdateValidator();
         }
 
         // Candidate Profile Endpoints
@@ -37,8 +51,9 @@ namespace Server.Controllers.Profiles
         [HttpPost("candidate")]
         public async Task<IActionResult> CreateCandidateProfile([FromBody] CandidateProfileCreateDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var validationResult = await _candidateCreateValidator.ValidateAsync(dto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
 
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
@@ -58,8 +73,9 @@ namespace Server.Controllers.Profiles
         [HttpPut("candidate")]
         public async Task<IActionResult> UpdateCandidateProfile([FromBody] CandidateProfileUpdateDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var validationResult = await _candidateUpdateValidator.ValidateAsync(dto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
 
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
@@ -94,8 +110,9 @@ namespace Server.Controllers.Profiles
         [HttpPost("employer")]
         public async Task<IActionResult> CreateEmployerProfile([FromBody] EmployerProfileCreateDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var validationResult = await _employerCreateValidator.ValidateAsync(dto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
 
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
@@ -115,8 +132,9 @@ namespace Server.Controllers.Profiles
         [HttpPut("employer")]
         public async Task<IActionResult> UpdateEmployerProfile([FromBody] EmployerProfileUpdateDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var validationResult = await _employerUpdateValidator.ValidateAsync(dto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
 
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
@@ -137,8 +155,9 @@ namespace Server.Controllers.Profiles
         [HttpPost("company")]
         public async Task<IActionResult> CreateCompany([FromBody] CompanyCreateDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var validationResult = await _companyCreateValidator.ValidateAsync(dto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
 
             try
             {
@@ -154,8 +173,9 @@ namespace Server.Controllers.Profiles
         [HttpPut("company/{companyId}")]
         public async Task<IActionResult> UpdateCompany(Guid companyId, [FromBody] CompanyUpdateDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var validationResult = await _companyUpdateValidator.ValidateAsync(dto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
 
             try
             {

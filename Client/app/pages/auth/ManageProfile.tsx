@@ -79,8 +79,8 @@ const ManageProfile: React.FC = () => {
       if (error.response?.status === 401) {
         logout();
         setNotification({
-          type: "error",
-          message: "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại",
+          type: "warning",
+          message: "Phiên đăng nhập hết hạn, vui lòng đăng nhập lại!",
         });
       } else {
         setNotification({
@@ -134,8 +134,8 @@ const ManageProfile: React.FC = () => {
       if (error.response?.status === 401) {
         logout();
         setNotification({
-          type: "error",
-          message: "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại",
+          type: "warning",
+          message: "Phiên đăng nhập hết hạn, vui lòng đăng nhập lại!",
         });
       } else {
         setNotification({
@@ -272,6 +272,7 @@ const CandidateProfileTab: React.FC<{
               name="fullName"
               value={formData.fullName}
               onChange={handleInputChange}
+              maxLength={200}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -285,6 +286,8 @@ const CandidateProfileTab: React.FC<{
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
+              maxLength={50}
+              pattern="^\+?[1-9]\d{1,14}$"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -326,6 +329,7 @@ const CandidateProfileTab: React.FC<{
             name="address"
             value={formData.address}
             onChange={handleInputChange}
+            maxLength={500}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -347,6 +351,7 @@ const CandidateProfileTab: React.FC<{
               value={formData.headline}
               onChange={handleInputChange}
               placeholder="Ví dụ: Frontend Developer với 3 năm kinh nghiệm"
+              maxLength={300}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -395,6 +400,7 @@ const CandidateProfileTab: React.FC<{
               onChange={handleInputChange}
               placeholder="Liệt kê các kỹ năng của bạn, cách nhau bằng dấu phẩy"
               rows={3}
+              maxLength={2000}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -408,6 +414,7 @@ const CandidateProfileTab: React.FC<{
                 name="linkedInProfile"
                 value={formData.linkedInProfile}
                 onChange={handleInputChange}
+                maxLength={300}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -420,6 +427,7 @@ const CandidateProfileTab: React.FC<{
                 name="portfolioURL"
                 value={formData.portfolioURL}
                 onChange={handleInputChange}
+                maxLength={300}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -498,6 +506,7 @@ const CandidateProfileTab: React.FC<{
           onChange={handleInputChange}
           placeholder="Hãy giới thiệu về bản thân bạn..."
           rows={5}
+          maxLength={2000}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
@@ -886,6 +895,7 @@ const EmployerProfileTab: React.FC<{
           onChange={handleInputChange}
           placeholder="Hãy giới thiệu về bản thân và kinh nghiệm của bạn..."
           rows={5}
+          maxLength={2000}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>

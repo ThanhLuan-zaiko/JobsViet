@@ -3,13 +3,13 @@ using Server.DTOs.Profiles;
 
 namespace Server.Validators.Profiles
 {
-    public class EmployerProfileCreateValidator : AbstractValidator<EmployerProfileCreateDto>
+    public class EmployerProfileUpdateValidator : AbstractValidator<EmployerProfileUpdateDto>
     {
-        public EmployerProfileCreateValidator()
+        public EmployerProfileUpdateValidator()
         {
             RuleFor(x => x.DisplayName)
-                .NotEmpty().WithMessage("Display name is required.")
-                .MaximumLength(200).WithMessage("Display name cannot exceed 200 characters.");
+                .MaximumLength(200).WithMessage("Display name cannot exceed 200 characters.")
+                .When(x => !string.IsNullOrEmpty(x.DisplayName));
 
             RuleFor(x => x.ContactPhone)
                 .MaximumLength(50).WithMessage("Contact phone cannot exceed 50 characters.")
@@ -17,10 +17,12 @@ namespace Server.Validators.Profiles
                 .When(x => !string.IsNullOrEmpty(x.ContactPhone));
 
             RuleFor(x => x.Industry)
-                .MaximumLength(100).WithMessage("Industry cannot exceed 100 characters.");
+                .MaximumLength(100).WithMessage("Industry cannot exceed 100 characters.")
+                .When(x => !string.IsNullOrEmpty(x.Industry));
 
             RuleFor(x => x.Position)
-                .MaximumLength(100).WithMessage("Position cannot exceed 100 characters.");
+                .MaximumLength(100).WithMessage("Position cannot exceed 100 characters.")
+                .When(x => !string.IsNullOrEmpty(x.Position));
 
             RuleFor(x => x.YearsOfExperience)
                 .InclusiveBetween(0, 50).WithMessage("Years of experience must be between 0 and 50.")
