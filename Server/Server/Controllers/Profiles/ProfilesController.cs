@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 
 namespace Server.Controllers.Profiles
 {
+    [Authorize]
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]

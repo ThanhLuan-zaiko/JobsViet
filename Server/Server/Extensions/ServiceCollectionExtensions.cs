@@ -92,7 +92,7 @@ namespace Server.Extensions
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Change to Always in production with HTTPS
-                options.Cookie.SameSite = SameSiteMode.None; // Changed to None for cross-origin requests in development
+                options.Cookie.SameSite = SameSiteMode.Lax; // Changed to Lax for development compatibility; use None in production with HTTPS
             });
             return services;
         }

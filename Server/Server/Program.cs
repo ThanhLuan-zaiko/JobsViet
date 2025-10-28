@@ -39,11 +39,11 @@ try
     var redis = app.Services.GetRequiredService<IConnectionMultiplexer>();
     var db = redis.GetDatabase();
     var pong = db.Ping();
-    Console.WriteLine($"✅ Redis connected successfully (Ping: {pong.TotalMilliseconds} ms)");
+    Console.WriteLine($"Redis connected successfully (Ping: {pong.TotalMilliseconds} ms)");
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"❌ Redis connection failed: {ex.Message}");
+    Console.WriteLine($"Redis connection failed: {ex.Message}");
 }
 
 // Configure the HTTP request pipeline.
