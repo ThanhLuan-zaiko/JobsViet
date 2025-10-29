@@ -65,9 +65,15 @@ const ManageProfile: React.FC = () => {
     );
   }
 
-  const handleCandidateSubmit = async (formData: any) => {
+  const handleCandidateSubmit = async (
+    formData: any,
+    profileImage: File | null,
+    portfolioImages: File[]
+  ) => {
     setSaving(true);
     try {
+      console.log("Form data being sent:", formData);
+      // Save profile data first
       const method = candidateProfile ? "put" : "post";
       const response = await axios[method](
         `${import.meta.env.VITE_API_BASE_URL}/profiles/candidate`,
@@ -75,6 +81,58 @@ const ManageProfile: React.FC = () => {
         { withCredentials: true }
       );
       setCandidateProfile(response.data);
+
+      // Upload profile image if selected
+      if (profileImage) {
+        try {
+          const imageFormData = new FormData();
+          imageFormData.append("imageType", "profile");
+          imageFormData.append("imageFile", profileImage);
+
+          await axios.post(
+            `${import.meta.env.VITE_API_BASE_URL}/profiles/candidate/images`,
+            imageFormData,
+            {
+              withCredentials: true,
+              headers: { "Content-Type": "multipart/form-data" },
+            }
+          );
+        } catch (imageError: any) {
+          console.error("Error uploading profile image:", imageError);
+          setNotification({
+            type: "warning",
+            message: "Hồ sơ đã được lưu nhưng không thể tải lên ảnh đại diện.",
+          });
+        }
+      }
+
+      // Upload portfolio images if selected
+      if (portfolioImages.length > 0) {
+        for (const image of portfolioImages) {
+          try {
+            const imageFormData = new FormData();
+            imageFormData.append("imageType", "portfolio");
+            imageFormData.append("imageFile", image);
+
+            await axios.post(
+              `${import.meta.env.VITE_API_BASE_URL}/profiles/candidate/images`,
+              imageFormData,
+              {
+                withCredentials: true,
+                headers: { "Content-Type": "multipart/form-data" },
+              }
+            );
+          } catch (imageError: any) {
+            console.error("Error uploading portfolio image:", imageError);
+            setNotification({
+              type: "warning",
+              message:
+                "Hồ sơ đã được lưu nhưng một số ảnh portfolio không thể tải lên.",
+            });
+          }
+        }
+      }
+
       setNotification({
         type: "success",
         message: "Hồ sơ ứng cử viên đã được lưu thành công!",
@@ -211,7 +269,11 @@ const ManageProfile: React.FC = () => {
 
 const CandidateProfileTab: React.FC<{
   profile: any;
-  onSubmit: (formData: any) => void;
+  onSubmit: (
+    formData: any,
+    profileImage: File | null,
+    portfolioImages: File[]
+  ) => void;
   saving: boolean;
 }> = ({ profile, onSubmit, saving }) => {
   const [formData, setFormData] = useState({
@@ -257,7 +319,26 @@ const CandidateProfileTab: React.FC<{
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    // Clean form data: convert empty strings to null for optional fields
+    const cleanedFormData = {
+      ...formData,
+      phone: formData.phone || null,
+      headline: formData.headline || null,
+      dateOfBirth: formData.dateOfBirth || null,
+      gender: formData.gender || null,
+      address: formData.address || null,
+      educationLevel: formData.educationLevel || null,
+      experienceYears: formData.experienceYears
+        ? parseInt(formData.experienceYears)
+        : null,
+      skills: formData.skills || null,
+      linkedInProfile: formData.linkedInProfile || null,
+      portfolioURL: formData.portfolioURL || null,
+      bio: formData.bio || null,
+    };
+
+    onSubmit(cleanedFormData, profileImage, portfolioImages);
   };
 
   return (
@@ -596,7 +677,22 @@ const EmployerProfileTab: React.FC<{
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData, companies);
+
+    // Clean form data: convert empty strings to null for optional fields
+    const cleanedFormData = {
+      ...formData,
+      contactPhone: formData.contactPhone || null,
+      bio: formData.bio || null,
+      industry: formData.industry || null,
+      position: formData.position || null,
+      yearsOfExperience: formData.yearsOfExperience
+        ? parseInt(formData.yearsOfExperience)
+        : null,
+      linkedInProfile: formData.linkedInProfile || null,
+      website: formData.website || null,
+    };
+
+    onSubmit(cleanedFormData, companies);
   };
 
   return (
