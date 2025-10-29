@@ -87,6 +87,7 @@ namespace Server.Data.Jobs
                 entity.HasKey(e => e.CandidateId);
                 entity.Property(e => e.CandidateId).HasColumnName("CANDIDATEID");
                 entity.Property(e => e.UserId).HasColumnName("USERID");
+                entity.HasIndex(e => e.UserId).IsUnique(); // Add unique constraint on UserId
                 entity.Property(e => e.FullName).HasColumnName("FULLNAME").HasMaxLength(255);
                 entity.Property(e => e.Phone).HasColumnName("PHONE").HasMaxLength(20);
                 entity.Property(e => e.Headline).HasColumnName("HEADLINE").HasMaxLength(500);

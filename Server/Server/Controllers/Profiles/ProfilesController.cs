@@ -68,6 +68,9 @@ namespace Server.Controllers.Profiles
             }
             catch (Exception ex)
             {
+                // Provide more specific error messages
+                if (ex.Message.Contains("already exists"))
+                    return Conflict("Candidate profile already exists for this user");
                 return BadRequest(ex.Message);
             }
         }

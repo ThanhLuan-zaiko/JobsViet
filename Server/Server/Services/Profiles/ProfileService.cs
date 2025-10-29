@@ -61,6 +61,11 @@ namespace Server.Services.Profiles
 
         public async Task<CandidateProfileDto> CreateCandidateProfileAsync(Guid userId, CandidateProfileCreateDto dto)
         {
+            // Check if profile already exists
+            var existingProfile = await _unitOfWork.ProfileRepository.GetCandidateProfileByUserIdAsync(userId);
+            if (existingProfile != null)
+                throw new Exception("Candidate profile already exists for this user");
+
             var profile = new CandidateProfile
             {
                 CandidateId = Guid.NewGuid(),

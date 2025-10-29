@@ -24,8 +24,8 @@ namespace Server.Validators.Profiles
                 .When(x => x.DateOfBirth.HasValue);
 
             RuleFor(x => x.Gender)
-                .Must(g => g == null || new[] { "Male", "Female", "Other" }.Contains(g))
-                .WithMessage("Gender must be 'Male', 'Female', or 'Other'.");
+                .Must(g => g == null || new[] { "Nam", "Nữ", "Khác" }.Contains(g))
+                .WithMessage("Gender must be 'Nam', 'Nữ', or 'Khác'.");
 
             RuleFor(x => x.Address)
                 .MaximumLength(500).WithMessage("Address cannot exceed 500 characters.");
