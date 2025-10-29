@@ -24,12 +24,14 @@ namespace Server.Data.Profiles
         public async Task<CandidateProfile> CreateCandidateProfileAsync(CandidateProfile profile)
         {
             _context.CandidateProfiles.Add(profile);
+            await _context.SaveChangesAsync();
             return profile;
         }
 
         public async Task<CandidateProfile> UpdateCandidateProfileAsync(CandidateProfile profile)
         {
             _context.CandidateProfiles.Update(profile);
+            await _context.SaveChangesAsync();
             return profile;
         }
 
@@ -43,12 +45,14 @@ namespace Server.Data.Profiles
         public async Task<EmployerProfile> CreateEmployerProfileAsync(EmployerProfile profile)
         {
             _context.EmployerProfiles.Add(profile);
+            await _context.SaveChangesAsync();
             return profile;
         }
 
         public async Task<EmployerProfile> UpdateEmployerProfileAsync(EmployerProfile profile)
         {
             _context.EmployerProfiles.Update(profile);
+            await _context.SaveChangesAsync();
             return profile;
         }
 
@@ -61,19 +65,21 @@ namespace Server.Data.Profiles
         public async Task<Company> CreateCompanyAsync(Company company)
         {
             _context.Companies.Add(company);
+            await _context.SaveChangesAsync();
             return company;
         }
 
         public async Task<Company> UpdateCompanyAsync(Company company)
         {
             _context.Companies.Update(company);
+            await _context.SaveChangesAsync();
             return company;
         }
 
         public async Task<List<Company>> GetCompaniesByEmployerIdAsync(Guid employerId)
         {
             return await _context.EmployerCompanies
-                .Where(ec => ec.EmployerId == employerId)
+                .Where(ec => ec.EmployerProfileId == employerId)
                 .Join(_context.Companies,
                     ec => ec.CompanyId,
                     c => c.CompanyId,
@@ -85,13 +91,14 @@ namespace Server.Data.Profiles
         public async Task<EmployerCompany> CreateEmployerCompanyAsync(EmployerCompany employerCompany)
         {
             _context.EmployerCompanies.Add(employerCompany);
+            await _context.SaveChangesAsync();
             return employerCompany;
         }
 
         public async Task<List<EmployerCompany>> GetEmployerCompaniesByEmployerIdAsync(Guid employerId)
         {
             return await _context.EmployerCompanies
-                .Where(ec => ec.EmployerId == employerId)
+                .Where(ec => ec.EmployerProfileId == employerId)
                 .ToListAsync();
         }
 
@@ -99,18 +106,21 @@ namespace Server.Data.Profiles
         public async Task<CandidateProfileImage> CreateCandidateProfileImageAsync(CandidateProfileImage image)
         {
             _context.CandidateProfileImages.Add(image);
+            await _context.SaveChangesAsync();
             return image;
         }
 
         public async Task<EmployerProfileImage> CreateEmployerProfileImageAsync(EmployerProfileImage image)
         {
             _context.EmployerProfileImages.Add(image);
+            await _context.SaveChangesAsync();
             return image;
         }
 
         public async Task<CompanyImage> CreateCompanyImageAsync(CompanyImage image)
         {
             _context.CompanyImages.Add(image);
+            await _context.SaveChangesAsync();
             return image;
         }
 

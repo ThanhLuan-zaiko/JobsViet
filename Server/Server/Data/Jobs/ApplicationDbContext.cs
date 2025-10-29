@@ -32,9 +32,9 @@ namespace Server.Data.Jobs
                 entity.ToTable("USERS");
                 entity.HasKey(e => e.UserId);
                 entity.Property(e => e.UserId).HasColumnName("USERID");
-                entity.Property(e => e.UserId).HasColumnName("USERNAME");
+                entity.Property(e => e.UserName).HasColumnName("USERNAME");
                 entity.Property(e => e.Email).HasColumnName("EMAIL").IsRequired().HasMaxLength(200);
-                entity.Property(e => e.PasswordHash).HasColumnName("PASSWORDHASH").IsRequired().HasMaxLength(256);
+                entity.Property(e => e.PasswordHash).HasColumnName("PASSWORDHASH").IsRequired().HasMaxLength(4000);
                 entity.Property(e => e.Role).HasColumnName("ROLE").IsRequired().HasMaxLength(50);
                 entity.Property(e => e.IsActive).HasColumnName("ISACTIVE");
                 entity.Property(e => e.CreatedAt).HasColumnName("CREATEDAT");
@@ -107,7 +107,7 @@ namespace Server.Data.Jobs
             {
                 entity.ToTable("EMPLOYERPROFILES");
                 entity.HasKey(e => e.EmployerId);
-                entity.Property(e => e.EmployerId).HasColumnName("EMPLOYERID");
+                entity.Property(e => e.EmployerId).HasColumnName("EMPLOYERPROFILEID");
                 entity.Property(e => e.UserId).HasColumnName("USERID");
                 entity.Property(e => e.DisplayName).HasColumnName("DISPLAYNAME").HasMaxLength(255);
                 entity.Property(e => e.ContactPhone).HasColumnName("CONTACTPHONE").HasMaxLength(20);
@@ -141,18 +141,22 @@ namespace Server.Data.Jobs
             modelBuilder.Entity<EmployerCompany>(entity =>
             {
                 entity.ToTable("EMPLOYERCOMPANIES");
-                entity.HasKey(e => new { e.EmployerId, e.CompanyId });
-                entity.Property(e => e.EmployerId).HasColumnName("EMPLOYERID");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.EmployerProfileId).HasColumnName("EMPLOYERPROFILEID");
                 entity.Property(e => e.CompanyId).HasColumnName("COMPANYID");
+                entity.Property(e => e.Role).HasColumnName("ROLE");
+                entity.Property(e => e.IsPrimary).HasColumnName("ISPRIMARY");
                 entity.Property(e => e.CreatedAt).HasColumnName("CREATEDAT");
+                entity.Property(e => e.UpdatedAt).HasColumnName("UPDATEDAT");
             });
 
             // Image entities configuration
             modelBuilder.Entity<CandidateProfileImage>(entity =>
             {
-                entity.ToTable("CANDIDATEPROFILEIMAGES");
+                entity.ToTable("CANDIDATEIMAGES");
                 entity.HasKey(e => e.ImageId);
-                entity.Property(e => e.ImageId).HasColumnName("IMAGEID");
+                entity.Property(e => e.ImageId).HasColumnName("CANDIDATEIMAGEID");
                 entity.Property(e => e.CandidateId).HasColumnName("CANDIDATEID");
                 entity.Property(e => e.ImageType).HasColumnName("IMAGETYPE").HasMaxLength(50);
                 entity.Property(e => e.ImageUrl).HasColumnName("IMAGEURL").HasMaxLength(1000);
@@ -165,10 +169,10 @@ namespace Server.Data.Jobs
 
             modelBuilder.Entity<EmployerProfileImage>(entity =>
             {
-                entity.ToTable("EMPLOYERPROFILEIMAGES");
+                entity.ToTable("EMPLOYERIMAGES");
                 entity.HasKey(e => e.ImageId);
-                entity.Property(e => e.ImageId).HasColumnName("IMAGEID");
-                entity.Property(e => e.EmployerId).HasColumnName("EMPLOYERID");
+                entity.Property(e => e.ImageId).HasColumnName("EMPLOYERIMAGEID");
+                entity.Property(e => e.EmployerId).HasColumnName("EMPLOYERPROFILEID");
                 entity.Property(e => e.ImageType).HasColumnName("IMAGETYPE").HasMaxLength(50);
                 entity.Property(e => e.ImageUrl).HasColumnName("IMAGEURL").HasMaxLength(1000);
                 entity.Property(e => e.OriginalFileName).HasColumnName("ORIGINALFILENAME").HasMaxLength(255);

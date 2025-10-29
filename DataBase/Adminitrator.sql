@@ -88,3 +88,6 @@ WHERE owner = 'JOBVIET' AND table_name = 'JOBS';
 
 SELECT column_name FROM all_tab_columns
 WHERE owner = 'JOBVIET' AND table_name = 'USERS';
+
+SELECT column_name FROM all_tab_columns
+WHERE owner = 'JOBVIET' AND table_name = 'EMPLOYERPROFILES';

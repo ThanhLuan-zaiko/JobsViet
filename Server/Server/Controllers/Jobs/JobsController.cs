@@ -10,10 +10,10 @@ using Server.Validators.Jobs;
 
 namespace Server.Controllers.Jobs
 {
+    [Authorize]
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
-    [Authorize]
     public class JobsController : ControllerBase
     {
         private readonly IJobService _jobService;
