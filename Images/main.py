@@ -108,8 +108,7 @@ def create_user_directory(user_id: str) -> Path:
 @app.post("/upload/candidate/{candidate_id}", response_model=ImageUploadResponse)
 async def upload_candidate_image(
     candidate_id: str,
-    file: UploadFile = File(...),
-    credentials: HTTPAuthorizationCredentials = Depends(security)
+    file: UploadFile = File(...)
 ):
     """Upload image for candidate profile."""
     # Validate file
@@ -147,8 +146,7 @@ async def upload_candidate_image(
 @app.post("/upload/employer/{employer_id}", response_model=ImageUploadResponse)
 async def upload_employer_image(
     employer_id: str,
-    file: UploadFile = File(...),
-    credentials: HTTPAuthorizationCredentials = Depends(security)
+    file: UploadFile = File(...)
 ):
     """Upload image for employer profile."""
     # Validate file
@@ -186,8 +184,7 @@ async def upload_employer_image(
 @app.post("/upload/company/{company_id}", response_model=ImageUploadResponse)
 async def upload_company_image(
     company_id: str,
-    file: UploadFile = File(...),
-    credentials: HTTPAuthorizationCredentials = Depends(security)
+    file: UploadFile = File(...)
 ):
     """Upload image for company."""
     # Validate file

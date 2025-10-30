@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.DTOs.Profiles;
 using Server.Services.Profiles;
@@ -8,7 +8,7 @@ using Server.Validators.Profiles;
 
 namespace Server.Controllers.Profiles
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
@@ -54,7 +54,9 @@ namespace Server.Controllers.Profiles
         {
             var validationResult = await _candidateCreateValidator.ValidateAsync(dto);
             if (!validationResult.IsValid)
+            {
                 return BadRequest(validationResult.Errors);
+            }
 
             await HttpContext.Session.LoadAsync();
             var userIdStr = HttpContext.Session.GetString("UserId");

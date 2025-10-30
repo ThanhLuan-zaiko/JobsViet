@@ -157,7 +157,11 @@ const ManageProfile: React.FC = () => {
     }
   };
 
-  const handleEmployerSubmit = async (formData: any, companies: any[]) => {
+  const handleEmployerSubmit = async (
+    formData: any,
+    companies: any[],
+    profileImage: File | null
+  ) => {
     setSaving(true);
     try {
       // Save employer profile
@@ -168,6 +172,30 @@ const ManageProfile: React.FC = () => {
         { withCredentials: true }
       );
       setEmployerProfile(employerResponse.data);
+
+      // Upload profile image if selected
+      if (profileImage) {
+        try {
+          const imageFormData = new FormData();
+          imageFormData.append("imageType", "profile");
+          imageFormData.append("imageFile", profileImage);
+
+          await axios.post(
+            `${import.meta.env.VITE_API_BASE_URL}/profiles/employer/images`,
+            imageFormData,
+            {
+              withCredentials: true,
+              headers: { "Content-Type": "multipart/form-data" },
+            }
+          );
+        } catch (imageError: any) {
+          console.error("Error uploading profile image:", imageError);
+          setNotification({
+            type: "warning",
+            message: "Hồ sơ đã được lưu nhưng không thể tải lên ảnh đại diện.",
+          });
+        }
+      }
 
       // Save companies
       for (const company of companies) {
@@ -614,7 +642,11 @@ const CandidateProfileTab: React.FC<{
 
 const EmployerProfileTab: React.FC<{
   profile: any;
-  onSubmit: (formData: any, companies: any[]) => void;
+  onSubmit: (
+    formData: any,
+    companies: any[],
+    profileImage: File | null
+  ) => void;
   saving: boolean;
 }> = ({ profile, onSubmit, saving }) => {
   const [formData, setFormData] = useState({
@@ -692,7 +724,7 @@ const EmployerProfileTab: React.FC<{
       website: formData.website || null,
     };
 
-    onSubmit(cleanedFormData, companies);
+    onSubmit(cleanedFormData, companies, profileImage);
   };
 
   return (
