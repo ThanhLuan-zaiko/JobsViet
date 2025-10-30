@@ -86,15 +86,31 @@ const ManageProfile: React.FC = () => {
       if (profileImage) {
         try {
           const imageFormData = new FormData();
-          imageFormData.append("imageType", "profile");
-          imageFormData.append("imageFile", profileImage);
+          imageFormData.append("file", profileImage);
+
+          const uploadResponse = await axios.post(
+            `http://127.0.0.1:8000/upload/candidate/${response.data.candidateId}`,
+            imageFormData,
+            {
+              headers: { "Content-Type": "multipart/form-data" },
+            }
+          );
+
+          // Send metadata to ASP.NET server
+          const metadata = {
+            imageType: "profile",
+            imageUrl: uploadResponse.data.image_url,
+            originalFileName: uploadResponse.data.file_name,
+            fileSize: uploadResponse.data.file_size,
+            mimeType: uploadResponse.data.mime_type,
+          };
 
           await axios.post(
             `${import.meta.env.VITE_API_BASE_URL}/profiles/candidate/images`,
-            imageFormData,
+            metadata,
             {
               withCredentials: true,
-              headers: { "Content-Type": "multipart/form-data" },
+              headers: { "Content-Type": "application/json" },
             }
           );
         } catch (imageError: any) {
@@ -111,15 +127,31 @@ const ManageProfile: React.FC = () => {
         for (const image of portfolioImages) {
           try {
             const imageFormData = new FormData();
-            imageFormData.append("imageType", "portfolio");
-            imageFormData.append("imageFile", image);
+            imageFormData.append("file", image);
+
+            const uploadResponse = await axios.post(
+              `http://127.0.0.1:8000/upload/candidate/${response.data.candidateId}`,
+              imageFormData,
+              {
+                headers: { "Content-Type": "multipart/form-data" },
+              }
+            );
+
+            // Send metadata to ASP.NET server
+            const metadata = {
+              imageType: "portfolio",
+              imageUrl: uploadResponse.data.image_url,
+              originalFileName: uploadResponse.data.file_name,
+              fileSize: uploadResponse.data.file_size,
+              mimeType: uploadResponse.data.mime_type,
+            };
 
             await axios.post(
               `${import.meta.env.VITE_API_BASE_URL}/profiles/candidate/images`,
-              imageFormData,
+              metadata,
               {
                 withCredentials: true,
-                headers: { "Content-Type": "multipart/form-data" },
+                headers: { "Content-Type": "application/json" },
               }
             );
           } catch (imageError: any) {
@@ -177,15 +209,31 @@ const ManageProfile: React.FC = () => {
       if (profileImage) {
         try {
           const imageFormData = new FormData();
-          imageFormData.append("imageType", "profile");
-          imageFormData.append("imageFile", profileImage);
+          imageFormData.append("file", profileImage);
+
+          const uploadResponse = await axios.post(
+            `http://127.0.0.1:8000/upload/employer/${employerResponse.data.employerId}`,
+            imageFormData,
+            {
+              headers: { "Content-Type": "multipart/form-data" },
+            }
+          );
+
+          // Send metadata to ASP.NET server
+          const metadata = {
+            imageType: "profile",
+            imageUrl: uploadResponse.data.image_url,
+            originalFileName: uploadResponse.data.file_name,
+            fileSize: uploadResponse.data.file_size,
+            mimeType: uploadResponse.data.mime_type,
+          };
 
           await axios.post(
             `${import.meta.env.VITE_API_BASE_URL}/profiles/employer/images`,
-            imageFormData,
+            metadata,
             {
               withCredentials: true,
-              headers: { "Content-Type": "multipart/form-data" },
+              headers: { "Content-Type": "application/json" },
             }
           );
         } catch (imageError: any) {

@@ -250,14 +250,9 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "ImageType",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "ImageFile",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
-        "IsRequired": false
+        "Name": "dto",
+        "Type": "Server.DTOs.Profiles.CandidateProfileImageCreateDto",
+        "IsRequired": true
       },
       {
         "Name": "version",
@@ -365,14 +360,9 @@
         "IsRequired": true
       },
       {
-        "Name": "ImageType",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "ImageFile",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
-        "IsRequired": false
+        "Name": "dto",
+        "Type": "Server.DTOs.Profiles.CompanyImageCreateDto",
+        "IsRequired": true
       },
       {
         "Name": "version",
@@ -486,14 +476,9 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "ImageType",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "ImageFile",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
-        "IsRequired": false
+        "Name": "dto",
+        "Type": "Server.DTOs.Profiles.EmployerProfileImageCreateDto",
+        "IsRequired": true
       },
       {
         "Name": "version",

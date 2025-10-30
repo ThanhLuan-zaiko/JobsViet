@@ -235,11 +235,8 @@ namespace Server.Controllers.Profiles
 
         // Image Upload Endpoints
         [HttpPost("candidate/images")]
-        public async Task<IActionResult> UploadCandidateProfileImage([FromForm] CandidateProfileImageCreateDto dto)
+        public async Task<IActionResult> UploadCandidateProfileImage([FromBody] CandidateProfileImageCreateDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             await HttpContext.Session.LoadAsync();
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
@@ -262,11 +259,8 @@ namespace Server.Controllers.Profiles
         }
 
         [HttpPost("employer/images")]
-        public async Task<IActionResult> UploadEmployerProfileImage([FromForm] EmployerProfileImageCreateDto dto)
+        public async Task<IActionResult> UploadEmployerProfileImage([FromBody] EmployerProfileImageCreateDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             await HttpContext.Session.LoadAsync();
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
@@ -289,11 +283,8 @@ namespace Server.Controllers.Profiles
         }
 
         [HttpPost("company/{companyId}/images")]
-        public async Task<IActionResult> UploadCompanyImage(Guid companyId, [FromForm] CompanyImageCreateDto dto)
+        public async Task<IActionResult> UploadCompanyImage(Guid companyId, [FromBody] CompanyImageCreateDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             try
             {
                 var image = await _profileService.UploadCompanyImageAsync(companyId, dto);

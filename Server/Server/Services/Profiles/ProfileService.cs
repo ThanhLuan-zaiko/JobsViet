@@ -322,30 +322,15 @@ namespace Server.Services.Profiles
         // Images
         public async Task<CandidateProfileImageDto> UploadCandidateProfileImageAsync(Guid candidateId, CandidateProfileImageCreateDto dto)
         {
-            // Call Images service to upload the image
-            var imagesServiceUrl = _configuration["ImagesService:Url"];
-            var uploadUrl = $"{imagesServiceUrl}/upload/candidate/{candidateId}";
-
-            using var content = new MultipartFormDataContent();
-            content.Add(new StreamContent(dto.ImageFile.OpenReadStream()), "file", dto.ImageFile.FileName);
-
-            var response = await _httpClient.PostAsync(uploadUrl, content);
-            response.EnsureSuccessStatusCode();
-
-            var uploadResult = await response.Content.ReadFromJsonAsync<ImageUploadResponse>();
-
-            if (uploadResult == null)
-                throw new Exception("Failed to upload image");
-
             var image = new CandidateProfileImage
             {
                 ImageId = Guid.NewGuid(),
                 CandidateId = candidateId,
                 ImageType = dto.ImageType,
-                ImageUrl = uploadResult.ImageUrl,
-                OriginalFileName = dto.ImageFile.FileName,
-                FileSize = dto.ImageFile.Length,
-                MimeType = dto.ImageFile.ContentType,
+                ImageUrl = dto.ImageUrl,
+                OriginalFileName = dto.OriginalFileName,
+                FileSize = dto.FileSize,
+                MimeType = dto.MimeType,
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -367,30 +352,15 @@ namespace Server.Services.Profiles
 
         public async Task<EmployerProfileImageDto> UploadEmployerProfileImageAsync(Guid employerId, EmployerProfileImageCreateDto dto)
         {
-            // Call Images service to upload the image
-            var imagesServiceUrl = _configuration["ImagesService:Url"];
-            var uploadUrl = $"{imagesServiceUrl}/upload/employer/{employerId}";
-
-            using var content = new MultipartFormDataContent();
-            content.Add(new StreamContent(dto.ImageFile.OpenReadStream()), "file", dto.ImageFile.FileName);
-
-            var response = await _httpClient.PostAsync(uploadUrl, content);
-            response.EnsureSuccessStatusCode();
-
-            var uploadResult = await response.Content.ReadFromJsonAsync<ImageUploadResponse>();
-
-            if (uploadResult == null)
-                throw new Exception("Failed to upload image");
-
             var image = new EmployerProfileImage
             {
                 ImageId = Guid.NewGuid(),
                 EmployerId = employerId,
                 ImageType = dto.ImageType,
-                ImageUrl = uploadResult.ImageUrl,
-                OriginalFileName = dto.ImageFile.FileName,
-                FileSize = dto.ImageFile.Length,
-                MimeType = dto.ImageFile.ContentType,
+                ImageUrl = dto.ImageUrl,
+                OriginalFileName = dto.OriginalFileName,
+                FileSize = dto.FileSize,
+                MimeType = dto.MimeType,
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -412,30 +382,15 @@ namespace Server.Services.Profiles
 
         public async Task<CompanyImageDto> UploadCompanyImageAsync(Guid companyId, CompanyImageCreateDto dto)
         {
-            // Call Images service to upload the image
-            var imagesServiceUrl = _configuration["ImagesService:Url"];
-            var uploadUrl = $"{imagesServiceUrl}/upload/company/{companyId}";
-
-            using var content = new MultipartFormDataContent();
-            content.Add(new StreamContent(dto.ImageFile.OpenReadStream()), "file", dto.ImageFile.FileName);
-
-            var response = await _httpClient.PostAsync(uploadUrl, content);
-            response.EnsureSuccessStatusCode();
-
-            var uploadResult = await response.Content.ReadFromJsonAsync<ImageUploadResponse>();
-
-            if (uploadResult == null)
-                throw new Exception("Failed to upload image");
-
             var image = new CompanyImage
             {
                 ImageId = Guid.NewGuid(),
                 CompanyId = companyId,
                 ImageType = dto.ImageType,
-                ImageUrl = uploadResult.ImageUrl,
-                OriginalFileName = dto.ImageFile.FileName,
-                FileSize = dto.ImageFile.Length,
-                MimeType = dto.ImageFile.ContentType,
+                ImageUrl = dto.ImageUrl,
+                OriginalFileName = dto.OriginalFileName,
+                FileSize = dto.FileSize,
+                MimeType = dto.MimeType,
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -508,7 +463,10 @@ namespace Server.Services.Profiles
 
         private class ImageUploadResponse
         {
-            public string? ImageUrl { get; set; }
+            public string? image_url { get; set; }
+            public string? file_name { get; set; }
+            public long? file_size { get; set; }
+            public string? mime_type { get; set; }
         }
     }
 }
