@@ -13,7 +13,7 @@ namespace Server.Validators.Profiles
 
             RuleFor(x => x.ContactPhone)
                 .MaximumLength(50).WithMessage("Contact phone cannot exceed 50 characters.")
-                .Matches(@"^\+?[1-9]\d{1,14}$").WithMessage("Invalid contact phone format.")
+                .Matches("^\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$").WithMessage("Invalid phone number format.")
                 .When(x => !string.IsNullOrEmpty(x.ContactPhone));
 
             RuleFor(x => x.Industry)

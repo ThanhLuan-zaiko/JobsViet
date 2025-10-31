@@ -1,4 +1,4 @@
-using FluentValidation;
+﻿using FluentValidation;
 using Server.DTOs.Profiles;
 
 namespace Server.Validators.Profiles
@@ -13,7 +13,7 @@ namespace Server.Validators.Profiles
 
             RuleFor(x => x.Phone)
                 .MaximumLength(50).WithMessage("Phone number cannot exceed 50 characters.")
-                .Matches(@"^\+?[1-9]\d{1,14}$").WithMessage("Invalid phone number format.")
+                .Matches("^\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$").WithMessage("Invalid phone number format.")
                 .When(x => !string.IsNullOrEmpty(x.Phone));
 
             RuleFor(x => x.Headline)
@@ -25,8 +25,8 @@ namespace Server.Validators.Profiles
                 .When(x => x.DateOfBirth.HasValue);
 
             RuleFor(x => x.Gender)
-                .Must(g => g == null || new[] { "Male", "Female", "Other" }.Contains(g))
-                .WithMessage("Gender must be 'Male', 'Female', or 'Other'.");
+                .Must(g => g == null || new[] { "Nam", "Nữ", "Khác" }.Contains(g))
+                .WithMessage("Gender must be 'Nam', 'Nữ', or 'Khác'.");
 
             RuleFor(x => x.Address)
                 .MaximumLength(500).WithMessage("Address cannot exceed 500 characters.")
