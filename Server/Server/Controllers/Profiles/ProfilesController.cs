@@ -8,7 +8,7 @@ using Server.Validators.Profiles;
 
 namespace Server.Controllers.Profiles
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
@@ -247,6 +247,9 @@ namespace Server.Controllers.Profiles
             if (candidateProfile == null)
                 return NotFound("Candidate profile not found");
 
+            // Set the uploaded by user ID
+            dto.UploadedByUserId = userId;
+
             try
             {
                 var image = await _profileService.UploadCandidateProfileImageAsync(candidateProfile.CandidateId, dto);
@@ -271,6 +274,9 @@ namespace Server.Controllers.Profiles
             if (employerProfile == null)
                 return NotFound("Employer profile not found");
 
+            // Set the uploaded by user ID
+            dto.UploadedByUserId = userId;
+
             try
             {
                 var image = await _profileService.UploadEmployerProfileImageAsync(employerProfile.EmployerId, dto);
@@ -285,6 +291,14 @@ namespace Server.Controllers.Profiles
         [HttpPost("company/{companyId}/images")]
         public async Task<IActionResult> UploadCompanyImage(Guid companyId, [FromBody] CompanyImageCreateDto dto)
         {
+            await HttpContext.Session.LoadAsync();
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
+                return Unauthorized("Invalid user ID");
+
+            // Set the uploaded by user ID
+            dto.UploadedByUserId = userId;
+
             try
             {
                 var image = await _profileService.UploadCompanyImageAsync(companyId, dto);

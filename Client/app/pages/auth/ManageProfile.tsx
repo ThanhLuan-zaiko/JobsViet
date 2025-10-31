@@ -98,11 +98,11 @@ const ManageProfile: React.FC = () => {
 
           // Send metadata to ASP.NET server
           const metadata = {
-            imageType: "profile",
-            imageUrl: uploadResponse.data.image_url,
-            originalFileName: uploadResponse.data.file_name,
-            fileSize: uploadResponse.data.file_size,
-            mimeType: uploadResponse.data.mime_type,
+            ImageType: "profile",
+            FilePath: uploadResponse.data.image_url,
+            FileName: uploadResponse.data.file_name,
+            FileSize: uploadResponse.data.file_size,
+            FileType: uploadResponse.data.mime_type,
           };
 
           await axios.post(
@@ -139,11 +139,11 @@ const ManageProfile: React.FC = () => {
 
             // Send metadata to ASP.NET server
             const metadata = {
-              imageType: "portfolio",
-              imageUrl: uploadResponse.data.image_url,
-              originalFileName: uploadResponse.data.file_name,
-              fileSize: uploadResponse.data.file_size,
-              mimeType: uploadResponse.data.mime_type,
+              ImageType: "portfolio",
+              FilePath: uploadResponse.data.image_url,
+              FileName: uploadResponse.data.file_name,
+              FileSize: uploadResponse.data.file_size,
+              FileType: uploadResponse.data.mime_type,
             };
 
             await axios.post(
@@ -221,11 +221,11 @@ const ManageProfile: React.FC = () => {
 
           // Send metadata to ASP.NET server
           const metadata = {
-            imageType: "profile",
-            imageUrl: uploadResponse.data.image_url,
-            originalFileName: uploadResponse.data.file_name,
-            fileSize: uploadResponse.data.file_size,
-            mimeType: uploadResponse.data.mime_type,
+            ImageType: "profile",
+            FilePath: uploadResponse.data.image_url,
+            FileName: uploadResponse.data.file_name,
+            FileSize: uploadResponse.data.file_size,
+            FileType: uploadResponse.data.mime_type,
           };
 
           await axios.post(

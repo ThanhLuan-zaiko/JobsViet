@@ -11,17 +11,24 @@ namespace Server.DTOs.Profiles
         [StringLength(50, ErrorMessage = "Image type cannot exceed 50 characters.")]
         public string? ImageType { get; set; } // "logo", "banner", "gallery", etc.
 
-        [StringLength(1000, ErrorMessage = "Image URL cannot exceed 1000 characters.")]
-        [Url(ErrorMessage = "Invalid image URL.")]
-        public string? ImageUrl { get; set; }
+        [StringLength(500, ErrorMessage = "File path cannot exceed 500 characters.")]
+        public string? FilePath { get; set; }
 
-        [StringLength(255, ErrorMessage = "Original file name cannot exceed 255 characters.")]
-        public string? OriginalFileName { get; set; }
+        [StringLength(255, ErrorMessage = "File name cannot exceed 255 characters.")]
+        public string? FileName { get; set; }
 
         public long? FileSize { get; set; }
 
-        [StringLength(100, ErrorMessage = "MIME type cannot exceed 100 characters.")]
-        public string? MimeType { get; set; }
+        [StringLength(100, ErrorMessage = "File type cannot exceed 100 characters.")]
+        public string? FileType { get; set; }
+
+        [StringLength(300, ErrorMessage = "Caption cannot exceed 300 characters.")]
+        public string? Caption { get; set; }
+
+        public int? SortOrder { get; set; }
+        public bool? IsPrimary { get; set; }
+        public bool? IsActive { get; set; }
+        public Guid? UploadedByUserId { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
@@ -33,26 +40,40 @@ namespace Server.DTOs.Profiles
         [StringLength(50, ErrorMessage = "Image type cannot exceed 50 characters.")]
         public string ImageType { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Image URL is required.")]
-        [StringLength(1000, ErrorMessage = "Image URL cannot exceed 1000 characters.")]
-        [Url(ErrorMessage = "Invalid image URL.")]
-        public string ImageUrl { get; set; } = string.Empty;
+        [Required(ErrorMessage = "File path is required.")]
+        [StringLength(500, ErrorMessage = "File path cannot exceed 500 characters.")]
+        public string FilePath { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Original file name is required.")]
-        [StringLength(255, ErrorMessage = "Original file name cannot exceed 255 characters.")]
-        public string OriginalFileName { get; set; } = string.Empty;
+        [Required(ErrorMessage = "File name is required.")]
+        [StringLength(255, ErrorMessage = "File name cannot exceed 255 characters.")]
+        public string FileName { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "File size is required.")]
         public long FileSize { get; set; }
 
-        [Required(ErrorMessage = "MIME type is required.")]
-        [StringLength(100, ErrorMessage = "MIME type cannot exceed 100 characters.")]
-        public string MimeType { get; set; } = string.Empty;
+        [Required(ErrorMessage = "File type is required.")]
+        [StringLength(100, ErrorMessage = "File type cannot exceed 100 characters.")]
+        public string FileType { get; set; } = string.Empty;
+
+        [StringLength(300, ErrorMessage = "Caption cannot exceed 300 characters.")]
+        public string? Caption { get; set; }
+
+        public int? SortOrder { get; set; }
+        public bool? IsPrimary { get; set; }
+        public bool? IsActive { get; set; }
+        public Guid? UploadedByUserId { get; set; }
     }
 
     public class CompanyImageUpdateDto
     {
         [StringLength(50, ErrorMessage = "Image type cannot exceed 50 characters.")]
         public string? ImageType { get; set; }
+
+        [StringLength(300, ErrorMessage = "Caption cannot exceed 300 characters.")]
+        public string? Caption { get; set; }
+
+        public int? SortOrder { get; set; }
+        public bool? IsPrimary { get; set; }
+        public bool? IsActive { get; set; }
     }
 }
