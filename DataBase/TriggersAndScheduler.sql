@@ -262,6 +262,8 @@ SELECT 'Permissions' AS TableName, COUNT(*) AS RecordCount FROM Permissions;
 SELECT 'RolePermissions' AS TableName, COUNT(*) AS RecordCount FROM RolePermissions;
 SELECT 'UserPermissions' AS TableName, COUNT(*) AS RecordCount FROM UserPermissions;
 SELECT 'CandidateProfiles' AS TableName, COUNT(*) AS RecordCount FROM CandidateProfiles;
+SELECT * FROM CandidateProfiles;
+SELECT * FROM CandidateIMAGES;
 SELECT 'EmployerProfiles' AS TableName, COUNT(*) AS RecordCount FROM EmployerProfiles;
 SELECT 'Companies' AS TableName, COUNT(*) AS RecordCount FROM Companies;
 SELECT 'EmployerCompanies' AS TableName, COUNT(*) AS RecordCount FROM EmployerCompanies;

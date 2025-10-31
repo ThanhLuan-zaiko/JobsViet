@@ -159,7 +159,6 @@ namespace Server.Data.Jobs
                 entity.HasKey(e => e.ImageId);
                 entity.Property(e => e.ImageId).HasColumnName("CANDIDATEIMAGEID");
                 entity.Property(e => e.CandidateId).HasColumnName("CANDIDATEID");
-                entity.Property(e => e.ImageType).HasColumnName("IMAGETYPE").HasMaxLength(50);
                 entity.Property(e => e.FilePath).HasColumnName("FILEPATH").HasMaxLength(500);
                 entity.Property(e => e.FileName).HasColumnName("FILENAME").HasMaxLength(255);
                 entity.Property(e => e.FileSize).HasColumnName("FILESIZE");
@@ -179,7 +178,6 @@ namespace Server.Data.Jobs
                 entity.HasKey(e => e.ImageId);
                 entity.Property(e => e.ImageId).HasColumnName("EMPLOYERIMAGEID");
                 entity.Property(e => e.EmployerId).HasColumnName("EMPLOYERPROFILEID");
-                entity.Property(e => e.ImageType).HasColumnName("IMAGETYPE").HasMaxLength(50);
                 entity.Property(e => e.FilePath).HasColumnName("FILEPATH").HasMaxLength(500);
                 entity.Property(e => e.FileName).HasColumnName("FILENAME").HasMaxLength(255);
                 entity.Property(e => e.FileSize).HasColumnName("FILESIZE");
@@ -199,7 +197,6 @@ namespace Server.Data.Jobs
                 entity.HasKey(e => e.ImageId);
                 entity.Property(e => e.ImageId).HasColumnName("IMAGEID");
                 entity.Property(e => e.CompanyId).HasColumnName("COMPANYID");
-                entity.Property(e => e.ImageType).HasColumnName("IMAGETYPE").HasMaxLength(50);
                 entity.Property(e => e.FilePath).HasColumnName("FILEPATH").HasMaxLength(500);
                 entity.Property(e => e.FileName).HasColumnName("FILENAME").HasMaxLength(255);
                 entity.Property(e => e.FileSize).HasColumnName("FILESIZE");

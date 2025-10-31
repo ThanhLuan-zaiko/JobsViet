@@ -6,7 +6,6 @@ namespace Server.Models.Profiles
     {
         public Guid ImageId { get; set; }
         public Guid CandidateId { get; set; }
-        public string? ImageType { get; set; } // "profile", "portfolio", etc.
         public string? FilePath { get; set; }
         public string? FileName { get; set; }
         public long? FileSize { get; set; }

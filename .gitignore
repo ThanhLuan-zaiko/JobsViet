@@ -8,6 +8,8 @@
 /Client/build/
 /Client/dist/
 
+/Images/uploads/
+
 # misc
 /Client/.DS_Store
 /Client/npm-debug.log*

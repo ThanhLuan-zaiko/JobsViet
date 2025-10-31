@@ -48,7 +48,6 @@ namespace Server.Services.Profiles
                 {
                     ImageId = img.ImageId,
                     CandidateId = img.CandidateId,
-                    ImageType = img.ImageType,
                     FilePath = img.FilePath,
                     FileName = img.FileName,
                     FileSize = img.FileSize,
@@ -147,7 +146,6 @@ namespace Server.Services.Profiles
                 {
                     ImageId = img.ImageId,
                     EmployerId = img.EmployerId,
-                    ImageType = img.ImageType,
                     FilePath = img.FilePath,
                     FileName = img.FileName,
                     FileSize = img.FileSize,
@@ -336,7 +334,6 @@ namespace Server.Services.Profiles
             {
                 ImageId = Guid.NewGuid(),
                 CandidateId = candidateId,
-                ImageType = dto.ImageType,
                 FilePath = dto.FilePath,
                 FileName = dto.FileName,
                 FileSize = dto.FileSize,
@@ -355,7 +352,6 @@ namespace Server.Services.Profiles
             {
                 ImageId = createdImage.ImageId,
                 CandidateId = createdImage.CandidateId,
-                ImageType = createdImage.ImageType,
                 FilePath = createdImage.FilePath,
                 FileName = createdImage.FileName,
                 FileSize = createdImage.FileSize,
@@ -376,7 +372,6 @@ namespace Server.Services.Profiles
             {
                 ImageId = Guid.NewGuid(),
                 EmployerId = employerId,
-                ImageType = dto.ImageType,
                 FilePath = dto.FilePath,
                 FileName = dto.FileName,
                 FileSize = dto.FileSize,
@@ -395,7 +390,6 @@ namespace Server.Services.Profiles
             {
                 ImageId = createdImage.ImageId,
                 EmployerId = createdImage.EmployerId,
-                ImageType = createdImage.ImageType,
                 FilePath = createdImage.FilePath,
                 FileName = createdImage.FileName,
                 FileSize = createdImage.FileSize,
@@ -416,7 +410,6 @@ namespace Server.Services.Profiles
             {
                 ImageId = Guid.NewGuid(),
                 CompanyId = companyId,
-                ImageType = dto.ImageType,
                 FilePath = dto.FilePath,
                 FileName = dto.FileName,
                 FileSize = dto.FileSize,
@@ -435,7 +428,6 @@ namespace Server.Services.Profiles
             {
                 ImageId = createdImage.ImageId,
                 CompanyId = createdImage.CompanyId,
-                ImageType = createdImage.ImageType,
                 FilePath = createdImage.FilePath,
                 FileName = createdImage.FileName,
                 FileSize = createdImage.FileSize,
@@ -457,7 +449,6 @@ namespace Server.Services.Profiles
             {
                 ImageId = img.ImageId,
                 CandidateId = img.CandidateId,
-                ImageType = img.ImageType,
                 FilePath = img.FilePath,
                 FileName = img.FileName,
                 FileSize = img.FileSize,
@@ -479,7 +470,6 @@ namespace Server.Services.Profiles
             {
                 ImageId = img.ImageId,
                 EmployerId = img.EmployerId,
-                ImageType = img.ImageType,
                 FilePath = img.FilePath,
                 FileName = img.FileName,
                 FileSize = img.FileSize,
@@ -501,7 +491,6 @@ namespace Server.Services.Profiles
             {
                 ImageId = img.ImageId,
                 CompanyId = img.CompanyId,
-                ImageType = img.ImageType,
                 FilePath = img.FilePath,
                 FileName = img.FileName,
                 FileSize = img.FileSize,
