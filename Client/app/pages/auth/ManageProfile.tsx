@@ -74,7 +74,6 @@ const ManageProfile: React.FC = () => {
   ) => {
     setSaving(true);
     try {
-      console.log("Form data being sent:", formData);
       // Save profile data first
       const method = candidateProfile ? "put" : "post";
       const response = await axios[method](
@@ -91,7 +90,7 @@ const ManageProfile: React.FC = () => {
           imageFormData.append("file", profileImage);
 
           const uploadResponse = await axios.post(
-            `http://127.0.0.1:8000/upload/candidate/${response.data.candidateId}`,
+            `${import.meta.env.VITE_IMAGES_SERVICE}/upload/candidate/${response.data.candidateId}`,
             imageFormData,
             {
               headers: { "Content-Type": "multipart/form-data" },
@@ -132,7 +131,7 @@ const ManageProfile: React.FC = () => {
             imageFormData.append("file", image);
 
             const uploadResponse = await axios.post(
-              `http://127.0.0.1:8000/upload/candidate/${response.data.candidateId}`,
+              `${import.meta.env.VITE_IMAGES_SERVICE}/upload/candidate/${response.data.candidateId}`,
               imageFormData,
               {
                 headers: { "Content-Type": "multipart/form-data" },
@@ -214,7 +213,7 @@ const ManageProfile: React.FC = () => {
           imageFormData.append("file", profileImage);
 
           const uploadResponse = await axios.post(
-            `http://127.0.0.1:8000/upload/employer/${employerResponse.data.employerId}`,
+            `${import.meta.env.VITE_IMAGES_SERVICE}/upload/employer/${employerResponse.data.employerId}`,
             imageFormData,
             {
               headers: { "Content-Type": "multipart/form-data" },

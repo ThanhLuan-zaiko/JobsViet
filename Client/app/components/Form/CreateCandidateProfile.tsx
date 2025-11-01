@@ -33,6 +33,7 @@ const CreateCandidateProfile: React.FC<CandidateProfileTabProps> = ({
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [portfolioImages, setPortfolioImages] = useState<File[]>([]);
+  const [dateOfBirthError, setDateOfBirthError] = useState<string>("");
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -41,6 +42,15 @@ const CreateCandidateProfile: React.FC<CandidateProfileTabProps> = ({
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Validate date of birth on change
+    if (name === "dateOfBirth") {
+      if (!validateDateOfBirth(value)) {
+        setDateOfBirthError("Bạn phải ít nhất 16 tuổi.");
+      } else {
+        setDateOfBirthError("");
+      }
+    }
   };
 
   const handleImageChange = (
@@ -57,8 +67,29 @@ const CreateCandidateProfile: React.FC<CandidateProfileTabProps> = ({
     }
   };
 
+  const validateDateOfBirth = (dateOfBirth: string): boolean => {
+    if (!dateOfBirth) return true; // Optional field
+    const birthDate = new Date(dateOfBirth);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+    return age >= 16;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate date of birth
+    if (!validateDateOfBirth(formData.dateOfBirth)) {
+      setDateOfBirthError("Bạn phải ít nhất 16 tuổi.");
+      return;
+    }
 
     // Clean form data: convert empty strings to null for optional fields
     const cleanedFormData = {
@@ -113,7 +144,7 @@ const CreateCandidateProfile: React.FC<CandidateProfileTabProps> = ({
               value={formData.phone}
               onChange={handleInputChange}
               maxLength={50}
-              pattern="^\+?[1-9]\d{1,14}$"
+              pattern="^/^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -128,6 +159,9 @@ const CreateCandidateProfile: React.FC<CandidateProfileTabProps> = ({
               onChange={handleInputChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            {dateOfBirthError && (
+              <p className="text-red-500 text-sm mt-1">{dateOfBirthError}</p>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
