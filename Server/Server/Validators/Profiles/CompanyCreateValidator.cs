@@ -9,28 +9,36 @@ namespace Server.Validators.Profiles
         {
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Company name is required.")
-                .MaximumLength(300).WithMessage("Company name cannot exceed 300 characters.");
+                .MaximumLength(255).WithMessage("Company name cannot exceed 255 characters.");
+
+            RuleFor(x => x.CompanyCode)
+                .MaximumLength(100).WithMessage("Company code cannot exceed 100 characters.");
 
             RuleFor(x => x.Website)
-                .MaximumLength(300).WithMessage("Website URL cannot exceed 300 characters.")
+                .MaximumLength(500).WithMessage("Website URL cannot exceed 500 characters.")
                 .Must(uri => uri == null || Uri.TryCreate(uri, UriKind.Absolute, out _))
                 .WithMessage("Invalid website URL.");
 
             RuleFor(x => x.Industry)
-                .MaximumLength(100).WithMessage("Industry cannot exceed 100 characters.");
+                .MaximumLength(255).WithMessage("Industry cannot exceed 255 characters.");
 
-            RuleFor(x => x.Size)
+            RuleFor(x => x.CompanySize)
                 .MaximumLength(50).WithMessage("Company size cannot exceed 50 characters.");
 
             RuleFor(x => x.FoundedYear)
                 .InclusiveBetween(1800, DateTime.Now.Year).WithMessage($"Founded year must be between 1800 and {DateTime.Now.Year}.")
                 .When(x => x.FoundedYear.HasValue);
 
+            RuleFor(x => x.LogoURL)
+                .MaximumLength(300).WithMessage("Logo URL cannot exceed 300 characters.")
+                .Must(uri => uri == null || Uri.TryCreate(uri, UriKind.Absolute, out _))
+                .WithMessage("Invalid logo URL.");
+
             RuleFor(x => x.Address)
                 .MaximumLength(500).WithMessage("Address cannot exceed 500 characters.");
 
             RuleFor(x => x.ContactEmail)
-                .MaximumLength(200).WithMessage("Contact email cannot exceed 200 characters.")
+                .MaximumLength(255).WithMessage("Contact email cannot exceed 255 characters.")
                 .EmailAddress().WithMessage("Invalid email address.")
                 .When(x => !string.IsNullOrEmpty(x.ContactEmail));
         }

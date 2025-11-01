@@ -4,7 +4,7 @@ namespace Server.Models.Profiles
 {
     public class CompanyImage
     {
-        public Guid ImageId { get; set; }
+        public Guid CompanyImageId { get; set; }
         public Guid CompanyId { get; set; }
         public string? FilePath { get; set; }
         public string? FileName { get; set; }

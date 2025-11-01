@@ -128,11 +128,13 @@ namespace Server.Data.Jobs
                 entity.HasKey(e => e.CompanyId);
                 entity.Property(e => e.CompanyId).HasColumnName("COMPANYID");
                 entity.Property(e => e.Name).HasColumnName("NAME").IsRequired().HasMaxLength(255);
+                entity.Property(e => e.CompanyCode).HasColumnName("COMPANYCODE").HasMaxLength(100);
                 entity.Property(e => e.Website).HasColumnName("WEBSITE").HasMaxLength(500);
                 entity.Property(e => e.Description).HasColumnName("DESCRIPTION");
                 entity.Property(e => e.Industry).HasColumnName("INDUSTRY").HasMaxLength(255);
-                entity.Property(e => e.Size).HasColumnName("SIZE").HasMaxLength(50);
+                entity.Property(e => e.CompanySize).HasColumnName("COMPANYSIZE").HasMaxLength(50);
                 entity.Property(e => e.FoundedYear).HasColumnName("FOUNDEDYEAR");
+                entity.Property(e => e.LogoURL).HasColumnName("LOGOURL").HasMaxLength(300);
                 entity.Property(e => e.Address).HasColumnName("ADDRESS").HasMaxLength(500);
                 entity.Property(e => e.ContactEmail).HasColumnName("CONTACTEMAIL").HasMaxLength(255);
                 entity.Property(e => e.CreatedAt).HasColumnName("CREATEDAT");
@@ -148,8 +150,6 @@ namespace Server.Data.Jobs
                 entity.Property(e => e.CompanyId).HasColumnName("COMPANYID");
                 entity.Property(e => e.Role).HasColumnName("ROLE");
                 entity.Property(e => e.IsPrimary).HasColumnName("ISPRIMARY");
-                entity.Property(e => e.CreatedAt).HasColumnName("CREATEDAT");
-                entity.Property(e => e.UpdatedAt).HasColumnName("UPDATEDAT");
             });
 
             // Image entities configuration
@@ -194,8 +194,8 @@ namespace Server.Data.Jobs
             modelBuilder.Entity<CompanyImage>(entity =>
             {
                 entity.ToTable("COMPANYIMAGES");
-                entity.HasKey(e => e.ImageId);
-                entity.Property(e => e.ImageId).HasColumnName("IMAGEID");
+                entity.HasKey(e => e.CompanyImageId);
+                entity.Property(e => e.CompanyImageId).HasColumnName("COMPANYIMAGEID");
                 entity.Property(e => e.CompanyId).HasColumnName("COMPANYID");
                 entity.Property(e => e.FilePath).HasColumnName("FILEPATH").HasMaxLength(500);
                 entity.Property(e => e.FileName).HasColumnName("FILENAME").HasMaxLength(255);

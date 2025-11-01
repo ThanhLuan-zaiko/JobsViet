@@ -9,7 +9,5 @@ namespace Server.Models.Profiles
         public Guid CompanyId { get; set; }
         public string? Role { get; set; } // e.g., "Owner", "HR", "Manager"
         public bool? IsPrimary { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
     }
 }

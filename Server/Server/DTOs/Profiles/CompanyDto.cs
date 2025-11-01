@@ -11,6 +11,9 @@ namespace Server.DTOs.Profiles
         [StringLength(255, ErrorMessage = "Company name cannot exceed 255 characters.")]
         public string Name { get; set; } = string.Empty;
 
+        [StringLength(100, ErrorMessage = "Company code cannot exceed 100 characters.")]
+        public string? CompanyCode { get; set; }
+
         [StringLength(500, ErrorMessage = "Website URL cannot exceed 500 characters.")]
         [Url(ErrorMessage = "Invalid website URL.")]
         public string? Website { get; set; }
@@ -21,10 +24,14 @@ namespace Server.DTOs.Profiles
         public string? Industry { get; set; }
 
         [StringLength(50, ErrorMessage = "Company size cannot exceed 50 characters.")]
-        public string? Size { get; set; }
+        public string? CompanySize { get; set; }
 
         [Range(1800, 2100, ErrorMessage = "Founded year must be between 1800 and 2100.")]
         public int? FoundedYear { get; set; }
+
+        [StringLength(300, ErrorMessage = "Logo URL cannot exceed 300 characters.")]
+        [Url(ErrorMessage = "Invalid logo URL.")]
+        public string? LogoURL { get; set; }
 
         [StringLength(500, ErrorMessage = "Address cannot exceed 500 characters.")]
         public string? Address { get; set; }
@@ -46,6 +53,9 @@ namespace Server.DTOs.Profiles
         [StringLength(255, ErrorMessage = "Company name cannot exceed 255 characters.")]
         public string Name { get; set; } = string.Empty;
 
+        [StringLength(100, ErrorMessage = "Company code cannot exceed 100 characters.")]
+        public string? CompanyCode { get; set; }
+
         [StringLength(500, ErrorMessage = "Website URL cannot exceed 500 characters.")]
         [Url(ErrorMessage = "Invalid website URL.")]
         public string? Website { get; set; }
@@ -56,10 +66,14 @@ namespace Server.DTOs.Profiles
         public string? Industry { get; set; }
 
         [StringLength(50, ErrorMessage = "Company size cannot exceed 50 characters.")]
-        public string? Size { get; set; }
+        public string? CompanySize { get; set; }
 
         [Range(1800, 2100, ErrorMessage = "Founded year must be between 1800 and 2100.")]
         public int? FoundedYear { get; set; }
+
+        [StringLength(300, ErrorMessage = "Logo URL cannot exceed 300 characters.")]
+        [Url(ErrorMessage = "Invalid logo URL.")]
+        public string? LogoURL { get; set; }
 
         [StringLength(500, ErrorMessage = "Address cannot exceed 500 characters.")]
         public string? Address { get; set; }
@@ -74,6 +88,9 @@ namespace Server.DTOs.Profiles
         [StringLength(255, ErrorMessage = "Company name cannot exceed 255 characters.")]
         public string? Name { get; set; }
 
+        [StringLength(100, ErrorMessage = "Company code cannot exceed 100 characters.")]
+        public string? CompanyCode { get; set; }
+
         [StringLength(500, ErrorMessage = "Website URL cannot exceed 500 characters.")]
         [Url(ErrorMessage = "Invalid website URL.")]
         public string? Website { get; set; }
@@ -84,10 +101,14 @@ namespace Server.DTOs.Profiles
         public string? Industry { get; set; }
 
         [StringLength(50, ErrorMessage = "Company size cannot exceed 50 characters.")]
-        public string? Size { get; set; }
+        public string? CompanySize { get; set; }
 
         [Range(1800, 2100, ErrorMessage = "Founded year must be between 1800 and 2100.")]
         public int? FoundedYear { get; set; }
+
+        [StringLength(300, ErrorMessage = "Logo URL cannot exceed 300 characters.")]
+        [Url(ErrorMessage = "Invalid logo URL.")]
+        public string? LogoURL { get; set; }
 
         [StringLength(500, ErrorMessage = "Address cannot exceed 500 characters.")]
         public string? Address { get; set; }

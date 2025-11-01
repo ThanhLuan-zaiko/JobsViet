@@ -5,7 +5,7 @@ namespace Server.DTOs.Profiles
 {
     public class CompanyImageDto
     {
-        public Guid ImageId { get; set; }
+        public Guid CompanyImageId { get; set; }
         public Guid CompanyId { get; set; }
 
         [StringLength(50, ErrorMessage = "Image type cannot exceed 50 characters.")]

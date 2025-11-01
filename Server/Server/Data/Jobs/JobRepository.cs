@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Server.Models.Jobs;
+using Server.Data.Jobs;
 
 namespace Server.Data.Jobs
 {

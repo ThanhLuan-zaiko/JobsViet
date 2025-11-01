@@ -1,7 +1,7 @@
 using System;
-using Server.Data.Jobs;
 using Server.Models.Profiles;
 using Microsoft.EntityFrameworkCore;
+using Server.Data.Jobs;
 
 namespace Server.Data.Profiles
 {

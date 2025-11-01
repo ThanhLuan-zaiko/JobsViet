@@ -102,9 +102,6 @@ namespace Server.Extensions
             services.AddDbContext<Server.Data.Jobs.ApplicationDbContext>(options =>
                 options.UseOracle(configuration.GetConnectionString("OracleDb")));
 
-            services.AddDbContext<Server.Data.Auth.ApplicationDbContext>(options =>
-                options.UseOracle(configuration.GetConnectionString("OracleDb")));
-
             return services;
         }
 

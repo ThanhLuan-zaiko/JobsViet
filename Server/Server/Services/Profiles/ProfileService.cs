@@ -165,7 +165,7 @@ namespace Server.Services.Profiles
                     Website = c.Website,
                     Description = c.Description,
                     Industry = c.Industry,
-                    Size = c.Size,
+                    CompanySize = c.CompanySize,
                     FoundedYear = c.FoundedYear,
                     Address = c.Address,
                     ContactEmail = c.ContactEmail,
@@ -228,7 +228,7 @@ namespace Server.Services.Profiles
                 Website = dto.Website,
                 Description = dto.Description,
                 Industry = dto.Industry,
-                Size = dto.Size,
+                CompanySize = dto.CompanySize,
                 FoundedYear = dto.FoundedYear,
                 Address = dto.Address,
                 ContactEmail = dto.ContactEmail,
@@ -244,7 +244,7 @@ namespace Server.Services.Profiles
                 Website = createdCompany.Website,
                 Description = createdCompany.Description,
                 Industry = createdCompany.Industry,
-                Size = createdCompany.Size,
+                CompanySize = createdCompany.CompanySize,
                 FoundedYear = createdCompany.FoundedYear,
                 Address = createdCompany.Address,
                 ContactEmail = createdCompany.ContactEmail,
@@ -263,7 +263,7 @@ namespace Server.Services.Profiles
             if (dto.Website != null) existingCompany.Website = dto.Website;
             if (dto.Description != null) existingCompany.Description = dto.Description;
             if (dto.Industry != null) existingCompany.Industry = dto.Industry;
-            if (dto.Size != null) existingCompany.Size = dto.Size;
+            if (dto.CompanySize != null) existingCompany.CompanySize = dto.CompanySize;
             if (dto.FoundedYear.HasValue) existingCompany.FoundedYear = dto.FoundedYear;
             if (dto.Address != null) existingCompany.Address = dto.Address;
             if (dto.ContactEmail != null) existingCompany.ContactEmail = dto.ContactEmail;
@@ -278,7 +278,7 @@ namespace Server.Services.Profiles
                 Website = updatedCompany.Website,
                 Description = updatedCompany.Description,
                 Industry = updatedCompany.Industry,
-                Size = updatedCompany.Size,
+                CompanySize = updatedCompany.CompanySize,
                 FoundedYear = updatedCompany.FoundedYear,
                 Address = updatedCompany.Address,
                 ContactEmail = updatedCompany.ContactEmail,
@@ -299,7 +299,7 @@ namespace Server.Services.Profiles
                 Website = company.Website,
                 Description = company.Description,
                 Industry = company.Industry,
-                Size = company.Size,
+                CompanySize = company.CompanySize,
                 FoundedYear = company.FoundedYear,
                 Address = company.Address,
                 ContactEmail = company.ContactEmail,
@@ -318,7 +318,7 @@ namespace Server.Services.Profiles
                 Website = c.Website,
                 Description = c.Description,
                 Industry = c.Industry,
-                Size = c.Size,
+                CompanySize = c.CompanySize,
                 FoundedYear = c.FoundedYear,
                 Address = c.Address,
                 ContactEmail = c.ContactEmail,
@@ -408,7 +408,7 @@ namespace Server.Services.Profiles
         {
             var image = new CompanyImage
             {
-                ImageId = Guid.NewGuid(),
+                CompanyImageId = Guid.NewGuid(),
                 CompanyId = companyId,
                 FilePath = dto.FilePath,
                 FileName = dto.FileName,
@@ -426,7 +426,7 @@ namespace Server.Services.Profiles
             await _unitOfWork.SaveChangesAsync();
             return new CompanyImageDto
             {
-                ImageId = createdImage.ImageId,
+                CompanyImageId = createdImage.CompanyImageId,
                 CompanyId = createdImage.CompanyId,
                 FilePath = createdImage.FilePath,
                 FileName = createdImage.FileName,
@@ -489,7 +489,7 @@ namespace Server.Services.Profiles
             var images = await _unitOfWork.ProfileRepository.GetCompanyImagesAsync(companyId);
             return images.Select(img => new CompanyImageDto
             {
-                ImageId = img.ImageId,
+                CompanyImageId = img.CompanyImageId,
                 CompanyId = img.CompanyId,
                 FilePath = img.FilePath,
                 FileName = img.FileName,
@@ -509,7 +509,7 @@ namespace Server.Services.Profiles
         {
             public string? image_url { get; set; }
             public string? file_name { get; set; }
-            public long? file_size { get; set; }
+            public long? file_CompanySize { get; set; }
             public string? mime_type { get; set; }
         }
     }
