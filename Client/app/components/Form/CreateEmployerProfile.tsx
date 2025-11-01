@@ -6,7 +6,8 @@ interface EmployerProfileTabProps {
   onSubmit: (
     formData: any,
     companies: any[],
-    profileImage: File | null
+    profileImage: File | null,
+    companyImages: { [key: string]: File[] }
   ) => void;
   saving: boolean;
 }
@@ -28,6 +29,9 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
   });
 
   const [companies, setCompanies] = useState<any[]>(profile?.companies || []);
+  const [companyImages, setCompanyImages] = useState<{ [key: string]: File[] }>(
+    {}
+  );
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
 
@@ -64,7 +68,28 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
   };
 
   const removeCompany = (index: number) => {
-    setCompanies(companies.filter((_, i) => i !== index));
+    const companyId = companies[index].id;
+    const updatedCompanies = companies.filter((_, i) => i !== index);
+    setCompanies(updatedCompanies);
+
+    // Remove associated images
+    const updatedImages = { ...companyImages };
+    delete updatedImages[companyId];
+    setCompanyImages(updatedImages);
+  };
+
+  const handleCompanyImageChange = (
+    companyId: string,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const files = e.target.files;
+    if (files) {
+      const fileArray = Array.from(files);
+      setCompanyImages((prev) => ({
+        ...prev,
+        [companyId]: fileArray,
+      }));
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,7 +116,7 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
       website: formData.website || null,
     };
 
-    onSubmit(cleanedFormData, companies, profileImage);
+    onSubmit(cleanedFormData, companies, profileImage, companyImages);
   };
 
   return (
@@ -347,6 +372,34 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+              </div>
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Ảnh công ty
+                </label>
+                <div className="flex items-center space-x-4">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={(e) => handleCompanyImageChange(company.id, e)}
+                    className="hidden"
+                    id={`company-image-${company.id}`}
+                  />
+                  <label
+                    htmlFor={`company-image-${company.id}`}
+                    className="flex items-center space-x-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-md cursor-pointer hover:bg-blue-100"
+                  >
+                    <FaCamera />
+                    <span>Chọn ảnh</span>
+                  </label>
+                  {companyImages[company.id] &&
+                    companyImages[company.id].length > 0 && (
+                      <span className="text-sm text-gray-600">
+                        {companyImages[company.id].length} ảnh đã chọn
+                      </span>
+                    )}
+                </div>
               </div>
             </div>
           ))}

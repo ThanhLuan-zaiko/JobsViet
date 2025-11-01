@@ -193,6 +193,79 @@ namespace Server.Services.Profiles
             };
 
             var createdProfile = await _unitOfWork.ProfileRepository.CreateEmployerProfileAsync(profile);
+
+            // Create companies if provided
+            if (dto.Companies != null && dto.Companies.Any())
+            {
+                foreach (var companyDto in dto.Companies)
+                {
+                    var company = new Company
+                    {
+                        CompanyId = Guid.NewGuid(),
+                        Name = companyDto.Name,
+                        Website = companyDto.Website,
+                        Description = companyDto.Description,
+                        Industry = companyDto.Industry,
+                        CompanySize = companyDto.CompanySize,
+                        FoundedYear = companyDto.FoundedYear,
+                        Address = companyDto.Address,
+                        ContactEmail = companyDto.ContactEmail,
+                        CreatedAt = DateTime.UtcNow
+                    };
+
+                    var createdCompany = await _unitOfWork.ProfileRepository.CreateCompanyAsync(company);
+
+                    // Create employer-company relationship
+                    var employerCompany = new EmployerCompany
+                    {
+                        Id = Guid.NewGuid(),
+                        EmployerProfileId = createdProfile.EmployerId,
+                        CompanyId = createdCompany.CompanyId,
+                        Role = companyDto.Role,
+                        IsPrimary = companyDto.IsPrimary
+                    };
+
+                    await _unitOfWork.ProfileRepository.CreateEmployerCompanyAsync(employerCompany);
+
+                    // Upload company images if provided
+                    if (companyDto.Images != null && companyDto.Images.Any())
+                    {
+                        foreach (var imageFile in companyDto.Images)
+                        {
+                            try
+                            {
+                                // Upload to image service
+                                var imageUploadResponse = await UploadImageToServiceAsync(createdCompany.CompanyId.ToString(), imageFile);
+
+                                // Save metadata to database
+                                var companyImage = new CompanyImage
+                                {
+                                    CompanyImageId = Guid.NewGuid(),
+                                    CompanyId = createdCompany.CompanyId,
+                                    FilePath = imageUploadResponse.image_url ?? string.Empty,
+                                    FileName = imageUploadResponse.file_name ?? string.Empty,
+                                    FileSize = (long)(imageUploadResponse.file_size ?? 0),
+                                    FileType = imageUploadResponse.mime_type ?? string.Empty,
+                                    Caption = null,
+                                    SortOrder = 0,
+                                    IsPrimary = false,
+                                    IsActive = true,
+                                    UploadedByUserId = userId,
+                                    CreatedAt = DateTime.UtcNow
+                                };
+
+                                await _unitOfWork.ProfileRepository.CreateCompanyImageAsync(companyImage);
+                            }
+                            catch (Exception ex)
+                            {
+                                // Log error but continue with other images
+                                Console.WriteLine($"Error uploading company image: {ex.Message}");
+                            }
+                        }
+                    }
+                }
+            }
+
             await _unitOfWork.SaveChangesAsync();
             return await GetEmployerProfileByUserIdAsync(userId) ?? throw new Exception("Failed to create employer profile");
         }
@@ -505,11 +578,31 @@ namespace Server.Services.Profiles
             }).ToList();
         }
 
+        private async Task<ImageUploadResponse> UploadImageToServiceAsync(string companyId, IFormFile imageFile)
+        {
+            var imagesServiceUrl = _configuration["ImagesService:BaseUrl"];
+            if (string.IsNullOrEmpty(imagesServiceUrl))
+                throw new Exception("Images service URL not configured");
+
+            using var content = new MultipartFormDataContent();
+            using var stream = imageFile.OpenReadStream();
+            content.Add(new StreamContent(stream), "file", imageFile.FileName);
+
+            var response = await _httpClient.PostAsync($"{imagesServiceUrl}/upload/company/{companyId}", content);
+            response.EnsureSuccessStatusCode();
+
+            var responseContent = await response.Content.ReadFromJsonAsync<ImageUploadResponse>();
+            if (responseContent == null)
+                throw new Exception("Invalid response from images service");
+
+            return responseContent;
+        }
+
         private class ImageUploadResponse
         {
             public string? image_url { get; set; }
             public string? file_name { get; set; }
-            public long? file_CompanySize { get; set; }
+            public long? file_size { get; set; }
             public string? mime_type { get; set; }
         }
     }

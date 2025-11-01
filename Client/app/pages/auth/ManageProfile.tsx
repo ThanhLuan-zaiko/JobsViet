@@ -193,7 +193,8 @@ const ManageProfile: React.FC = () => {
   const handleEmployerSubmit = async (
     formData: any,
     companies: any[],
-    profileImage: File | null
+    profileImage: File | null,
+    companyImages: { [key: string]: File[] }
   ) => {
     setSaving(true);
     try {
@@ -246,22 +247,67 @@ const ManageProfile: React.FC = () => {
         }
       }
 
-      // Save companies
+      // Save companies and upload company images
       for (const company of companies) {
+        let companyResponse;
         if (company.id.startsWith("temp-")) {
           // New company
-          await axios.post(
+          companyResponse = await axios.post(
             `${import.meta.env.VITE_API_BASE_URL}/profiles/company`,
             company,
             { withCredentials: true }
           );
         } else {
           // Update existing company
-          await axios.put(
+          companyResponse = await axios.put(
             `${import.meta.env.VITE_API_BASE_URL}/profiles/company/${company.id}`,
             company,
             { withCredentials: true }
           );
+        }
+
+        // Upload company images if selected
+        const companyId = companyResponse.data.companyId || company.id;
+        if (companyImages[company.id] && companyImages[company.id].length > 0) {
+          for (const image of companyImages[company.id]) {
+            try {
+              const imageFormData = new FormData();
+              imageFormData.append("file", image);
+
+              const uploadResponse = await axios.post(
+                `${import.meta.env.VITE_IMAGES_SERVICE}/upload/company/${companyId}`,
+                imageFormData,
+                {
+                  headers: { "Content-Type": "multipart/form-data" },
+                }
+              );
+
+              // Send metadata to ASP.NET server
+              const metadata = {
+                ImageType: "company",
+                FilePath: uploadResponse.data.image_url,
+                FileName: uploadResponse.data.file_name,
+                FileSize: uploadResponse.data.file_size,
+                FileType: uploadResponse.data.mime_type,
+              };
+
+              await axios.post(
+                `${import.meta.env.VITE_API_BASE_URL}/profiles/company/images`,
+                metadata,
+                {
+                  withCredentials: true,
+                  headers: { "Content-Type": "application/json" },
+                }
+              );
+            } catch (imageError: any) {
+              console.error("Error uploading company image:", imageError);
+              setNotification({
+                type: "warning",
+                message:
+                  "Công ty đã được lưu nhưng một số ảnh công ty không thể tải lên.",
+              });
+            }
+          }
         }
       }
 
