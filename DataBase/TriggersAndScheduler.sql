@@ -266,6 +266,7 @@ SELECT * FROM CandidateProfiles;
 SELECT * FROM CandidateIMAGES;
 SELECT 'EmployerProfiles' AS TableName, COUNT(*) AS RecordCount FROM EmployerProfiles;
 SELECT 'Companies' AS TableName, COUNT(*) AS RecordCount FROM Companies;
+SELECT * FROM Companies;
 SELECT 'EmployerCompanies' AS TableName, COUNT(*) AS RecordCount FROM EmployerCompanies;
 SELECT 'JobCategories' AS TableName, COUNT(*) AS RecordCount FROM JobCategories;
 SELECT 'Jobs' AS TableName, COUNT(*) AS RecordCount FROM Jobs;

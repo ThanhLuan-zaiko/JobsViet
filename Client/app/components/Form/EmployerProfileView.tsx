@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FaEdit,
   FaUser,
@@ -10,6 +10,7 @@ import {
   FaEnvelope,
   FaCalendarAlt,
   FaUsers,
+  FaTimes,
 } from "react-icons/fa";
 
 interface EmployerProfileViewProps {
@@ -21,6 +22,11 @@ const EmployerProfileView: React.FC<EmployerProfileViewProps> = ({
   profile,
   onEdit,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="max-w-6xl mx-auto px-4 py-8">
@@ -33,8 +39,9 @@ const EmployerProfileView: React.FC<EmployerProfileViewProps> = ({
                 {profile.images && profile.images.length > 0 ? (
                   <img
                     src={
-                      profile.images.find((img: any) => img.isPrimary)
-                        ?.filePath || profile.images[0].filePath
+                      import.meta.env.VITE_IMAGES_SERVICE +
+                      (profile.images.find((img: any) => img.isPrimary)
+                        ?.filePath || profile.images[0].filePath)
                     }
                     alt="Profile"
                     className="w-full h-full rounded-full object-cover"
@@ -119,7 +126,10 @@ const EmployerProfileView: React.FC<EmployerProfileViewProps> = ({
                         <div className="w-20 h-20 bg-white rounded-lg shadow-sm flex items-center justify-center flex-shrink-0">
                           {company.images && company.images.length > 0 ? (
                             <img
-                              src={company.images[0].filePath}
+                              src={
+                                import.meta.env.VITE_IMAGES_SERVICE +
+                                company.images[0].filePath
+                              }
                               alt={company.name}
                               className="w-full h-full rounded-lg object-cover"
                             />
@@ -194,7 +204,10 @@ const EmployerProfileView: React.FC<EmployerProfileViewProps> = ({
                                   .map((image: any, imgIndex: number) => (
                                     <img
                                       key={imgIndex}
-                                      src={image.filePath}
+                                      src={
+                                        import.meta.env.VITE_IMAGES_SERVICE +
+                                        image.filePath
+                                      }
                                       alt={`${company.name} ${imgIndex + 2}`}
                                       className="w-full h-20 object-cover rounded-lg shadow-sm"
                                     />
@@ -259,9 +272,12 @@ const EmployerProfileView: React.FC<EmployerProfileViewProps> = ({
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Công ty</span>
-                  <span className="font-semibold text-gray-900">
+                  <button
+                    onClick={openModal}
+                    className="font-semibold text-blue-600 hover:text-blue-800 hover:underline"
+                  >
                     {profile.companies?.length || 0}
-                  </span>
+                  </button>
                 </div>
                 {profile.yearsOfExperience && (
                   <div className="flex justify-between items-center">
@@ -275,6 +291,141 @@ const EmployerProfileView: React.FC<EmployerProfileViewProps> = ({
             </div>
           </div>
         </div>
+
+        {/* Modal for Company List */}
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-opacity-50 backdrop-blur-sm animate-fadeIn flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+              <div className="flex items-center justify-between p-6 border-b">
+                <h2 className="text-2xl font-bold text-gray-800 flex items-center">
+                  <FaBuilding className="mr-3 text-blue-600" />
+                  Danh sách công ty ({profile.companies?.length || 0})
+                </h2>
+                <button
+                  onClick={closeModal}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <FaTimes className="text-2xl" />
+                </button>
+              </div>
+              <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+                {profile.companies && profile.companies.length > 0 ? (
+                  <div className="space-y-6">
+                    {profile.companies.map((company: any, index: number) => (
+                      <div
+                        key={company.companyId || index}
+                        className="bg-gray-50 rounded-lg p-6 hover:shadow-md transition-shadow duration-300"
+                      >
+                        <div className="flex items-start space-x-4">
+                          <div className="w-20 h-20 bg-white rounded-lg shadow-sm flex items-center justify-center flex-shrink-0">
+                            {company.images && company.images.length > 0 ? (
+                              <img
+                                src={
+                                  import.meta.env.VITE_IMAGES_SERVICE +
+                                  company.images[0].filePath
+                                }
+                                alt={company.name}
+                                className="w-full h-full rounded-lg object-cover"
+                              />
+                            ) : (
+                              <FaBuilding className="text-gray-400 text-2xl" />
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                              {company.name}
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                              {company.industry && (
+                                <div className="flex items-center space-x-2 text-gray-600">
+                                  <FaBriefcase className="text-blue-500" />
+                                  <span>{company.industry}</span>
+                                </div>
+                              )}
+                              {company.size && (
+                                <div className="flex items-center space-x-2 text-gray-600">
+                                  <FaUsers className="text-blue-500" />
+                                  <span>{company.size}</span>
+                                </div>
+                              )}
+                              {company.foundedYear && (
+                                <div className="flex items-center space-x-2 text-gray-600">
+                                  <FaCalendarAlt className="text-blue-500" />
+                                  <span>Thành lập {company.foundedYear}</span>
+                                </div>
+                              )}
+                              {company.website && (
+                                <div className="flex items-center space-x-2">
+                                  <FaLink className="text-blue-500" />
+                                  <a
+                                    href={company.website}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:underline"
+                                  >
+                                    Website
+                                  </a>
+                                </div>
+                              )}
+                            </div>
+                            {company.description && (
+                              <p className="text-gray-700 mb-4 whitespace-pre-wrap">
+                                {company.description}
+                              </p>
+                            )}
+                            <div className="flex flex-wrap gap-2 mb-4">
+                              {company.contactEmail && (
+                                <div className="flex items-center space-x-2 text-sm text-gray-600">
+                                  <FaEnvelope className="text-blue-500" />
+                                  <span>{company.contactEmail}</span>
+                                </div>
+                              )}
+                              {company.address && (
+                                <div className="flex items-center space-x-2 text-sm text-gray-600">
+                                  <FaMapMarkerAlt className="text-blue-500" />
+                                  <span>{company.address}</span>
+                                </div>
+                              )}
+                            </div>
+                            {company.images && company.images.length > 1 && (
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-700 mb-2">
+                                  Hình ảnh công ty
+                                </h4>
+                                <div className="grid grid-cols-3 gap-2">
+                                  {company.images
+                                    .slice(1)
+                                    .map((image: any, imgIndex: number) => (
+                                      <img
+                                        key={imgIndex}
+                                        src={
+                                          import.meta.env.VITE_IMAGES_SERVICE +
+                                          image.filePath
+                                        }
+                                        alt={`${company.name} ${imgIndex + 2}`}
+                                        className="w-full h-20 object-cover rounded-lg shadow-sm"
+                                      />
+                                    ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <FaBuilding className="text-gray-400 text-6xl mx-auto mb-4" />
+                    <p className="text-gray-600 text-lg">
+                      Không có công ty nào
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

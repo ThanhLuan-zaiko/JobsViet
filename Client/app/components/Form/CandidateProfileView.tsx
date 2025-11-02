@@ -34,8 +34,9 @@ const CandidateProfileView: React.FC<CandidateProfileViewProps> = ({
               {profile.images && profile.images.length > 0 ? (
                 <img
                   src={
-                    profile.images.find((img: any) => img.isPrimary)
-                      ?.filePath || profile.images[0].filePath
+                    import.meta.env.VITE_IMAGES_SERVICE +
+                    (profile.images.find((img: any) => img.isPrimary)
+                      ?.filePath || profile.images[0].filePath)
                   }
                   alt="Profile"
                   className="w-20 h-20 rounded-full object-cover"
@@ -223,7 +224,7 @@ const CandidateProfileView: React.FC<CandidateProfileViewProps> = ({
               .map((image: any, index: number) => (
                 <div key={image.imageId || index} className="relative">
                   <img
-                    src={image.filePath}
+                    src={import.meta.env.VITE_IMAGES_SERVICE + image.filePath}
                     alt={`Portfolio ${index + 1}`}
                     className="w-full h-48 object-cover rounded-lg"
                   />

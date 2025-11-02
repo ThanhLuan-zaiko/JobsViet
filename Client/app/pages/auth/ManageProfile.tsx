@@ -385,6 +385,7 @@ const ManageProfile: React.FC = () => {
               profile={candidateProfile}
               onSubmit={handleCandidateSubmit}
               saving={saving}
+              onCancel={() => setEditingCandidate(false)}
             />
           ) : (
             <CandidateProfileView
@@ -401,6 +402,7 @@ const ManageProfile: React.FC = () => {
               profile={employerProfile}
               onSubmit={handleEmployerSubmit}
               saving={saving}
+              onCancel={() => setEditingEmployer(false)}
             />
           ) : (
             <EmployerProfileView
