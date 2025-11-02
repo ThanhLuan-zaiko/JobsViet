@@ -83,6 +83,9 @@ namespace Server.DTOs.Profiles
         [StringLength(255, ErrorMessage = "Company name cannot exceed 255 characters.")]
         public string Name { get; set; } = string.Empty;
 
+        [StringLength(100, ErrorMessage = "Company code cannot exceed 100 characters.")]
+        public string? CompanyCode { get; set; }
+
         [StringLength(500, ErrorMessage = "Website URL cannot exceed 500 characters.")]
         [Url(ErrorMessage = "Invalid website URL.")]
         public string? Website { get; set; }

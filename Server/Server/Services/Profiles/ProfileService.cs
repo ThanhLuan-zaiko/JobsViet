@@ -11,12 +11,18 @@ namespace Server.Services.Profiles
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
 
-        public ProfileService(IProfileUnitOfWork unitOfWork, HttpClient httpClient, IConfiguration configuration)
-        {
-            _unitOfWork = unitOfWork;
-            _httpClient = httpClient;
-            _configuration = configuration;
-        }
+    public ProfileService(IProfileUnitOfWork unitOfWork, HttpClient httpClient, IConfiguration configuration)
+    {
+        _unitOfWork = unitOfWork;
+        _httpClient = httpClient;
+        _configuration = configuration;
+    }
+
+    private string GenerateCompanyCode()
+    {
+        // Generate a unique 8-character code using GUID
+        return Guid.NewGuid().ToString("N").Substring(0, 8).ToUpper();
+    }
 
         // Candidate Profile
         public async Task<CandidateProfileDto?> GetCandidateProfileByUserIdAsync(Guid userId)
@@ -162,6 +168,7 @@ namespace Server.Services.Profiles
                 {
                     CompanyId = c.CompanyId,
                     Name = c.Name ?? string.Empty,
+                    CompanyCode = c.CompanyCode,
                     Website = c.Website,
                     Description = c.Description,
                     Industry = c.Industry,
@@ -203,6 +210,7 @@ namespace Server.Services.Profiles
                     {
                         CompanyId = Guid.NewGuid(),
                         Name = companyDto.Name,
+                        CompanyCode = companyDto.CompanyCode,
                         Website = companyDto.Website,
                         Description = companyDto.Description,
                         Industry = companyDto.Industry,
@@ -298,6 +306,7 @@ namespace Server.Services.Profiles
             {
                 CompanyId = Guid.NewGuid(),
                 Name = dto.Name,
+                CompanyCode = dto.CompanyCode ?? GenerateCompanyCode(),
                 Website = dto.Website,
                 Description = dto.Description,
                 Industry = dto.Industry,
@@ -314,6 +323,7 @@ namespace Server.Services.Profiles
             {
                 CompanyId = createdCompany.CompanyId,
                 Name = createdCompany.Name ?? string.Empty,
+                CompanyCode = createdCompany.CompanyCode,
                 Website = createdCompany.Website,
                 Description = createdCompany.Description,
                 Industry = createdCompany.Industry,
@@ -348,6 +358,7 @@ namespace Server.Services.Profiles
             {
                 CompanyId = updatedCompany.CompanyId,
                 Name = updatedCompany.Name ?? string.Empty,
+                CompanyCode = updatedCompany.CompanyCode,
                 Website = updatedCompany.Website,
                 Description = updatedCompany.Description,
                 Industry = updatedCompany.Industry,
@@ -369,6 +380,7 @@ namespace Server.Services.Profiles
             {
                 CompanyId = company.CompanyId,
                 Name = company.Name ?? string.Empty,
+                CompanyCode = company.CompanyCode,
                 Website = company.Website,
                 Description = company.Description,
                 Industry = company.Industry,
@@ -388,6 +400,7 @@ namespace Server.Services.Profiles
             {
                 CompanyId = c.CompanyId,
                 Name = c.Name ?? string.Empty,
+                CompanyCode = c.CompanyCode,
                 Website = c.Website,
                 Description = c.Description,
                 Industry = c.Industry,

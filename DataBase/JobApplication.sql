@@ -154,7 +154,7 @@ CREATE TABLE EmployerImages (
 CREATE TABLE Companies (
   CompanyId RAW(16) DEFAULT SYS_GUID() PRIMARY KEY,
   Name VARCHAR2(300) NOT NULL,
-  CompanyCode VARCHAR2(100) UNIQUE,              -- Mã công ty duy nhất
+  CompanyCode VARCHAR2(100) DEFAULT SYS_GUID() UNIQUE,              -- Mã công ty duy nhất
   Website VARCHAR2(300),
   Description CLOB,                              -- Mô tả công ty
   Industry VARCHAR2(100),                        -- Ngành nghề

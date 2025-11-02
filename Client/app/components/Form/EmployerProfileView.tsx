@@ -140,6 +140,11 @@ const EmployerProfileView: React.FC<EmployerProfileViewProps> = ({
                         <div className="flex-1">
                           <h3 className="text-xl font-semibold text-gray-900 mb-2">
                             {company.name}
+                            {company.companyCode && (
+                              <span className="text-sm text-gray-500 ml-2">
+                                ({company.companyCode})
+                              </span>
+                            )}
                           </h3>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             {company.industry && (
@@ -334,6 +339,11 @@ const EmployerProfileView: React.FC<EmployerProfileViewProps> = ({
                           <div className="flex-1">
                             <h3 className="text-xl font-semibold text-gray-900 mb-2">
                               {company.name}
+                              {company.companyCode && (
+                                <span className="text-sm text-gray-500 ml-2">
+                                  ({company.companyCode})
+                                </span>
+                              )}
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                               {company.industry && (
