@@ -22,8 +22,11 @@ namespace Server.Services.Profiles
 
         // Images
         Task<CandidateProfileImageDto> UploadCandidateProfileImageAsync(Guid candidateId, CandidateProfileImageCreateDto dto);
+        Task<CandidateProfileImageDto> UpdateCandidateProfileImageAsync(Guid imageId, CandidateProfileImageCreateDto dto);
         Task<EmployerProfileImageDto> UploadEmployerProfileImageAsync(Guid employerId, EmployerProfileImageCreateDto dto);
+        Task<EmployerProfileImageDto> UpdateEmployerProfileImageAsync(Guid imageId, EmployerProfileImageCreateDto dto);
         Task<CompanyImageDto> UploadCompanyImageAsync(Guid companyId, CompanyImageCreateDto dto);
+        Task<CompanyImageDto> UpdateCompanyImageAsync(Guid imageId, CompanyImageCreateDto dto);
         Task<List<CandidateProfileImageDto>> GetCandidateProfileImagesAsync(Guid candidateId);
         Task<List<EmployerProfileImageDto>> GetEmployerProfileImagesAsync(Guid employerId);
         Task<List<CompanyImageDto>> GetCompanyImagesAsync(Guid companyId);

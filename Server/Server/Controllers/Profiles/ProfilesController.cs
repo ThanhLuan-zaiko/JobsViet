@@ -261,6 +261,28 @@ namespace Server.Controllers.Profiles
             }
         }
 
+        [HttpPut("candidate/images/{imageId}")]
+        public async Task<IActionResult> UpdateCandidateProfileImage(Guid imageId, [FromBody] CandidateProfileImageCreateDto dto)
+        {
+            await HttpContext.Session.LoadAsync();
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
+                return Unauthorized("Invalid user ID");
+
+            // Set the uploaded by user ID
+            dto.UploadedByUserId = userId;
+
+            try
+            {
+                var image = await _profileService.UpdateCandidateProfileImageAsync(imageId, dto);
+                return Ok(image);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost("employer/images")]
         public async Task<IActionResult> UploadEmployerProfileImage([FromBody] EmployerProfileImageCreateDto dto)
         {
@@ -288,6 +310,28 @@ namespace Server.Controllers.Profiles
             }
         }
 
+        [HttpPut("employer/images/{imageId}")]
+        public async Task<IActionResult> UpdateEmployerProfileImage(Guid imageId, [FromBody] EmployerProfileImageCreateDto dto)
+        {
+            await HttpContext.Session.LoadAsync();
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
+                return Unauthorized("Invalid user ID");
+
+            // Set the uploaded by user ID
+            dto.UploadedByUserId = userId;
+
+            try
+            {
+                var image = await _profileService.UpdateEmployerProfileImageAsync(imageId, dto);
+                return Ok(image);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost("company/{companyId}/images")]
         public async Task<IActionResult> UploadCompanyImage(Guid companyId, [FromBody] CompanyImageCreateDto dto)
         {
@@ -303,6 +347,28 @@ namespace Server.Controllers.Profiles
             {
                 var image = await _profileService.UploadCompanyImageAsync(companyId, dto);
                 return Created("", image);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("company/images/{imageId}")]
+        public async Task<IActionResult> UpdateCompanyImage(Guid imageId, [FromBody] CompanyImageCreateDto dto)
+        {
+            await HttpContext.Session.LoadAsync();
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
+                return Unauthorized("Invalid user ID");
+
+            // Set the uploaded by user ID
+            dto.UploadedByUserId = userId;
+
+            try
+            {
+                var image = await _profileService.UpdateCompanyImageAsync(imageId, dto);
+                return Ok(image);
             }
             catch (Exception ex)
             {

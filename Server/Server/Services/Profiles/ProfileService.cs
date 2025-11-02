@@ -578,6 +578,114 @@ namespace Server.Services.Profiles
             }).ToList();
         }
 
+        public async Task<CandidateProfileImageDto> UpdateCandidateProfileImageAsync(Guid imageId, CandidateProfileImageCreateDto dto)
+        {
+            var existingImage = await _unitOfWork.ProfileRepository.GetCandidateProfileImageByIdAsync(imageId);
+            if (existingImage == null)
+                throw new Exception("Candidate profile image not found");
+
+            if (dto.FilePath != null) existingImage.FilePath = dto.FilePath;
+            if (dto.FileName != null) existingImage.FileName = dto.FileName;
+            if (dto.FileSize != 0) existingImage.FileSize = dto.FileSize;
+            if (dto.FileType != null) existingImage.FileType = dto.FileType;
+            if (dto.Caption != null) existingImage.Caption = dto.Caption;
+            if (dto.SortOrder.HasValue) existingImage.SortOrder = dto.SortOrder.Value;
+            if (dto.IsPrimary.HasValue) existingImage.IsPrimary = dto.IsPrimary.Value;
+            if (dto.IsActive.HasValue) existingImage.IsActive = dto.IsActive.Value;
+            existingImage.UpdatedAt = DateTime.UtcNow;
+
+            var updatedImage = await _unitOfWork.ProfileRepository.UpdateCandidateProfileImageAsync(existingImage);
+            await _unitOfWork.SaveChangesAsync();
+            return new CandidateProfileImageDto
+            {
+                ImageId = updatedImage.ImageId,
+                CandidateId = updatedImage.CandidateId,
+                FilePath = updatedImage.FilePath,
+                FileName = updatedImage.FileName,
+                FileSize = updatedImage.FileSize,
+                FileType = updatedImage.FileType,
+                Caption = updatedImage.Caption,
+                SortOrder = updatedImage.SortOrder,
+                IsPrimary = updatedImage.IsPrimary,
+                IsActive = updatedImage.IsActive,
+                UploadedByUserId = updatedImage.UploadedByUserId,
+                CreatedAt = updatedImage.CreatedAt,
+                UpdatedAt = updatedImage.UpdatedAt
+            };
+        }
+
+        public async Task<EmployerProfileImageDto> UpdateEmployerProfileImageAsync(Guid imageId, EmployerProfileImageCreateDto dto)
+        {
+            var existingImage = await _unitOfWork.ProfileRepository.GetEmployerProfileImageByIdAsync(imageId);
+            if (existingImage == null)
+                throw new Exception("Employer profile image not found");
+
+            if (dto.FilePath != null) existingImage.FilePath = dto.FilePath;
+            if (dto.FileName != null) existingImage.FileName = dto.FileName;
+            if (dto.FileSize != 0) existingImage.FileSize = dto.FileSize;
+            if (dto.FileType != null) existingImage.FileType = dto.FileType;
+            if (dto.Caption != null) existingImage.Caption = dto.Caption;
+            if (dto.SortOrder.HasValue) existingImage.SortOrder = dto.SortOrder.Value;
+            if (dto.IsPrimary.HasValue) existingImage.IsPrimary = dto.IsPrimary.Value;
+            if (dto.IsActive.HasValue) existingImage.IsActive = dto.IsActive.Value;
+            existingImage.UpdatedAt = DateTime.UtcNow;
+
+            var updatedImage = await _unitOfWork.ProfileRepository.UpdateEmployerProfileImageAsync(existingImage);
+            await _unitOfWork.SaveChangesAsync();
+            return new EmployerProfileImageDto
+            {
+                ImageId = updatedImage.ImageId,
+                EmployerId = updatedImage.EmployerId,
+                FilePath = updatedImage.FilePath,
+                FileName = updatedImage.FileName,
+                FileSize = updatedImage.FileSize,
+                FileType = updatedImage.FileType,
+                Caption = updatedImage.Caption,
+                SortOrder = updatedImage.SortOrder,
+                IsPrimary = updatedImage.IsPrimary,
+                IsActive = updatedImage.IsActive,
+                UploadedByUserId = updatedImage.UploadedByUserId,
+                CreatedAt = updatedImage.CreatedAt,
+                UpdatedAt = updatedImage.UpdatedAt
+            };
+        }
+
+        public async Task<CompanyImageDto> UpdateCompanyImageAsync(Guid imageId, CompanyImageCreateDto dto)
+        {
+            var existingImage = await _unitOfWork.ProfileRepository.GetCompanyImageByIdAsync(imageId);
+            if (existingImage == null)
+                throw new Exception("Company image not found");
+
+            if (dto.FilePath != null) existingImage.FilePath = dto.FilePath;
+            if (dto.FileName != null) existingImage.FileName = dto.FileName;
+            if (dto.FileSize != 0) existingImage.FileSize = dto.FileSize;
+            if (dto.FileType != null) existingImage.FileType = dto.FileType;
+            if (dto.Caption != null) existingImage.Caption = dto.Caption;
+            if (dto.SortOrder.HasValue) existingImage.SortOrder = dto.SortOrder.Value;
+            if (dto.IsPrimary.HasValue) existingImage.IsPrimary = dto.IsPrimary.Value;
+            if (dto.IsActive.HasValue) existingImage.IsActive = dto.IsActive.Value;
+            existingImage.UpdatedAt = DateTime.UtcNow;
+
+            var updatedImage = await _unitOfWork.ProfileRepository.UpdateCompanyImageAsync(existingImage);
+            await _unitOfWork.SaveChangesAsync();
+            return new CompanyImageDto
+            {
+                CompanyImageId = updatedImage.CompanyImageId,
+                CompanyId = updatedImage.CompanyId,
+                FilePath = updatedImage.FilePath,
+                FileName = updatedImage.FileName,
+                FileSize = updatedImage.FileSize,
+                FileType = updatedImage.FileType,
+                Caption = updatedImage.Caption,
+                SortOrder = updatedImage.SortOrder,
+                IsPrimary = updatedImage.IsPrimary,
+                IsActive = updatedImage.IsActive,
+                UploadedByUserId = updatedImage.UploadedByUserId,
+                CreatedAt = updatedImage.CreatedAt,
+                UpdatedAt = updatedImage.UpdatedAt
+            };
+        }
+
         private async Task<ImageUploadResponse> UploadImageToServiceAsync(string companyId, IFormFile imageFile)
         {
             var imagesServiceUrl = _configuration["ImagesService:BaseUrl"];

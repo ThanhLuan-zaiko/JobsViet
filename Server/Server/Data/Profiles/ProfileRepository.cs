@@ -110,6 +110,18 @@ namespace Server.Data.Profiles
             return image;
         }
 
+        public async Task<CandidateProfileImage?> GetCandidateProfileImageByIdAsync(Guid imageId)
+        {
+            return await _context.CandidateProfileImages.FindAsync(imageId);
+        }
+
+        public async Task<CandidateProfileImage> UpdateCandidateProfileImageAsync(CandidateProfileImage image)
+        {
+            _context.CandidateProfileImages.Update(image);
+            await _context.SaveChangesAsync();
+            return image;
+        }
+
         public async Task<EmployerProfileImage> CreateEmployerProfileImageAsync(EmployerProfileImage image)
         {
             _context.EmployerProfileImages.Add(image);
@@ -117,9 +129,33 @@ namespace Server.Data.Profiles
             return image;
         }
 
+        public async Task<EmployerProfileImage?> GetEmployerProfileImageByIdAsync(Guid imageId)
+        {
+            return await _context.EmployerProfileImages.FindAsync(imageId);
+        }
+
+        public async Task<EmployerProfileImage> UpdateEmployerProfileImageAsync(EmployerProfileImage image)
+        {
+            _context.EmployerProfileImages.Update(image);
+            await _context.SaveChangesAsync();
+            return image;
+        }
+
         public async Task<CompanyImage> CreateCompanyImageAsync(CompanyImage image)
         {
             _context.CompanyImages.Add(image);
+            await _context.SaveChangesAsync();
+            return image;
+        }
+
+        public async Task<CompanyImage?> GetCompanyImageByIdAsync(Guid imageId)
+        {
+            return await _context.CompanyImages.FindAsync(imageId);
+        }
+
+        public async Task<CompanyImage> UpdateCompanyImageAsync(CompanyImage image)
+        {
+            _context.CompanyImages.Update(image);
             await _context.SaveChangesAsync();
             return image;
         }

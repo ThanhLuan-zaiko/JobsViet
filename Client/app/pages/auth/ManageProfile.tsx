@@ -5,6 +5,8 @@ import { useAuth } from "../../contexts/AuthContext";
 import Notification from "../../components/Message/Notification";
 import CreateCandidateProfile from "../../components/Form/CreateCandidateProfile";
 import CreateEmployerProfile from "../../components/Form/CreateEmployerProfile";
+import CandidateProfileView from "../../components/Form/CandidateProfileView";
+import EmployerProfileView from "../../components/Form/EmployerProfileView";
 
 const ManageProfile: React.FC = () => {
   const { user, setNotification, logout } = useAuth();
@@ -16,6 +18,8 @@ const ManageProfile: React.FC = () => {
   const [employerProfile, setEmployerProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [editingCandidate, setEditingCandidate] = useState(false);
+  const [editingEmployer, setEditingEmployer] = useState(false);
 
   // Load existing profiles on component mount
   useEffect(() => {
@@ -170,6 +174,7 @@ const ManageProfile: React.FC = () => {
         type: "success",
         message: "Hồ sơ ứng cử viên đã được lưu thành công!",
       });
+      setEditingCandidate(false);
     } catch (error: any) {
       console.error("Error saving candidate profile:", error);
       if (error.response?.status === 401) {
@@ -315,6 +320,7 @@ const ManageProfile: React.FC = () => {
         type: "success",
         message: "Hồ sơ nhà tuyển dụng đã được lưu thành công!",
       });
+      setEditingEmployer(false);
     } catch (error: any) {
       console.error("Error saving employer profile:", error);
       if (error.response?.status === 401) {
@@ -373,18 +379,36 @@ const ManageProfile: React.FC = () => {
 
       {/* Tab Content */}
       {activeTab === "candidate" && (
-        <CreateCandidateProfile
-          profile={candidateProfile}
-          onSubmit={handleCandidateSubmit}
-          saving={saving}
-        />
+        <>
+          {editingCandidate || !candidateProfile ? (
+            <CreateCandidateProfile
+              profile={candidateProfile}
+              onSubmit={handleCandidateSubmit}
+              saving={saving}
+            />
+          ) : (
+            <CandidateProfileView
+              profile={candidateProfile}
+              onEdit={() => setEditingCandidate(true)}
+            />
+          )}
+        </>
       )}
       {activeTab === "employer" && (
-        <CreateEmployerProfile
-          profile={employerProfile}
-          onSubmit={handleEmployerSubmit}
-          saving={saving}
-        />
+        <>
+          {editingEmployer || !employerProfile ? (
+            <CreateEmployerProfile
+              profile={employerProfile}
+              onSubmit={handleEmployerSubmit}
+              saving={saving}
+            />
+          ) : (
+            <EmployerProfileView
+              profile={employerProfile}
+              onEdit={() => setEditingEmployer(true)}
+            />
+          )}
+        </>
       )}
     </div>
   );

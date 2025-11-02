@@ -9,12 +9,14 @@ interface CandidateProfileTabProps {
     portfolioImages: File[]
   ) => void;
   saving: boolean;
+  onCancel?: () => void;
 }
 
 const CreateCandidateProfile: React.FC<CandidateProfileTabProps> = ({
   profile,
   onSubmit,
   saving,
+  onCancel,
 }) => {
   const [formData, setFormData] = useState({
     fullName: profile?.fullName || "",
@@ -372,7 +374,16 @@ const CreateCandidateProfile: React.FC<CandidateProfileTabProps> = ({
       </div>
 
       {/* Submit Button */}
-      <div className="flex justify-end">
+      <div className="flex justify-end space-x-4">
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="flex items-center space-x-2 px-6 py-3 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            <span>Hủy</span>
+          </button>
+        )}
         <button
           type="submit"
           disabled={saving}

@@ -27,8 +27,14 @@ namespace Server.Data.Profiles
 
         // Images
         Task<CandidateProfileImage> CreateCandidateProfileImageAsync(CandidateProfileImage image);
+        Task<CandidateProfileImage?> GetCandidateProfileImageByIdAsync(Guid imageId);
+        Task<CandidateProfileImage> UpdateCandidateProfileImageAsync(CandidateProfileImage image);
         Task<EmployerProfileImage> CreateEmployerProfileImageAsync(EmployerProfileImage image);
+        Task<EmployerProfileImage?> GetEmployerProfileImageByIdAsync(Guid imageId);
+        Task<EmployerProfileImage> UpdateEmployerProfileImageAsync(EmployerProfileImage image);
         Task<CompanyImage> CreateCompanyImageAsync(CompanyImage image);
+        Task<CompanyImage?> GetCompanyImageByIdAsync(Guid imageId);
+        Task<CompanyImage> UpdateCompanyImageAsync(CompanyImage image);
         Task<List<CandidateProfileImage>> GetCandidateProfileImagesAsync(Guid candidateId);
         Task<List<EmployerProfileImage>> GetEmployerProfileImagesAsync(Guid employerId);
         Task<List<CompanyImage>> GetCompanyImagesAsync(Guid companyId);
