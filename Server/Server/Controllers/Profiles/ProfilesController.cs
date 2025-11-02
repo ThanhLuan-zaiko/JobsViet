@@ -181,6 +181,36 @@ namespace Server.Controllers.Profiles
             }
         }
 
+        [HttpPost("company/with-employer")]
+        public async Task<IActionResult> CreateCompanyWithEmployer([FromBody] CompanyCreateDto dto)
+        {
+            var validationResult = await _companyCreateValidator.ValidateAsync(dto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            await HttpContext.Session.LoadAsync();
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
+                return Unauthorized("Invalid user ID");
+
+            // Get employer profile to set EmployerId
+            var employerProfile = await _profileService.GetEmployerProfileByUserIdAsync(userId);
+            if (employerProfile == null)
+                return NotFound("Employer profile not found");
+
+            dto.EmployerId = employerProfile.EmployerId;
+
+            try
+            {
+                var company = await _profileService.CreateCompanyAsync(dto);
+                return CreatedAtAction(nameof(GetCompany), new { companyId = company.CompanyId }, company);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPut("company/{companyId}")]
         public async Task<IActionResult> UpdateCompany(Guid companyId, [FromBody] CompanyUpdateDto dto)
         {

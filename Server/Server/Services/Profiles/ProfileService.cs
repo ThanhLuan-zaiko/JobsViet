@@ -319,6 +319,23 @@ namespace Server.Services.Profiles
 
             var createdCompany = await _unitOfWork.ProfileRepository.CreateCompanyAsync(company);
             await _unitOfWork.SaveChangesAsync();
+
+            // If EmployerId is provided, create the EmployerCompany relationship
+            if (dto.EmployerId.HasValue)
+            {
+                var employerCompany = new EmployerCompany
+                {
+                    Id = Guid.NewGuid(),
+                    EmployerProfileId = dto.EmployerId.Value,
+                    CompanyId = createdCompany.CompanyId,
+                    Role = "Owner", // Default role
+                    IsPrimary = true
+                };
+
+                await _unitOfWork.ProfileRepository.CreateEmployerCompanyAsync(employerCompany);
+                await _unitOfWork.SaveChangesAsync();
+            }
+
             return new CompanyDto
             {
                 CompanyId = createdCompany.CompanyId,

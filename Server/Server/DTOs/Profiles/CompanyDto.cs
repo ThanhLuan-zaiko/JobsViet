@@ -81,6 +81,8 @@ namespace Server.DTOs.Profiles
         [StringLength(255, ErrorMessage = "Contact email cannot exceed 255 characters.")]
         [EmailAddress(ErrorMessage = "Invalid email address.")]
         public string? ContactEmail { get; set; }
+
+        public Guid? EmployerId { get; set; }
     }
 
     public class CompanyUpdateDto

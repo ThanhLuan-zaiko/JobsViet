@@ -256,9 +256,9 @@ const ManageProfile: React.FC = () => {
       for (const company of companies) {
         let companyResponse;
         if (company.id.startsWith("temp-")) {
-          // New company
+          // New company - use the new endpoint that associates with employer
           companyResponse = await axios.post(
-            `${import.meta.env.VITE_API_BASE_URL}/profiles/company`,
+            `${import.meta.env.VITE_API_BASE_URL}/profiles/company/with-employer`,
             company,
             { withCredentials: true }
           );
