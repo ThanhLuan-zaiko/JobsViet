@@ -174,10 +174,12 @@ namespace Server.Services.Profiles
                     Industry = c.Industry,
                     CompanySize = c.CompanySize,
                     FoundedYear = c.FoundedYear,
+                    LogoURL = c.LogoURL,
                     Address = c.Address,
                     ContactEmail = c.ContactEmail,
                     CreatedAt = c.CreatedAt,
-                    UpdatedAt = c.UpdatedAt
+                    UpdatedAt = c.UpdatedAt,
+                    Images = null // Will be populated in GetCompaniesByEmployerIdAsync if needed
                 }).ToList()
             };
         }
@@ -216,6 +218,7 @@ namespace Server.Services.Profiles
                         Industry = companyDto.Industry,
                         CompanySize = companyDto.CompanySize,
                         FoundedYear = companyDto.FoundedYear,
+                        LogoURL = companyDto.LogoURL,
                         Address = companyDto.Address,
                         ContactEmail = companyDto.ContactEmail,
                         CreatedAt = DateTime.UtcNow
@@ -250,6 +253,7 @@ namespace Server.Services.Profiles
                                 {
                                     CompanyImageId = Guid.NewGuid(),
                                     CompanyId = createdCompany.CompanyId,
+                                    ImageType = "company",
                                     FilePath = imageUploadResponse.image_url ?? string.Empty,
                                     FileName = imageUploadResponse.file_name ?? string.Empty,
                                     FileSize = (long)(imageUploadResponse.file_size ?? 0),
@@ -393,6 +397,8 @@ namespace Server.Services.Profiles
             var company = await _unitOfWork.ProfileRepository.GetCompanyByIdAsync(companyId);
             if (company == null) return null;
 
+            var images = await _unitOfWork.ProfileRepository.GetCompanyImagesAsync(companyId);
+
             return new CompanyDto
             {
                 CompanyId = company.CompanyId,
@@ -403,31 +409,75 @@ namespace Server.Services.Profiles
                 Industry = company.Industry,
                 CompanySize = company.CompanySize,
                 FoundedYear = company.FoundedYear,
+                LogoURL = company.LogoURL,
                 Address = company.Address,
                 ContactEmail = company.ContactEmail,
                 CreatedAt = company.CreatedAt,
-                UpdatedAt = company.UpdatedAt
+                UpdatedAt = company.UpdatedAt,
+                Images = images.Select(img => new CompanyImageDto
+                {
+                    CompanyImageId = img.CompanyImageId,
+                    CompanyId = img.CompanyId,
+                    ImageType = img.ImageType,
+                    FilePath = img.FilePath,
+                    FileName = img.FileName,
+                    FileSize = img.FileSize,
+                    FileType = img.FileType,
+                    Caption = img.Caption,
+                    SortOrder = img.SortOrder,
+                    IsPrimary = img.IsPrimary,
+                    IsActive = img.IsActive,
+                    UploadedByUserId = img.UploadedByUserId,
+                    CreatedAt = img.CreatedAt,
+                    UpdatedAt = img.UpdatedAt
+                }).ToList()
             };
         }
 
         public async Task<List<CompanyDto>> GetCompaniesByEmployerIdAsync(Guid employerId)
         {
             var companies = await _unitOfWork.ProfileRepository.GetCompaniesByEmployerIdAsync(employerId);
-            return companies.Select(c => new CompanyDto
+            var result = new List<CompanyDto>();
+
+            foreach (var c in companies)
             {
-                CompanyId = c.CompanyId,
-                Name = c.Name ?? string.Empty,
-                CompanyCode = c.CompanyCode,
-                Website = c.Website,
-                Description = c.Description,
-                Industry = c.Industry,
-                CompanySize = c.CompanySize,
-                FoundedYear = c.FoundedYear,
-                Address = c.Address,
-                ContactEmail = c.ContactEmail,
-                CreatedAt = c.CreatedAt,
-                UpdatedAt = c.UpdatedAt
-            }).ToList();
+                var images = await _unitOfWork.ProfileRepository.GetCompanyImagesAsync(c.CompanyId);
+                result.Add(new CompanyDto
+                {
+                    CompanyId = c.CompanyId,
+                    Name = c.Name ?? string.Empty,
+                    CompanyCode = c.CompanyCode,
+                    Website = c.Website,
+                    Description = c.Description,
+                    Industry = c.Industry,
+                    CompanySize = c.CompanySize,
+                    FoundedYear = c.FoundedYear,
+                    LogoURL = c.LogoURL,
+                    Address = c.Address,
+                    ContactEmail = c.ContactEmail,
+                    CreatedAt = c.CreatedAt,
+                    UpdatedAt = c.UpdatedAt,
+                    Images = images.Select(img => new CompanyImageDto
+                    {
+                        CompanyImageId = img.CompanyImageId,
+                        CompanyId = img.CompanyId,
+                        ImageType = img.ImageType,
+                        FilePath = img.FilePath,
+                        FileName = img.FileName,
+                        FileSize = img.FileSize,
+                        FileType = img.FileType,
+                        Caption = img.Caption,
+                        SortOrder = img.SortOrder,
+                        IsPrimary = img.IsPrimary,
+                        IsActive = img.IsActive,
+                        UploadedByUserId = img.UploadedByUserId,
+                        CreatedAt = img.CreatedAt,
+                        UpdatedAt = img.UpdatedAt
+                    }).ToList()
+                });
+            }
+
+            return result;
         }
 
         // Images

@@ -7,7 +7,8 @@ interface EmployerProfileTabProps {
     formData: any,
     companies: any[],
     profileImage: File | null,
-    companyImages: { [key: string]: File[] }
+    companyImages: { [key: string]: File[] },
+    companyLogoFiles: { [key: string]: File | null }
   ) => void;
   saving: boolean;
   onCancel?: () => void;
@@ -34,6 +35,9 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
   const [companyImages, setCompanyImages] = useState<{ [key: string]: File[] }>(
     {}
   );
+  const [companyLogoFiles, setCompanyLogoFiles] = useState<{
+    [key: string]: File | null;
+  }>({});
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
 
@@ -53,11 +57,13 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
   };
 
   const addCompany = () => {
+    const newId = `temp-${Date.now()}`;
     setCompanies([
       ...companies,
       {
-        id: `temp-${Date.now()}`,
+        id: newId,
         name: "",
+        logoURL: "",
         website: "",
         description: "",
         industry: "",
@@ -74,10 +80,14 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
     const updatedCompanies = companies.filter((_, i) => i !== index);
     setCompanies(updatedCompanies);
 
-    // Remove associated images
+    // Remove associated images and logo
     const updatedImages = { ...companyImages };
     delete updatedImages[companyId];
     setCompanyImages(updatedImages);
+
+    const updatedLogoFiles = { ...companyLogoFiles };
+    delete updatedLogoFiles[companyId];
+    setCompanyLogoFiles(updatedLogoFiles);
   };
 
   const handleCompanyImageChange = (
@@ -90,6 +100,19 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
       setCompanyImages((prev) => ({
         ...prev,
         [companyId]: fileArray,
+      }));
+    }
+  };
+
+  const handleLogoChange = (
+    companyId: string,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const files = e.target.files;
+    if (files) {
+      setCompanyLogoFiles((prev) => ({
+        ...prev,
+        [companyId]: files[0],
       }));
     }
   };
@@ -118,7 +141,26 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
       website: formData.website || null,
     };
 
-    onSubmit(cleanedFormData, companies, profileImage, companyImages);
+    // Clean companies data: convert empty strings to null for optional fields
+    const cleanedCompanies = companies.map((company) => ({
+      ...company,
+      logoURL: company.logoURL || null,
+      website: company.website || null,
+      description: company.description || null,
+      industry: company.industry || null,
+      companySize: company.companySize || null,
+      foundedYear: company.foundedYear ? parseInt(company.foundedYear) : null,
+      address: company.address || null,
+      contactEmail: company.contactEmail || null,
+    }));
+
+    onSubmit(
+      cleanedFormData,
+      cleanedCompanies,
+      profileImage,
+      companyImages,
+      companyLogoFiles
+    );
   };
 
   return (
@@ -273,6 +315,32 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Logo
+                  </label>
+                  <div className="flex items-center space-x-4">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleLogoChange(company.id, e)}
+                      className="hidden"
+                      id={`company-logo-${company.id}`}
+                    />
+                    <label
+                      htmlFor={`company-logo-${company.id}`}
+                      className="flex items-center space-x-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-md cursor-pointer hover:bg-blue-100"
+                    >
+                      <FaCamera />
+                      <span>Chọn logo</span>
+                    </label>
+                    {companyLogoFiles[company.id] && (
+                      <span className="text-sm text-gray-600">
+                        {companyLogoFiles[company.id]?.name}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">

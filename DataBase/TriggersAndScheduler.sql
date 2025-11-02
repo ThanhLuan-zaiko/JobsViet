@@ -272,7 +272,6 @@ SELECT * FROM Companies;
 SELECT * FROM CompanyImages;
 SELECT 'EmployerCompanies' AS TableName, COUNT(*) AS RecordCount FROM EmployerCompanies;
 SELECT * FROM EmployerCompanies;
-SELECT * FROM EmployerCompanies;
 SELECT 'JobCategories' AS TableName, COUNT(*) AS RecordCount FROM JobCategories;
 SELECT 'Jobs' AS TableName, COUNT(*) AS RecordCount FROM Jobs;
 SELECT 'JobImages' AS TableName, COUNT(*) AS RecordCount FROM JobImages;
