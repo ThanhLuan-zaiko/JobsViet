@@ -32,6 +32,10 @@ namespace Server.Validators.Jobs
             RuleFor(x => x.PositionsNeeded)
                 .GreaterThan(0).WithMessage("PositionsNeeded must be at least 1.");
 
+            RuleFor(x => x.PositionsFilled)
+                .GreaterThanOrEqualTo(0).WithMessage("PositionsFilled must be non-negative.")
+                .When(x => x.PositionsFilled.HasValue);
+
             RuleFor(x => x.DeadlineDate)
                 .GreaterThan(DateTime.Now).WithMessage("DeadlineDate must be in the future.")
                 .When(x => x.DeadlineDate.HasValue);

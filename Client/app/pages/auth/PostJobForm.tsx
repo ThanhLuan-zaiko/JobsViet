@@ -17,6 +17,7 @@ const PostJobForm: React.FC = () => {
     salaryFrom: undefined,
     salaryTo: undefined,
     positionsNeeded: 1,
+    positionsFilled: 0,
     deadlineDate: "",
     minAge: undefined,
     maxAge: undefined,
@@ -250,6 +251,7 @@ const PostJobForm: React.FC = () => {
         salaryFrom: undefined,
         salaryTo: undefined,
         positionsNeeded: 1,
+        positionsFilled: 0,
         deadlineDate: "",
         minAge: undefined,
         maxAge: undefined,
@@ -386,6 +388,24 @@ const PostJobForm: React.FC = () => {
           />
           {errors.positionsNeeded && (
             <p className="text-red-500 text-sm">{errors.positionsNeeded}</p>
+          )}
+        </div>
+
+        {/* Positions Filled */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Số lượng đã tuyển
+          </label>
+          <input
+            type="number"
+            name="positionsFilled"
+            value={formData.positionsFilled || ""}
+            onChange={handleChange}
+            min="0"
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+          />
+          {errors.positionsFilled && (
+            <p className="text-red-500 text-sm">{errors.positionsFilled}</p>
           )}
         </div>
 

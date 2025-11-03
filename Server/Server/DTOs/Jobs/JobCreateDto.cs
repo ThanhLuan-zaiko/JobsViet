@@ -24,6 +24,9 @@ namespace Server.DTOs.Jobs
         [Range(1, int.MaxValue, ErrorMessage = "PositionsNeeded must be at least 1.")]
         public int PositionsNeeded { get; set; } = 1;
 
+        [Range(0, int.MaxValue, ErrorMessage = "PositionsFilled must be non-negative.")]
+        public int? PositionsFilled { get; set; }
+
         [DataType(DataType.Date)]
         [FutureDate(ErrorMessage = "DeadlineDate must be in the future.")]
         public DateTime? DeadlineDate { get; set; }
