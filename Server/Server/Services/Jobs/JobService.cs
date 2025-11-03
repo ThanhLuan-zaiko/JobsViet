@@ -73,6 +73,7 @@ namespace Server.Services.Jobs
             job.CreatedAt = DateTime.UtcNow;
             job.EmployerProfileId = null; // TODO: Fetch from user profile
             job.CompanyId = jobCreateDto.CompanyId; // Optional
+            job.ImageUrl = jobCreateDto.ImageUrl; // Optional
 
             await _unitOfWork.JobRepository.CreateJobAsync(job);
             await _unitOfWork.SaveChangesAsync();

@@ -219,6 +219,44 @@ async def upload_company_image(
         mime_type="image/webp"
     )
 
+@app.post("/upload/job/{user_id}", response_model=ImageUploadResponse)
+async def upload_job_image(
+    user_id: str,
+    file: UploadFile = File(...)
+):
+    """Upload image for job posting."""
+    # Validate file
+    validate_image_file(file)
+
+    # Create user directory
+    user_dir = create_user_directory(user_id)
+
+    # Generate unique filename
+    file_ext = Path(file.filename).suffix.lower()
+    unique_filename = f"{uuid.uuid4()}{file_ext}"
+    file_path = user_dir / unique_filename
+
+    # Read file content
+    file_content = await file.read()
+
+    # Convert to WebP
+    webp_content = convert_to_webp(file_content)
+
+    # Save WebP file
+    webp_filename = f"{uuid.uuid4()}.webp"
+    webp_path = user_dir / webp_filename
+
+    with open(webp_path, "wb") as f:
+        f.write(webp_content)
+
+    # Return response
+    return ImageUploadResponse(
+        image_url=f"/images/job/{user_id}/{webp_filename}",
+        file_name=webp_filename,
+        file_size=len(webp_content),
+        mime_type="image/webp"
+    )
+
 @app.get("/images/candidate/{candidate_id}/{filename}")
 async def get_candidate_image(candidate_id: str, filename: str):
     """Serve candidate image."""
@@ -249,6 +287,19 @@ async def get_employer_image(employer_id: str, filename: str):
 async def get_company_image(company_id: str, filename: str):
     """Serve company image."""
     file_path = UPLOAD_DIR / company_id / filename
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Image not found")
+
+    return FileResponse(
+        path=file_path,
+        media_type="image/webp",
+        filename=filename
+    )
+
+@app.get("/images/job/{user_id}/{filename}")
+async def get_job_image(user_id: str, filename: str):
+    """Serve job image."""
+    file_path = UPLOAD_DIR / user_id / filename
     if not file_path.exists():
         raise HTTPException(status_code=404, detail="Image not found")
 

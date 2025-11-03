@@ -67,6 +67,7 @@ namespace Server.Data.Jobs
                 entity.Property(e => e.GenderPreference).HasColumnName("GENDERPREFERENCE");
                 entity.Property(e => e.SkillsRequired).HasColumnName("SKILLSREQUIRED");
                 entity.Property(e => e.CategoryId).HasColumnName("CATEGORYID");
+                entity.Property(e => e.ImageUrl).HasColumnName("IMAGEURL");
             });
 
             modelBuilder.Entity<JobCategory>(entity =>

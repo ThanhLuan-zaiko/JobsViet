@@ -14,6 +14,7 @@ export interface JobCreateRequest {
   skillsRequired?: string;
   categoryId: string; // This should be a valid GUID string
   companyId?: string;
+  imageUrl?: string;
 }
 
 export interface JobDto {
@@ -36,6 +37,7 @@ export interface JobDto {
   genderPreference?: string;
   skillsRequired?: string;
   categoryId?: string;
+  imageUrl?: string;
 }
 
 export interface CategoryDto {

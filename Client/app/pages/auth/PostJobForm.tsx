@@ -8,20 +8,7 @@ const PostJobForm: React.FC = () => {
   const [categories, setCategories] = useState<CategoryDto[]>([]);
   const [companies, setCompanies] = useState<
     { companyId: string; name: string }[]
-  >([
-    {
-      companyId: "550e8400-e29b-41d4-a716-446655440000",
-      name: "Công ty TNHH ABC",
-    },
-    {
-      companyId: "550e8400-e29b-41d4-a716-446655440001",
-      name: "Công ty CP XYZ",
-    },
-    {
-      companyId: "550e8400-e29b-41d4-a716-446655440002",
-      name: "Công ty TNHH DEF",
-    },
-  ]);
+  >([]);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<JobCreateRequest>({
     title: "",
@@ -39,7 +26,11 @@ const PostJobForm: React.FC = () => {
     skillsRequired: "",
     categoryId: "",
     companyId: "",
+    imageUrl: "",
   });
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -59,7 +50,26 @@ const PostJobForm: React.FC = () => {
         });
       }
     };
+
+    // Fetch companies from API
+    const fetchCompanies = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/profiles/employer/companies`,
+          { withCredentials: true }
+        );
+        setCompanies(response.data);
+      } catch (error) {
+        console.error("Error fetching companies:", error);
+        setNotification({
+          message: "Failed to load companies.",
+          type: "error",
+        });
+      }
+    };
+
     fetchCategories();
+    fetchCompanies();
   }, []);
 
   const handleChange = (
@@ -77,6 +87,61 @@ const PostJobForm: React.FC = () => {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadImage = async () => {
+    if (!selectedImage || !user) return;
+
+    setUploadingImage(true);
+    try {
+      const formDataUpload = new FormData();
+      formDataUpload.append("file", selectedImage);
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_IMAGE_SERVICE_URL}/upload/job/${user.userId}`,
+        formDataUpload,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      setFormData((prev) => ({
+        ...prev,
+        imageUrl: response.data.image_url,
+      }));
+      setNotification({
+        message: "Image uploaded successfully!",
+        type: "success",
+      });
+    } catch (error: any) {
+      console.error("Error uploading image:", error);
+      setNotification({
+        message: "Failed to upload image.",
+        type: "error",
+      });
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedImage) {
+      uploadImage();
+    }
+  }, [selectedImage]);
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -122,7 +187,7 @@ const PostJobForm: React.FC = () => {
       newErrors.skillsRequired =
         "Kỹ năng yêu cầu không được vượt quá 500 ký tự.";
     if (!formData.categoryId) newErrors.categoryId = "Danh mục là bắt buộc.";
-    if (!formData.companyId) newErrors.companyId = "Công ty ID là bắt buộc.";
+    if (!formData.companyId) newErrors.companyId = "Công ty là bắt buộc.";
 
     // Validate GUID format
     const guidRegex =
@@ -435,25 +500,57 @@ const PostJobForm: React.FC = () => {
           )}
         </div>
 
-        {/* Category */}
+        {/* Image Upload */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Hình ảnh công việc
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            disabled={uploadingImage}
+          />
+          {uploadingImage && (
+            <p className="text-blue-500 text-sm">Đang tải lên hình ảnh...</p>
+          )}
+          {imagePreview && (
+            <div className="mt-2">
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="w-32 h-32 object-cover rounded-md"
+              />
+            </div>
+          )}
+        </div>
+
         {/* Company */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Công ty ID *
+            Công ty *
           </label>
-          <input
-            type="text"
+          <select
             name="companyId"
             value={formData.companyId}
             onChange={handleChange}
             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-            placeholder="Nhập ID công ty (GUID)"
             required
-          />
+          >
+            <option value="">Chọn công ty</option>
+            {companies.map((company) => (
+              <option key={company.companyId} value={company.companyId}>
+                {company.name}
+              </option>
+            ))}
+          </select>
           {errors.companyId && (
             <p className="text-red-500 text-sm">{errors.companyId}</p>
           )}
         </div>
+
+        {/* Category */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Danh mục *
