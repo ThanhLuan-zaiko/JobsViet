@@ -5,7 +5,7 @@ export interface JobCreateRequest {
   salaryFrom?: number;
   salaryTo?: number;
   positionsNeeded: number;
-  positionsFilled?: number;
+  positionsFilled: number;
   deadlineDate?: string; // ISO date string
   minAge?: number;
   maxAge?: number;

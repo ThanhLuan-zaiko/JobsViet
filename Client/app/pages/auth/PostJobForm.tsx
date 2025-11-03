@@ -80,13 +80,34 @@ const PostJobForm: React.FC = () => {
     >
   ) => {
     const { name, value } = e.target;
+    let processedValue: any = value;
+    if (
+      [
+        "salaryFrom",
+        "salaryTo",
+        "positionsNeeded",
+        "positionsFilled",
+        "minAge",
+        "maxAge",
+        "requiredExperienceYears",
+      ].includes(name)
+    ) {
+      processedValue = value ? Number(value) : undefined;
+    }
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: processedValue,
     }));
     // Clear error on change
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+    // Clear related errors
+    if (["salaryFrom", "salaryTo"].includes(name)) {
+      setErrors((prev) => ({ ...prev, salaryTo: "" }));
+    }
+    if (["minAge", "maxAge"].includes(name)) {
+      setErrors((prev) => ({ ...prev, maxAge: "" }));
     }
   };
 
@@ -99,37 +120,6 @@ const PostJobForm: React.FC = () => {
         setImagePreview(e.target?.result as string);
       };
       reader.readAsDataURL(file);
-    }
-  };
-
-  const uploadImage = async () => {
-    if (!selectedImage || !user) return;
-
-    setUploadingImage(true);
-    setUploadError(false);
-    try {
-      const formDataUpload = new FormData();
-      formDataUpload.append("file", selectedImage);
-
-      const response = await axios.post(
-        `${import.meta.env.VITE_IMAGES_SERVICE}/upload/job/${user.userId}`,
-        formDataUpload,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      setFormData((prev) => ({
-        ...prev,
-        imageUrl: response.data.image_url,
-      }));
-    } catch (error: any) {
-      console.error("Error uploading image:", error);
-      setUploadError(true);
-    } finally {
-      setUploadingImage(false);
     }
   };
 
@@ -399,7 +389,7 @@ const PostJobForm: React.FC = () => {
           <input
             type="number"
             name="positionsFilled"
-            value={formData.positionsFilled || ""}
+            value={formData.positionsFilled}
             onChange={handleChange}
             min="0"
             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
