@@ -108,6 +108,7 @@ const ManageProfile: React.FC = () => {
             FileName: uploadResponse.data.file_name,
             FileSize: uploadResponse.data.file_size,
             FileType: uploadResponse.data.mime_type,
+            IsPrimary: true,
           };
 
           await axios.post(
