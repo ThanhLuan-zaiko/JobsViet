@@ -218,7 +218,7 @@ namespace Server.Services.Profiles
                         Industry = companyDto.Industry,
                         CompanySize = companyDto.CompanySize,
                         FoundedYear = companyDto.FoundedYear,
-                        LogoURL = companyDto.LogoURL,
+                        LogoURL = companyDto.LogoURL ?? string.Empty,
                         Address = companyDto.Address,
                         ContactEmail = companyDto.ContactEmail,
                         CreatedAt = DateTime.UtcNow
@@ -315,6 +315,7 @@ namespace Server.Services.Profiles
                 Industry = dto.Industry,
                 CompanySize = dto.CompanySize,
                 FoundedYear = dto.FoundedYear,
+                LogoURL = dto.LogoURL,
                 Address = dto.Address,
                 ContactEmail = dto.ContactEmail,
                 CreatedAt = DateTime.UtcNow

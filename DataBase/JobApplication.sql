@@ -160,7 +160,7 @@ CREATE TABLE Companies (
   Industry VARCHAR2(100),                        -- Ngành nghề
   CompanySize VARCHAR2(50),                      -- Quy mô công ty (Small, Medium, Large)
   FoundedYear NUMBER,                            -- Năm thành lập
-  LogoURL VARCHAR2(300),                         -- URL logo công ty
+  LogoURL VARCHAR2(300) NOT NULL,                         -- URL logo công ty
   Address VARCHAR2(500),                         -- Địa chỉ công ty
   ContactEmail VARCHAR2(200),                    -- Email liên hệ
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,

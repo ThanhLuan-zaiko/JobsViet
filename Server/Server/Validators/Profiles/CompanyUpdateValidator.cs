@@ -33,8 +33,9 @@ namespace Server.Validators.Profiles
                 .When(x => x.FoundedYear.HasValue);
 
             RuleFor(x => x.LogoURL)
+                .NotEmpty().WithMessage("LogoURL is required.")
                 .MaximumLength(300).WithMessage("Logo URL cannot exceed 300 characters.")
-                .Must(uri => uri == null || Uri.TryCreate(uri, UriKind.Absolute, out _))
+                .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out _))
                 .WithMessage("Invalid logo URL.")
                 .When(x => !string.IsNullOrEmpty(x.LogoURL));
 
