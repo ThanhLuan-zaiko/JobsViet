@@ -124,14 +124,9 @@ const EmployerProfileView: React.FC<EmployerProfileViewProps> = ({
                     >
                       <div className="flex items-start space-x-4">
                         <div className="w-20 h-20 bg-white rounded-lg shadow-sm flex items-center justify-center flex-shrink-0">
-                          {company.LOGOURL ||
-                          (company.images && company.images.length > 0) ? (
+                          {company.logoURL ? (
                             <img
-                              src={
-                                company.LOGOURL ||
-                                import.meta.env.VITE_IMAGES_SERVICE +
-                                  company.images[0].filePath
-                              }
+                              src={company.logoURL}
                               alt={company.name}
                               className="w-full h-full rounded-lg object-cover"
                             />
