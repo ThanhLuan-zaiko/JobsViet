@@ -31,6 +31,7 @@ const PostJobForm: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadError, setUploadError] = useState(false);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -104,12 +105,13 @@ const PostJobForm: React.FC = () => {
     if (!selectedImage || !user) return;
 
     setUploadingImage(true);
+    setUploadError(false);
     try {
       const formDataUpload = new FormData();
       formDataUpload.append("file", selectedImage);
 
       const response = await axios.post(
-        `${import.meta.env.VITE_IMAGE_SERVICE_URL}/upload/job/${user.userId}`,
+        `${import.meta.env.VITE_IMAGES_SERVICE}/upload/job/${user.userId}`,
         formDataUpload,
         {
           headers: {
@@ -122,26 +124,13 @@ const PostJobForm: React.FC = () => {
         ...prev,
         imageUrl: response.data.image_url,
       }));
-      setNotification({
-        message: "Image uploaded successfully!",
-        type: "success",
-      });
     } catch (error: any) {
       console.error("Error uploading image:", error);
-      setNotification({
-        message: "Failed to upload image.",
-        type: "error",
-      });
+      setUploadError(true);
     } finally {
       setUploadingImage(false);
     }
   };
-
-  useEffect(() => {
-    if (selectedImage) {
-      uploadImage();
-    }
-  }, [selectedImage]);
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -180,24 +169,12 @@ const PostJobForm: React.FC = () => {
     )
       newErrors.requiredExperienceYears =
         "Kinh nghiệm yêu cầu phải từ 0 đến 50 năm.";
-    if (formData.requiredDegree && formData.requiredDegree.length > 100)
-      newErrors.requiredDegree =
-        "Bằng cấp yêu cầu không được vượt quá 100 ký tự.";
+    // No validation needed for requiredDegree as it's now a select dropdown
     if (formData.skillsRequired && formData.skillsRequired.length > 500)
       newErrors.skillsRequired =
         "Kỹ năng yêu cầu không được vượt quá 500 ký tự.";
     if (!formData.categoryId) newErrors.categoryId = "Danh mục là bắt buộc.";
     if (!formData.companyId) newErrors.companyId = "Công ty là bắt buộc.";
-
-    // Validate GUID format
-    const guidRegex =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    if (formData.categoryId && !guidRegex.test(formData.categoryId)) {
-      newErrors.categoryId = "ID danh mục không hợp lệ.";
-    }
-    if (formData.companyId && !guidRegex.test(formData.companyId)) {
-      newErrors.companyId = "ID công ty không hợp lệ.";
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -209,9 +186,44 @@ const PostJobForm: React.FC = () => {
 
     setLoading(true);
     try {
+      let imageUrl = formData.imageUrl;
+
+      // Upload image if selected
+      if (selectedImage && !uploadError) {
+        setUploadingImage(true);
+        try {
+          const formDataUpload = new FormData();
+          formDataUpload.append("file", selectedImage);
+
+          const uploadResponse = await axios.post(
+            `${import.meta.env.VITE_IMAGES_SERVICE}/upload/job/${user?.userId}`,
+            formDataUpload,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+
+          imageUrl = uploadResponse.data.image_url;
+        } catch (uploadError: any) {
+          console.error("Error uploading image:", uploadError);
+          setUploadError(true);
+          setNotification({
+            message: "Failed to upload image. Please try again.",
+            type: "error",
+          });
+          setLoading(false);
+          return;
+        } finally {
+          setUploadingImage(false);
+        }
+      }
+
       // Prepare data for submission - ensure categoryId is a valid GUID
       const submitData = {
         ...formData,
+        imageUrl,
         categoryId: formData.categoryId, // Already a string GUID from the select
         deadlineDate: formData.deadlineDate
           ? new Date(formData.deadlineDate).toISOString().split("T")[0]
@@ -247,7 +259,11 @@ const PostJobForm: React.FC = () => {
         skillsRequired: "",
         categoryId: "",
         companyId: "",
+        imageUrl: "",
       });
+      setSelectedImage(null);
+      setImagePreview(null);
+      setUploadError(false);
     } catch (error: any) {
       console.error(
         "Error posting job:",
@@ -454,13 +470,20 @@ const PostJobForm: React.FC = () => {
           <label className="block text-sm font-medium text-gray-700">
             Bằng cấp yêu cầu
           </label>
-          <input
-            type="text"
+          <select
             name="requiredDegree"
             value={formData.requiredDegree}
             onChange={handleChange}
             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-          />
+          >
+            <option value="">Chọn bằng cấp</option>
+            <option value="Cấp 3">Cấp 3</option>
+            <option value="Trung cấp">Trung cấp</option>
+            <option value="Cao đẳng">Cao đẳng</option>
+            <option value="Đại học">Đại học</option>
+            <option value="Thạc sĩ">Thạc sĩ</option>
+            <option value="Tiến sĩ">Tiến sĩ</option>
+          </select>
           {errors.requiredDegree && (
             <p className="text-red-500 text-sm">{errors.requiredDegree}</p>
           )}
