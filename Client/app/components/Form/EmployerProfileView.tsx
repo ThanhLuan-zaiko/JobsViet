@@ -124,11 +124,13 @@ const EmployerProfileView: React.FC<EmployerProfileViewProps> = ({
                     >
                       <div className="flex items-start space-x-4">
                         <div className="w-20 h-20 bg-white rounded-lg shadow-sm flex items-center justify-center flex-shrink-0">
-                          {company.images && company.images.length > 0 ? (
+                          {company.LOGOURL ||
+                          (company.images && company.images.length > 0) ? (
                             <img
                               src={
+                                company.LOGOURL ||
                                 import.meta.env.VITE_IMAGES_SERVICE +
-                                company.images[0].filePath
+                                  company.images[0].filePath
                               }
                               alt={company.name}
                               className="w-full h-full rounded-lg object-cover"
@@ -198,25 +200,25 @@ const EmployerProfileView: React.FC<EmployerProfileViewProps> = ({
                               </div>
                             )}
                           </div>
-                          {company.images && company.images.length > 1 && (
+                          {company.images && company.images.length > 0 && (
                             <div>
                               <h4 className="text-sm font-medium text-gray-700 mb-2">
                                 Hình ảnh công ty
                               </h4>
-                              <div className="grid grid-cols-3 gap-2">
-                                {company.images
-                                  .slice(1)
-                                  .map((image: any, imgIndex: number) => (
+                              <div className="grid grid-cols-4 gap-2">
+                                {company.images.map(
+                                  (image: any, imgIndex: number) => (
                                     <img
                                       key={imgIndex}
                                       src={
                                         import.meta.env.VITE_IMAGES_SERVICE +
                                         image.filePath
                                       }
-                                      alt={`${company.name} ${imgIndex + 2}`}
+                                      alt={`${company.name} ${imgIndex + 1}`}
                                       className="w-full h-20 object-cover rounded-lg shadow-sm"
                                     />
-                                  ))}
+                                  )
+                                )}
                               </div>
                             </div>
                           )}

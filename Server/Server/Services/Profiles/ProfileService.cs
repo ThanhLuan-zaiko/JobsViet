@@ -164,23 +164,42 @@ namespace Server.Services.Profiles
                     CreatedAt = img.CreatedAt,
                     UpdatedAt = img.UpdatedAt
                 }).ToList(),
-                Companies = companies.Select(c => new CompanyDto
+                Companies = (await Task.WhenAll(companies.Select(async c =>
                 {
-                    CompanyId = c.CompanyId,
-                    Name = c.Name ?? string.Empty,
-                    CompanyCode = c.CompanyCode,
-                    Website = c.Website,
-                    Description = c.Description,
-                    Industry = c.Industry,
-                    CompanySize = c.CompanySize,
-                    FoundedYear = c.FoundedYear,
-                    LogoURL = c.LogoURL,
-                    Address = c.Address,
-                    ContactEmail = c.ContactEmail,
-                    CreatedAt = c.CreatedAt,
-                    UpdatedAt = c.UpdatedAt,
-                    Images = null // Will be populated in GetCompaniesByEmployerIdAsync if needed
-                }).ToList()
+                    var images = await _unitOfWork.ProfileRepository.GetCompanyImagesAsync(c.CompanyId);
+                    return new CompanyDto
+                    {
+                        CompanyId = c.CompanyId,
+                        Name = c.Name ?? string.Empty,
+                        CompanyCode = c.CompanyCode,
+                        Website = c.Website,
+                        Description = c.Description,
+                        Industry = c.Industry,
+                        CompanySize = c.CompanySize,
+                        FoundedYear = c.FoundedYear,
+                        LogoURL = c.LogoURL,
+                        Address = c.Address,
+                        ContactEmail = c.ContactEmail,
+                        CreatedAt = c.CreatedAt,
+                        UpdatedAt = c.UpdatedAt,
+                        Images = images.Select(img => new CompanyImageDto
+                        {
+                            CompanyImageId = img.CompanyImageId,
+                            CompanyId = img.CompanyId,
+                            FilePath = img.FilePath,
+                            FileName = img.FileName,
+                            FileSize = img.FileSize,
+                            FileType = img.FileType,
+                            Caption = img.Caption,
+                            SortOrder = img.SortOrder,
+                            IsPrimary = img.IsPrimary,
+                            IsActive = img.IsActive,
+                            UploadedByUserId = img.UploadedByUserId,
+                            CreatedAt = img.CreatedAt,
+                            UpdatedAt = img.UpdatedAt
+                        }).ToList()
+                    };
+                }))).ToList()
             };
         }
 
