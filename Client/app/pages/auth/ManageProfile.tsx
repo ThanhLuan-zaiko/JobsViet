@@ -171,6 +171,19 @@ const ManageProfile: React.FC = () => {
         }
       }
 
+      // Reload profile to get any uploaded images
+      try {
+        const updatedResponse = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/profiles/candidate`,
+          {
+            withCredentials: true,
+          }
+        );
+        setCandidateProfile(updatedResponse.data);
+      } catch (error) {
+        console.error("Error reloading profile:", error);
+      }
+
       setNotification({
         type: "success",
         message: "Hồ sơ ứng cử viên đã được lưu thành công!",
@@ -315,6 +328,19 @@ const ManageProfile: React.FC = () => {
             }
           }
         }
+      }
+
+      // Reload employer profile to get any uploaded images
+      try {
+        const updatedResponse = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/profiles/employer`,
+          {
+            withCredentials: true,
+          }
+        );
+        setEmployerProfile(updatedResponse.data);
+      } catch (error) {
+        console.error("Error reloading employer profile:", error);
       }
 
       setNotification({
