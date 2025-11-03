@@ -274,7 +274,9 @@ SELECT 'EmployerCompanies' AS TableName, COUNT(*) AS RecordCount FROM EmployerCo
 SELECT * FROM EmployerCompanies;
 SELECT 'JobCategories' AS TableName, COUNT(*) AS RecordCount FROM JobCategories;
 SELECT 'Jobs' AS TableName, COUNT(*) AS RecordCount FROM Jobs;
+SELECT * FROM Jobs;
 SELECT 'JobImages' AS TableName, COUNT(*) AS RecordCount FROM JobImages;
+SELECT * FROM JobImages;
 SELECT 'Resumes' AS TableName, COUNT(*) AS RecordCount FROM Resumes;
 SELECT 'Applications' AS TableName, COUNT(*) AS RecordCount FROM Applications;
 SELECT 'Reports' AS TableName, COUNT(*) AS RecordCount FROM Reports;
