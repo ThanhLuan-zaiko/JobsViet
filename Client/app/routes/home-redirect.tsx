@@ -1,9 +1,9 @@
 import { redirect } from "react-router";
 
-export async function loader() {
-  return redirect("/");
-}
-
 export default function HomeRedirect() {
   return null;
+}
+
+export function clientLoader() {
+  return redirect("/");
 }

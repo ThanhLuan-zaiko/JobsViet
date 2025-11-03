@@ -297,7 +297,7 @@ const ManageProfile: React.FC = () => {
               };
 
               await axios.post(
-                `${import.meta.env.VITE_API_BASE_URL}/profiles/company/images`,
+                `${import.meta.env.VITE_API_BASE_URL}/profiles/company/${companyId}/images`,
                 metadata,
                 {
                   withCredentials: true,

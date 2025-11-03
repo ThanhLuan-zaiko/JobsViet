@@ -7,8 +7,7 @@ interface EmployerProfileTabProps {
     formData: any,
     companies: any[],
     profileImage: File | null,
-    companyImages: { [key: string]: File[] },
-    companyLogoFiles: { [key: string]: File | null }
+    companyImages: { [key: string]: File[] }
   ) => void;
   saving: boolean;
   onCancel?: () => void;
@@ -31,13 +30,12 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
     website: profile?.website || "",
   });
 
-  const [companies, setCompanies] = useState<any[]>(profile?.companies || []);
+  const [companies, setCompanies] = useState<any[]>(
+    profile?.companies?.map((c: any) => ({ ...c, id: c.companyId })) || []
+  );
   const [companyImages, setCompanyImages] = useState<{ [key: string]: File[] }>(
     {}
   );
-  const [companyLogoFiles, setCompanyLogoFiles] = useState<{
-    [key: string]: File | null;
-  }>({});
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
 
@@ -57,11 +55,10 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
   };
 
   const addCompany = () => {
-    const newId = `temp-${Date.now()}`;
     setCompanies([
       ...companies,
       {
-        id: newId,
+        id: `temp-${Date.now()}`,
         name: "",
         logoURL: "",
         website: "",
@@ -80,14 +77,10 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
     const updatedCompanies = companies.filter((_, i) => i !== index);
     setCompanies(updatedCompanies);
 
-    // Remove associated images and logo
+    // Remove associated images
     const updatedImages = { ...companyImages };
     delete updatedImages[companyId];
     setCompanyImages(updatedImages);
-
-    const updatedLogoFiles = { ...companyLogoFiles };
-    delete updatedLogoFiles[companyId];
-    setCompanyLogoFiles(updatedLogoFiles);
   };
 
   const handleCompanyImageChange = (
@@ -104,19 +97,6 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
     }
   };
 
-  const handleLogoChange = (
-    companyId: string,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const files = e.target.files;
-    if (files) {
-      setCompanyLogoFiles((prev) => ({
-        ...prev,
-        [companyId]: files[0],
-      }));
-    }
-  };
-
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
@@ -127,40 +107,35 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Clean form data: convert empty strings to null for optional fields
+    // Clean form data: convert to PascalCase and null for optional fields
     const cleanedFormData = {
-      ...formData,
-      contactPhone: formData.contactPhone || null,
-      bio: formData.bio || null,
-      industry: formData.industry || null,
-      position: formData.position || null,
-      yearsOfExperience: formData.yearsOfExperience
+      DisplayName: formData.displayName || null,
+      ContactPhone: formData.contactPhone || null,
+      Bio: formData.bio || null,
+      Industry: formData.industry || null,
+      Position: formData.position || null,
+      YearsOfExperience: formData.yearsOfExperience
         ? parseInt(formData.yearsOfExperience)
         : null,
-      linkedInProfile: formData.linkedInProfile || null,
-      website: formData.website || null,
+      LinkedInProfile: formData.linkedInProfile || null,
+      Website: formData.website || null,
     };
 
-    // Clean companies data: convert empty strings to null for optional fields
+    // Clean companies data: map to PascalCase and null for optional fields, keep id for logic
     const cleanedCompanies = companies.map((company) => ({
-      ...company,
-      logoURL: company.logoURL || null,
-      website: company.website || null,
-      description: company.description || null,
-      industry: company.industry || null,
-      companySize: company.companySize || null,
-      foundedYear: company.foundedYear ? parseInt(company.foundedYear) : null,
-      address: company.address || null,
-      contactEmail: company.contactEmail || null,
+      id: company.id,
+      Name: company.name || null,
+      LogoURL: company.logoURL || null,
+      Website: company.website || null,
+      Description: company.description || null,
+      Industry: company.industry || null,
+      CompanySize: company.companySize || null,
+      FoundedYear: company.foundedYear ? parseInt(company.foundedYear) : null,
+      Address: company.address || null,
+      ContactEmail: company.contactEmail || null,
     }));
 
-    onSubmit(
-      cleanedFormData,
-      cleanedCompanies,
-      profileImage,
-      companyImages,
-      companyLogoFiles
-    );
+    onSubmit(cleanedFormData, cleanedCompanies, profileImage, companyImages);
   };
 
   return (
@@ -318,29 +293,17 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Logo
+                    Logo URL
                   </label>
-                  <div className="flex items-center space-x-4">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleLogoChange(company.id, e)}
-                      className="hidden"
-                      id={`company-logo-${company.id}`}
-                    />
-                    <label
-                      htmlFor={`company-logo-${company.id}`}
-                      className="flex items-center space-x-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-md cursor-pointer hover:bg-blue-100"
-                    >
-                      <FaCamera />
-                      <span>Chọn logo</span>
-                    </label>
-                    {companyLogoFiles[company.id] && (
-                      <span className="text-sm text-gray-600">
-                        {companyLogoFiles[company.id]?.name}
-                      </span>
-                    )}
-                  </div>
+                  <input
+                    type="url"
+                    value={company.logoURL}
+                    onChange={(e) =>
+                      handleCompanyChange(index, "logoURL", e.target.value)
+                    }
+                    placeholder="https://example.com/logo.png"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">

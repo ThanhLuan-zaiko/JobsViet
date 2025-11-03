@@ -253,7 +253,6 @@ namespace Server.Services.Profiles
                                 {
                                     CompanyImageId = Guid.NewGuid(),
                                     CompanyId = createdCompany.CompanyId,
-                                    ImageType = "company",
                                     FilePath = imageUploadResponse.image_url ?? string.Empty,
                                     FileName = imageUploadResponse.file_name ?? string.Empty,
                                     FileSize = (long)(imageUploadResponse.file_size ?? 0),
@@ -369,6 +368,7 @@ namespace Server.Services.Profiles
             if (dto.Industry != null) existingCompany.Industry = dto.Industry;
             if (dto.CompanySize != null) existingCompany.CompanySize = dto.CompanySize;
             if (dto.FoundedYear.HasValue) existingCompany.FoundedYear = dto.FoundedYear;
+            if (dto.LogoURL != null) existingCompany.LogoURL = dto.LogoURL;
             if (dto.Address != null) existingCompany.Address = dto.Address;
             if (dto.ContactEmail != null) existingCompany.ContactEmail = dto.ContactEmail;
             existingCompany.UpdatedAt = DateTime.UtcNow;
@@ -385,6 +385,7 @@ namespace Server.Services.Profiles
                 Industry = updatedCompany.Industry,
                 CompanySize = updatedCompany.CompanySize,
                 FoundedYear = updatedCompany.FoundedYear,
+                LogoURL = updatedCompany.LogoURL,
                 Address = updatedCompany.Address,
                 ContactEmail = updatedCompany.ContactEmail,
                 CreatedAt = updatedCompany.CreatedAt,
@@ -418,7 +419,6 @@ namespace Server.Services.Profiles
                 {
                     CompanyImageId = img.CompanyImageId,
                     CompanyId = img.CompanyId,
-                    ImageType = img.ImageType,
                     FilePath = img.FilePath,
                     FileName = img.FileName,
                     FileSize = img.FileSize,
@@ -461,7 +461,6 @@ namespace Server.Services.Profiles
                     {
                         CompanyImageId = img.CompanyImageId,
                         CompanyId = img.CompanyId,
-                        ImageType = img.ImageType,
                         FilePath = img.FilePath,
                         FileName = img.FileName,
                         FileSize = img.FileSize,

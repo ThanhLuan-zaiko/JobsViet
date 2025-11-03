@@ -6,7 +6,6 @@ namespace Server.Models.Profiles
     {
         public Guid CompanyImageId { get; set; }
         public Guid CompanyId { get; set; }
-        public string? ImageType { get; set; } // "logo", "banner", "gallery", etc.
         public string? FilePath { get; set; }
         public string? FileName { get; set; }
         public long? FileSize { get; set; }
