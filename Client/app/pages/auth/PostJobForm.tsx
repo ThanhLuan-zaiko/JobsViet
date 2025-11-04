@@ -51,7 +51,7 @@ const PostJobForm: React.FC = () => {
       } catch (error) {
         console.error("Error fetching categories:", error);
         setNotification({
-          message: "Failed to load categories.",
+          message: "Không thể tải danh mục.",
           type: "error",
         });
       }
@@ -68,7 +68,7 @@ const PostJobForm: React.FC = () => {
       } catch (error) {
         console.error("Error fetching companies:", error);
         setNotification({
-          message: "Failed to load companies.",
+          message: "Không thể tải công ty.",
           type: "error",
         });
       }
@@ -213,7 +213,7 @@ const PostJobForm: React.FC = () => {
           console.error("Error uploading image:", uploadError);
           setUploadError(true);
           setNotification({
-            message: "Failed to upload image. Please try again.",
+            message: "Không thể tải lên hình ảnh. Vui lòng thử lại.",
             type: "error",
           });
           setLoading(false);
@@ -242,7 +242,8 @@ const PostJobForm: React.FC = () => {
       );
 
       setNotification({
-        message: "Job posted successfully! It will be reviewed by moderators.",
+        message:
+          "Đăng tin thành công! Tin sẽ được kiểm duyệt bởi người điều hành.",
         type: "success",
       });
       // Reset form
@@ -273,7 +274,7 @@ const PostJobForm: React.FC = () => {
         "Error posting job:",
         error.response?.data || error.message
       );
-      const message = error.response?.data?.message || "Failed to post job.";
+      const message = error.response?.data?.message || "Không thể đăng tin.";
       setNotification({ message, type: "error" });
     } finally {
       setLoading(false);
