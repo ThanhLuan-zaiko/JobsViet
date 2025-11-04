@@ -94,11 +94,12 @@ namespace Server.Services.Jobs
             return jobDto;
         }
 
-        public async Task<JobImageDto> UploadJobImageAsync(Guid jobId, JobImageCreateDto dto)
+        public async Task<JobImageDto> UploadJobImageAsync(Guid jobId, JobImageCreateDto dto, Guid userId)
         {
             var jobImage = _mapper.Map<JobImage>(dto);
             jobImage.JobImageId = Guid.NewGuid();
             jobImage.JobId = jobId;
+            jobImage.UploadedByUserId = userId;
             jobImage.CreatedAt = DateTime.UtcNow;
 
             await _unitOfWork.JobRepository.CreateJobImageAsync(jobImage);
@@ -107,7 +108,7 @@ namespace Server.Services.Jobs
             return _mapper.Map<JobImageDto>(jobImage);
         }
 
-        public async Task<JobImageDto> UpdateJobImageAsync(Guid imageId, JobImageCreateDto dto)
+        public async Task<JobImageDto> UpdateJobImageAsync(Guid imageId, JobImageCreateDto dto, Guid userId)
         {
             var existingImage = await _unitOfWork.JobRepository.GetJobImageByIdAsync(imageId);
             if (existingImage == null)

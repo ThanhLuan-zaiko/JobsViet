@@ -86,7 +86,7 @@ namespace Server.Controllers.Jobs
 
             try
             {
-                var image = await _jobService.UploadJobImageAsync(jobId, dto);
+                var image = await _jobService.UploadJobImageAsync(jobId, dto, userId);
                 return Created("", image);
             }
             catch (Exception ex)
@@ -107,7 +107,7 @@ namespace Server.Controllers.Jobs
 
             try
             {
-                var image = await _jobService.UpdateJobImageAsync(imageId, dto);
+                var image = await _jobService.UpdateJobImageAsync(imageId, dto, userId);
                 return Ok(image);
             }
             catch (Exception ex)

@@ -28,5 +28,8 @@ namespace Server.DTOs.Jobs
 
         [Range(0, int.MaxValue, ErrorMessage = "IsActive must be 0 or 1.")]
         public int IsActive { get; set; } = 1;
+
+        [Required(ErrorMessage = "UploadedByUserId is required.")]
+        public Guid UploadedByUserId { get; set; }
     }
 }
