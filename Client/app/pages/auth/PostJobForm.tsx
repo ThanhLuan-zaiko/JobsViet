@@ -242,8 +242,7 @@ const PostJobForm: React.FC = () => {
       );
 
       setNotification({
-        message:
-          "Đăng tin thành công! Tin sẽ được kiểm duyệt bởi người điều hành.",
+        message: "Đăng tin thành công!",
         type: "success",
       });
       // Reset form

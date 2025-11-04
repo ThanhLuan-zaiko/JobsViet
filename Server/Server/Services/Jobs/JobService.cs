@@ -34,6 +34,12 @@ namespace Server.Services.Jobs
 
                 var jobDtos = _mapper.Map<List<JobDto>>(jobs);
 
+                // Load images for each job
+                foreach (var jobDto in jobDtos)
+                {
+                    jobDto.Images = await GetJobImagesAsync(jobDto.JobId);
+                }
+
                 cachedResult = new PaginatedResult<JobDto>
                 {
                     Data = jobDtos,
@@ -68,8 +74,8 @@ namespace Server.Services.Jobs
             job.JobId = Guid.NewGuid();
             job.JobGuid = Guid.NewGuid();
             job.PostedByUserId = userId;
-            job.HiringStatus = "PENDING_APPROVAL"; // Default as per schema
-            job.IsActive = 0; // Pending approval
+            job.HiringStatus = "OPEN"; // Auto-approved
+            job.IsActive = 1; // Active
             job.CreatedAt = DateTime.UtcNow;
             job.EmployerProfileId = null; // TODO: Fetch from user profile
             job.CompanyId = jobCreateDto.CompanyId; // Optional

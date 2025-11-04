@@ -28,6 +28,23 @@ interface JobDto {
   genderPreference?: string;
   skillsRequired?: string;
   categoryId?: string;
+  images?: JobImageDto[];
+}
+
+interface JobImageDto {
+  jobImageId: string;
+  jobId: string;
+  filePath: string;
+  fileName?: string;
+  fileSize?: number;
+  fileType?: string;
+  caption?: string;
+  sortOrder: number;
+  isPrimary: boolean;
+  isActive: boolean;
+  uploadedByUserId?: string;
+  createdAt: string;
+  updatedAt?: string;
 }
 
 interface PaginatedResult<T> {
@@ -59,18 +76,27 @@ export async function fetchJobs(
   }
   const result: PaginatedResult<JobDto> = await response.json();
 
-  const jobs: Job[] = result.data.map((dto) => ({
-    id: dto.jobGuid,
-    title: dto.title,
-    company: "Unknown Company", // Placeholder, as server doesn't have company
-    location: "Unknown Location", // Placeholder, as server doesn't have location
-    salary:
-      dto.salaryFrom && dto.salaryTo
-        ? `${dto.salaryFrom.toLocaleString()} - ${dto.salaryTo.toLocaleString()} VND`
-        : "Negotiable",
-    description: dto.description || "No description available",
-    imageUrl: "https://via.placeholder.com/300x200?text=Job+Image", // Placeholder
-  }));
+  const jobs: Job[] = result.data.map((dto) => {
+    // Get primary image or first image
+    const primaryImage =
+      dto.images?.find((img) => img.isPrimary) || dto.images?.[0];
+    const imageUrl = primaryImage
+      ? `${import.meta.env.VITE_IMAGES_SERVICE || "http://127.0.0.1:8000"}${primaryImage.filePath}`
+      : "https://via.placeholder.com/300x200?text=Job+Image";
+
+    return {
+      id: dto.jobGuid,
+      title: dto.title,
+      company: "Unknown Company", // Placeholder, as server doesn't have company
+      location: "Unknown Location", // Placeholder, as server doesn't have location
+      salary:
+        dto.salaryFrom && dto.salaryTo
+          ? `${dto.salaryFrom.toLocaleString()} - ${dto.salaryTo.toLocaleString()} VND`
+          : "Negotiable",
+      description: dto.description || "No description available",
+      imageUrl: imageUrl,
+    };
+  });
 
   return { jobs, totalCount: result.totalCount };
 }
