@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import type { JobCreateRequest, CategoryDto } from "../../types/job";
+import type {
+  JobCreateRequest,
+  CategoryDto,
+  JobImageCreateRequest,
+} from "../../types/job";
 import axios from "axios";
 
 const PostJobForm: React.FC = () => {
@@ -27,7 +31,7 @@ const PostJobForm: React.FC = () => {
     skillsRequired: "",
     categoryId: "",
     companyId: "",
-    imageUrl: "",
+    image: undefined,
   });
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -116,8 +120,8 @@ const PostJobForm: React.FC = () => {
     if (file) {
       setSelectedImage(file);
       const reader = new FileReader();
-      reader.onload = (e) => {
-        setImagePreview(e.target?.result as string);
+      reader.onload = (event: ProgressEvent<FileReader>) => {
+        setImagePreview(event.target?.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -177,7 +181,7 @@ const PostJobForm: React.FC = () => {
 
     setLoading(true);
     try {
-      let imageUrl = formData.imageUrl;
+      let imageData: JobImageCreateRequest | undefined = undefined;
 
       // Upload image if selected
       if (selectedImage && !uploadError) {
@@ -196,7 +200,15 @@ const PostJobForm: React.FC = () => {
             }
           );
 
-          imageUrl = uploadResponse.data.image_url;
+          imageData = {
+            filePath: uploadResponse.data.image_url,
+            fileName: uploadResponse.data.file_name,
+            fileType: uploadResponse.data.mime_type,
+            fileSize: uploadResponse.data.file_size,
+            isPrimary: true,
+            sortOrder: 0,
+            isActive: 1,
+          };
         } catch (uploadError: any) {
           console.error("Error uploading image:", uploadError);
           setUploadError(true);
@@ -214,7 +226,7 @@ const PostJobForm: React.FC = () => {
       // Prepare data for submission - ensure categoryId is a valid GUID
       const submitData = {
         ...formData,
-        imageUrl,
+        image: imageData,
         categoryId: formData.categoryId, // Already a string GUID from the select
         deadlineDate: formData.deadlineDate
           ? new Date(formData.deadlineDate).toISOString().split("T")[0]
@@ -251,7 +263,7 @@ const PostJobForm: React.FC = () => {
         skillsRequired: "",
         categoryId: "",
         companyId: "",
-        imageUrl: "",
+        image: undefined,
       });
       setSelectedImage(null);
       setImagePreview(null);

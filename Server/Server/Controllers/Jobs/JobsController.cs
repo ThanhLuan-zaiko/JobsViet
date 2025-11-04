@@ -72,5 +72,55 @@ namespace Server.Controllers.Jobs
                 return StatusCode(500, "Internal server error.");
             }
         }
+
+        // Job Image Upload Endpoints
+        [HttpPost("{jobId}/images")]
+        public async Task<IActionResult> UploadJobImage(Guid jobId, [FromBody] JobImageCreateDto dto)
+        {
+            await HttpContext.Session.LoadAsync();
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
+                return Unauthorized("Invalid user ID");
+
+            dto.UploadedByUserId = userId;
+
+            try
+            {
+                var image = await _jobService.UploadJobImageAsync(jobId, dto);
+                return Created("", image);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("images/{imageId}")]
+        public async Task<IActionResult> UpdateJobImage(Guid imageId, [FromBody] JobImageCreateDto dto)
+        {
+            await HttpContext.Session.LoadAsync();
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
+                return Unauthorized("Invalid user ID");
+
+            dto.UploadedByUserId = userId;
+
+            try
+            {
+                var image = await _jobService.UpdateJobImageAsync(imageId, dto);
+                return Ok(image);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{jobId}/images")]
+        public async Task<IActionResult> GetJobImages(Guid jobId)
+        {
+            var images = await _jobService.GetJobImagesAsync(jobId);
+            return Ok(images);
+        }
     }
 }

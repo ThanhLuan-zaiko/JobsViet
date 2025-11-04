@@ -55,8 +55,7 @@ namespace Server.DTOs.Jobs
         // Optional: CompanyId if user has employer profile
         public Guid? CompanyId { get; set; }
 
-        [StringLength(500, ErrorMessage = "ImageUrl cannot exceed 500 characters.")]
-        public string? ImageUrl { get; set; }
+        public JobImageCreateDto? Image { get; set; }
     }
 
     // Custom validation attribute for future date

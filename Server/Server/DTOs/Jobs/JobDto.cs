@@ -23,6 +23,6 @@ namespace Server.DTOs.Jobs
         public string? GenderPreference { get; set; }
         public string? SkillsRequired { get; set; }
         public Guid? CategoryId { get; set; }
-        public string? ImageUrl { get; set; }
+
     }
 }

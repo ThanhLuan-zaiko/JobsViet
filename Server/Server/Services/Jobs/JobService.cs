@@ -73,13 +73,59 @@ namespace Server.Services.Jobs
             job.CreatedAt = DateTime.UtcNow;
             job.EmployerProfileId = null; // TODO: Fetch from user profile
             job.CompanyId = jobCreateDto.CompanyId; // Optional
-            job.ImageUrl = jobCreateDto.ImageUrl; // Optional
 
             await _unitOfWork.JobRepository.CreateJobAsync(job);
+
+            // Handle image if provided
+            if (jobCreateDto.Image != null)
+            {
+                var jobImage = _mapper.Map<JobImage>(jobCreateDto.Image);
+                jobImage.JobImageId = Guid.NewGuid();
+                jobImage.JobId = job.JobId;
+                jobImage.UploadedByUserId = userId;
+                jobImage.CreatedAt = DateTime.UtcNow;
+
+                await _unitOfWork.JobRepository.CreateJobImageAsync(jobImage);
+            }
+
             await _unitOfWork.SaveChangesAsync();
 
             var jobDto = _mapper.Map<JobDto>(job);
             return jobDto;
+        }
+
+        public async Task<JobImageDto> UploadJobImageAsync(Guid jobId, JobImageCreateDto dto)
+        {
+            var jobImage = _mapper.Map<JobImage>(dto);
+            jobImage.JobImageId = Guid.NewGuid();
+            jobImage.JobId = jobId;
+            jobImage.CreatedAt = DateTime.UtcNow;
+
+            await _unitOfWork.JobRepository.CreateJobImageAsync(jobImage);
+            await _unitOfWork.SaveChangesAsync();
+
+            return _mapper.Map<JobImageDto>(jobImage);
+        }
+
+        public async Task<JobImageDto> UpdateJobImageAsync(Guid imageId, JobImageCreateDto dto)
+        {
+            var existingImage = await _unitOfWork.JobRepository.GetJobImageByIdAsync(imageId);
+            if (existingImage == null)
+                throw new Exception("Job image not found");
+
+            _mapper.Map(dto, existingImage);
+            existingImage.UpdatedAt = DateTime.UtcNow;
+
+            await _unitOfWork.JobRepository.UpdateJobImageAsync(existingImage);
+            await _unitOfWork.SaveChangesAsync();
+
+            return _mapper.Map<JobImageDto>(existingImage);
+        }
+
+        public async Task<List<JobImageDto>> GetJobImagesAsync(Guid jobId)
+        {
+            var images = await _unitOfWork.JobRepository.GetJobImagesByJobIdAsync(jobId);
+            return _mapper.Map<List<JobImageDto>>(images);
         }
     }
 

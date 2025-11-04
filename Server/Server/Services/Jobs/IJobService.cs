@@ -6,6 +6,9 @@ namespace Server.Services.Jobs
     {
         Task<PaginatedResult<JobDto>> GetJobsAsync(JobQueryDto query);
         Task<JobDto> CreateJobAsync(JobCreateDto jobCreateDto, Guid userId);
+        Task<JobImageDto> UploadJobImageAsync(Guid jobId, JobImageCreateDto dto);
+        Task<JobImageDto> UpdateJobImageAsync(Guid imageId, JobImageCreateDto dto);
+        Task<List<JobImageDto>> GetJobImagesAsync(Guid jobId);
     }
 
     public class PaginatedResult<T>

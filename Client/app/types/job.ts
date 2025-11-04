@@ -1,3 +1,14 @@
+export interface JobImageCreateRequest {
+  filePath: string;
+  fileName?: string;
+  fileType?: string;
+  fileSize?: number;
+  caption?: string;
+  sortOrder?: number;
+  isPrimary?: boolean;
+  isActive?: number;
+}
+
 export interface JobCreateRequest {
   title: string;
   description?: string;
@@ -15,7 +26,7 @@ export interface JobCreateRequest {
   skillsRequired?: string;
   categoryId: string; // This should be a valid GUID string
   companyId?: string;
-  imageUrl?: string;
+  image?: JobImageCreateRequest;
 }
 
 export interface JobDto {

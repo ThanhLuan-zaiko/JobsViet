@@ -51,5 +51,28 @@ namespace Server.Data.Jobs
         {
             await _context.Jobs.AddAsync(job);
         }
+
+        public async Task CreateJobImageAsync(JobImage jobImage)
+        {
+            await _context.JobImages.AddAsync(jobImage);
+        }
+
+        public async Task<JobImage?> GetJobImageByIdAsync(Guid imageId)
+        {
+            return await _context.JobImages.FindAsync(imageId);
+        }
+
+        public async Task UpdateJobImageAsync(JobImage jobImage)
+        {
+            _context.JobImages.Update(jobImage);
+        }
+
+        public async Task<List<JobImage>> GetJobImagesByJobIdAsync(Guid jobId)
+        {
+            return await _context.JobImages
+                .Where(ji => ji.JobId == jobId && ji.IsActive == 1)
+                .OrderBy(ji => ji.SortOrder)
+                .ToListAsync();
+        }
     }
 }

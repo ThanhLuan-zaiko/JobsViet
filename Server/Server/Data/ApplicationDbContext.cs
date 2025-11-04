@@ -24,6 +24,7 @@ namespace Server.Data.Jobs
         public DbSet<CandidateProfileImage> CandidateProfileImages { get; set; }
         public DbSet<EmployerProfileImage> EmployerProfileImages { get; set; }
         public DbSet<CompanyImage> CompanyImages { get; set; }
+        public DbSet<JobImage> JobImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -67,7 +68,6 @@ namespace Server.Data.Jobs
                 entity.Property(e => e.GenderPreference).HasColumnName("GENDERPREFERENCE");
                 entity.Property(e => e.SkillsRequired).HasColumnName("SKILLSREQUIRED");
                 entity.Property(e => e.CategoryId).HasColumnName("CATEGORYID");
-                entity.Property(e => e.ImageUrl).HasColumnName("IMAGEURL");
             });
 
             modelBuilder.Entity<JobCategory>(entity =>
@@ -198,6 +198,25 @@ namespace Server.Data.Jobs
                 entity.HasKey(e => e.CompanyImageId);
                 entity.Property(e => e.CompanyImageId).HasColumnName("COMPANYIMAGEID");
                 entity.Property(e => e.CompanyId).HasColumnName("COMPANYID");
+                entity.Property(e => e.FilePath).HasColumnName("FILEPATH").HasMaxLength(500);
+                entity.Property(e => e.FileName).HasColumnName("FILENAME").HasMaxLength(255);
+                entity.Property(e => e.FileSize).HasColumnName("FILESIZE");
+                entity.Property(e => e.FileType).HasColumnName("FILETYPE").HasMaxLength(100);
+                entity.Property(e => e.Caption).HasColumnName("CAPTION").HasMaxLength(300);
+                entity.Property(e => e.SortOrder).HasColumnName("SORTORDER");
+                entity.Property(e => e.IsPrimary).HasColumnName("ISPRIMARY");
+                entity.Property(e => e.IsActive).HasColumnName("ISACTIVE");
+                entity.Property(e => e.UploadedByUserId).HasColumnName("UPLOADEDBYUSERID");
+                entity.Property(e => e.CreatedAt).HasColumnName("CREATEDAT");
+                entity.Property(e => e.UpdatedAt).HasColumnName("UPDATEDAT");
+            });
+
+            modelBuilder.Entity<JobImage>(entity =>
+            {
+                entity.ToTable("JOBIMAGES");
+                entity.HasKey(e => e.JobImageId);
+                entity.Property(e => e.JobImageId).HasColumnName("JOBIMAGEID");
+                entity.Property(e => e.JobId).HasColumnName("JOBID");
                 entity.Property(e => e.FilePath).HasColumnName("FILEPATH").HasMaxLength(500);
                 entity.Property(e => e.FileName).HasColumnName("FILENAME").HasMaxLength(255);
                 entity.Property(e => e.FileSize).HasColumnName("FILESIZE");

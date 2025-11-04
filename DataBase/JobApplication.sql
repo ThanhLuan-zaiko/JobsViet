@@ -249,7 +249,6 @@ ALTER TABLE Jobs ADD (
   GenderPreference VARCHAR2(20),                     -- Nam/Nữ/Không yêu cầu
   SkillsRequired CLOB,                               -- Kỹ năng yêu cầu (text)
   CategoryId RAW(16),                                -- FK tới JobCategories
-  ImageUrl VARCHAR2(500),                            -- URL hình ảnh công việc
   CONSTRAINT FkJobsCategory FOREIGN KEY (CategoryId) REFERENCES JobCategories(CategoryId)
 );
 

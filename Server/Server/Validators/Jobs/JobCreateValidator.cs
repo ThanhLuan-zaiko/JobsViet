@@ -72,6 +72,36 @@ namespace Server.Validators.Jobs
 
             RuleFor(x => x.CategoryId)
                 .NotEmpty().WithMessage("CategoryId is required.");
+
+            // Validation for Image (JobImageCreateDto)
+            When(x => x.Image != null, () =>
+            {
+                RuleFor(x => x.Image!.FilePath)
+                    .NotEmpty().WithMessage("Image FilePath is required.")
+                    .MaximumLength(500).WithMessage("Image FilePath cannot exceed 500 characters.");
+
+                RuleFor(x => x.Image!.FileName)
+                    .MaximumLength(255).WithMessage("Image FileName cannot exceed 255 characters.")
+                    .When(x => !string.IsNullOrEmpty(x.Image!.FileName));
+
+                RuleFor(x => x.Image!.FileType)
+                    .MaximumLength(100).WithMessage("Image FileType cannot exceed 100 characters.")
+                    .When(x => !string.IsNullOrEmpty(x.Image!.FileType));
+
+                RuleFor(x => x.Image!.FileSize)
+                    .GreaterThanOrEqualTo(0).WithMessage("Image FileSize must be a positive number.")
+                    .When(x => x.Image!.FileSize.HasValue);
+
+                RuleFor(x => x.Image!.Caption)
+                    .MaximumLength(300).WithMessage("Image Caption cannot exceed 300 characters.")
+                    .When(x => !string.IsNullOrEmpty(x.Image!.Caption));
+
+                RuleFor(x => x.Image!.SortOrder)
+                    .GreaterThanOrEqualTo(0).WithMessage("Image SortOrder must be non-negative.");
+
+                RuleFor(x => x.Image!.IsActive)
+                    .InclusiveBetween(0, 1).WithMessage("Image IsActive must be 0 or 1.");
+            });
         }
     }
 }
