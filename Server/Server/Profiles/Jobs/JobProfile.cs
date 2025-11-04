@@ -11,6 +11,8 @@ namespace Server.Profiles.Jobs
             CreateMap<Job, JobDto>();
             CreateMap<JobCreateDto, Job>();
             CreateMap<JobCategory, JobCategoryDto>();
+            CreateMap<JobImageCreateDto, JobImage>();
+            CreateMap<JobImage, JobImageDto>();
         }
     }
 }
