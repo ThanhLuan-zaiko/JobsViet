@@ -127,6 +127,9 @@ namespace Server.Extensions
             services.AddScoped<JwtService>();
             services.AddScoped<IProfileService, ProfileService>();
 
+            // Add SignalR services
+            services.AddSignalR();
+
             return services;
         }
 

@@ -90,4 +90,7 @@ app.MapHealthChecks("/health");
 
 app.MapControllers().RequireRateLimiting("Fixed");
 
+// Map SignalR hub
+app.MapHub<Server.Hubs.JobsHub>("/jobsHub");
+
 app.Run();

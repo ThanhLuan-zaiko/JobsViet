@@ -11,6 +11,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import "./animations.css";
 import { AuthProvider } from "./contexts/AuthContext";
+import { SignalRProvider } from "./contexts/SignalRContext";
 import Notification from "./components/Message/Notification";
 import { useAuth } from "./contexts/AuthContext";
 
@@ -65,7 +66,9 @@ function AppContent() {
 export default function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <SignalRProvider>
+        <AppContent />
+      </SignalRProvider>
     </AuthProvider>
   );
 }

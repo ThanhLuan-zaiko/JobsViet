@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Antiforgery;
 using System.Security.Claims;
 using FluentValidation;
 using Server.Validators.Jobs;
+using Microsoft.AspNetCore.SignalR;
+using Server.Hubs;
 
 namespace Server.Controllers.Jobs
 {
@@ -18,11 +20,13 @@ namespace Server.Controllers.Jobs
     {
         private readonly IJobService _jobService;
         private readonly ILogger<JobsController> _logger;
+        private readonly IHubContext<JobsHub> _hubContext;
 
-        public JobsController(IJobService jobService, ILogger<JobsController> logger)
+        public JobsController(IJobService jobService, ILogger<JobsController> logger, IHubContext<JobsHub> hubContext)
         {
             _jobService = jobService;
             _logger = logger;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -64,6 +68,10 @@ namespace Server.Controllers.Jobs
             try
             {
                 var jobDto = await _jobService.CreateJobAsync(jobCreateDto, userId);
+
+                // Broadcast new job to all connected clients
+                await _hubContext.Clients.All.SendAsync("ReceiveNewJob", jobDto);
+
                 return CreatedAtAction(nameof(GetJobs), new { id = jobDto.JobId }, jobDto);
             }
             catch (Exception ex)
