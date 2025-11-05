@@ -52,6 +52,7 @@ export default function Home() {
   useEffect(() => {
     if (connection) {
       const handleReceiveNewJob = (jobDto: any) => {
+        console.log("Received new job from SignalR:", jobDto);
         // Transform the jobDto to Job format
         const primaryImage =
           jobDto.images?.find((img: any) => img.isPrimary) ||
@@ -76,9 +77,11 @@ export default function Home() {
         // Add new job to the beginning of the list
         setJobs((prevJobs) => [newJob, ...prevJobs]);
         setTotalCount((prevCount) => prevCount + 1);
+        console.log("Job added to list:", newJob);
       };
 
       connection.on("ReceiveNewJob", handleReceiveNewJob);
+      console.log("Listening for ReceiveNewJob events");
 
       return () => {
         connection.off("ReceiveNewJob", handleReceiveNewJob);

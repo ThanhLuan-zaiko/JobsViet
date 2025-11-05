@@ -128,7 +128,10 @@ namespace Server.Extensions
             services.AddScoped<IProfileService, ProfileService>();
 
             // Add SignalR services
-            services.AddSignalR();
+            services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = true;
+            });
 
             return services;
         }
