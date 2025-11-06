@@ -70,7 +70,7 @@ namespace Server.Controllers.Jobs
                 var jobDto = await _jobService.CreateJobAsync(jobCreateDto, userId);
 
                 // Broadcast new job to all connected clients
-                await _hubContext.Clients.All.SendAsync("ReceiveNewJob", jobDto);
+                await _hubContext.Clients.All.SendAsync("receivenewjob", jobDto);
                 _logger.LogInformation("Broadcasted new job {JobId} to all clients via SignalR. Connected clients: {Count}", _hubContext.Clients.All, jobDto.JobId);
 
                 return CreatedAtAction(nameof(GetJobs), new { id = jobDto.JobId }, jobDto);

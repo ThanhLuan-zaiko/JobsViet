@@ -27,7 +27,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { connection } = useSignalR();
+  const { setJobCallback } = useSignalR();
 
   useEffect(() => {
     const loadJobs = async () => {
@@ -50,9 +50,12 @@ export default function Home() {
 
   // Listen for new job events from SignalR
   useEffect(() => {
-    if (connection) {
-      const handleReceiveNewJob = (jobDto: any) => {
-        console.log("Received new job from SignalR:", jobDto);
+    console.log("Setting up SignalR job callback in Home component");
+
+    const handleReceiveNewJob = (jobDto: any) => {
+      try {
+        console.log("Home component received new job from SignalR:", jobDto);
+
         // Transform the jobDto to Job format
         const primaryImage =
           jobDto.images?.find((img: any) => img.isPrimary) ||
@@ -74,20 +77,36 @@ export default function Home() {
           imageUrl: imageUrl,
         };
 
+        console.log("Transformed job:", newJob);
+
         // Add new job to the beginning of the list
-        setJobs((prevJobs) => [newJob, ...prevJobs]);
-        setTotalCount((prevCount) => prevCount + 1);
-        console.log("Job added to list:", newJob);
-      };
+        setJobs((prevJobs) => {
+          const updatedJobs = [newJob, ...prevJobs];
+          console.log("Updated jobs list:", updatedJobs.length, "jobs");
+          console.log("First job in list:", updatedJobs[0]);
+          return updatedJobs;
+        });
+        setTotalCount((prevCount) => {
+          const newCount = prevCount + 1;
+          console.log("Updated total count:", newCount);
+          return newCount;
+        });
 
-      connection.on("ReceiveNewJob", handleReceiveNewJob);
-      console.log("Listening for ReceiveNewJob events");
+        console.log("Job successfully added to list");
+      } catch (error) {
+        console.error("Error processing received job:", error);
+      }
+    };
 
-      return () => {
-        connection.off("ReceiveNewJob", handleReceiveNewJob);
-      };
-    }
-  }, [connection]);
+    console.log("About to set job callback");
+    setJobCallback(handleReceiveNewJob);
+    console.log("SignalR job callback set in Home component");
+
+    return () => {
+      console.log("Removing SignalR job callback from Home component");
+      setJobCallback(null);
+    };
+  }, [setJobCallback]);
 
   const handlePageChange = (page: number) => {
     setSearchParams({ page: page.toString() });
