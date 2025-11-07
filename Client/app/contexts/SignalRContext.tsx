@@ -53,7 +53,7 @@ export const SignalRProvider: React.FC<SignalRProviderProps> = ({
       console.log("Creating SignalR connection to:", hubUrl);
 
       const newConnection = new HubConnectionBuilder()
-        .withUrl(hubUrl)
+        .withUrl(hubUrl, { withCredentials: true })
         .withAutomaticReconnect()
         .configureLogging(LogLevel.Information)
         .build();
