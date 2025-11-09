@@ -65,6 +65,7 @@ namespace Server.Data.Jobs
         public async Task UpdateJobImageAsync(JobImage jobImage)
         {
             _context.JobImages.Update(jobImage);
+            await Task.CompletedTask;
         }
 
         public async Task<List<JobImage>> GetJobImagesByJobIdAsync(Guid jobId)
