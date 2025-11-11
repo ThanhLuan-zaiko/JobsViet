@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router";
 import type { Job } from "../../data/mockJobs";
 
 interface JobCardProps {
@@ -20,7 +21,15 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
         <p className="text-sm text-gray-600 mb-1">{job.company}</p>
         <p className="text-sm text-gray-500 mb-2">{job.location}</p>
         <p className="text-sm font-medium text-green-600 mb-3">{job.salary}</p>
-        <p className="text-sm text-gray-700 line-clamp-3">{job.description}</p>
+        <p className="text-sm text-gray-700 line-clamp-3 mb-4">
+          {job.description}
+        </p>
+        <Link
+          to={`/job/${job.id}`}
+          className="inline-block bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200"
+        >
+          Xem chi tiết
+        </Link>
       </div>
     </div>
   );

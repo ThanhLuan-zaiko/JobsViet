@@ -62,6 +62,20 @@ namespace Server.Services.Jobs
             return cachedResult!;
         }
 
+        public async Task<JobDto> GetJobAsync(Guid jobGuid)
+        {
+            var job = await _unitOfWork.JobRepository.GetJobByGuidAsync(jobGuid);
+            if (job == null)
+            {
+                return null!;
+            }
+
+            var jobDto = _mapper.Map<JobDto>(job);
+            jobDto.Images = await GetJobImagesAsync(jobDto.JobId);
+
+            return jobDto;
+        }
+
         public async Task<JobDto> CreateJobAsync(JobCreateDto jobCreateDto, Guid userId)
         {
             _logger.LogInformation("Creating job for user {UserId}", userId);

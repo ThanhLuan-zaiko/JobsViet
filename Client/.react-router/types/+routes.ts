@@ -40,12 +40,17 @@ type Pages = {
   "/applicants": {
     params: {};
   };
+  "/job/:jobGuid": {
+    params: {
+      "jobGuid": string;
+    };
+  };
 };
 
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/home" | "/trending" | "/history" | "/suggested" | "/following" | "/post-job" | "/manage-jobs" | "/manage-profile" | "/applicants";
+    page: "/" | "/home" | "/trending" | "/history" | "/suggested" | "/following" | "/post-job" | "/manage-jobs" | "/manage-profile" | "/applicants" | "/job/:jobGuid";
   };
   "routes/home.tsx": {
     id: "routes/home";
@@ -86,5 +91,9 @@ type RouteFiles = {
   "routes/applicants.tsx": {
     id: "routes/applicants";
     page: "/applicants";
+  };
+  "routes/job-detail.tsx": {
+    id: "routes/job-detail";
+    page: "/job/:jobGuid";
   };
 };

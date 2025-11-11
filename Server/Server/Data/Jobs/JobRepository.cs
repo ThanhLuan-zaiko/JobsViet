@@ -77,5 +77,13 @@ namespace Server.Data.Jobs
                 .OrderBy(ji => ji.SortOrder)
                 .ToListAsync();
         }
+
+        public async Task<Job?> GetJobByGuidAsync(Guid jobGuid)
+        {
+            return await _context.Jobs
+                .Where(j => j.JobGuid == jobGuid && j.IsActive == 1)
+                .Include(j => j.Company)
+                .FirstOrDefaultAsync();
+        }
     }
 }

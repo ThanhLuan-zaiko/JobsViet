@@ -46,6 +46,18 @@ namespace Server.Controllers.Jobs
             return Ok(result);
         }
 
+        [HttpGet("{jobGuid}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetJob(Guid jobGuid)
+        {
+            var job = await _jobService.GetJobAsync(jobGuid);
+            if (job == null)
+            {
+                return NotFound();
+            }
+            return Ok(job);
+        }
+
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> CreateJob([FromBody] JobCreateDto jobCreateDto)

@@ -11,4 +11,5 @@ export default [
   route("/manage-jobs", "routes/manage-jobs.tsx"),
   route("/manage-profile", "routes/manage-profile.tsx"),
   route("/applicants", "routes/applicants.tsx"),
+  route("/job/:jobGuid", "routes/job-detail.tsx"),
 ] satisfies RouteConfig;

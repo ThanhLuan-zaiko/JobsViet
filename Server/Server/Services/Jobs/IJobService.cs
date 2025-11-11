@@ -5,6 +5,7 @@ namespace Server.Services.Jobs
     public interface IJobService
     {
         Task<PaginatedResult<JobDto>> GetJobsAsync(JobQueryDto query);
+        Task<JobDto> GetJobAsync(Guid jobGuid);
         Task<JobDto> CreateJobAsync(JobCreateDto jobCreateDto, Guid userId);
         Task<JobImageDto> UploadJobImageAsync(Guid jobId, JobImageCreateDto dto, Guid userId);
         Task<JobImageDto> UpdateJobImageAsync(Guid imageId, JobImageCreateDto dto, Guid userId);
