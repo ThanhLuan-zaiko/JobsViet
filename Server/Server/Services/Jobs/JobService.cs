@@ -110,7 +110,9 @@ namespace Server.Services.Jobs
 
             await _unitOfWork.SaveChangesAsync();
 
-            var jobDto = _mapper.Map<JobDto>(job);
+            // Fetch the created job with Company included
+            var createdJob = await _unitOfWork.JobRepository.GetJobByGuidAsync(job.JobGuid);
+            var jobDto = _mapper.Map<JobDto>(createdJob);
             return jobDto;
         }
 
@@ -147,6 +149,20 @@ namespace Server.Services.Jobs
         {
             var images = await _unitOfWork.JobRepository.GetJobImagesByJobIdAsync(jobId);
             return _mapper.Map<List<JobImageDto>>(images);
+        }
+
+        public async Task DeleteJobImageAsync(Guid imageId, Guid userId)
+        {
+            var existingImage = await _unitOfWork.JobRepository.GetJobImageByIdAsync(imageId);
+            if (existingImage == null)
+                throw new Exception("Job image not found");
+
+            // Optional: Check if the user is authorized to delete (e.g., if they uploaded it)
+            if (existingImage.UploadedByUserId != userId)
+                throw new Exception("Unauthorized to delete this image");
+
+            await _unitOfWork.JobRepository.DeleteJobImageAsync(existingImage);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 

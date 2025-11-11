@@ -10,6 +10,7 @@ namespace Server.Services.Jobs
         Task<JobImageDto> UploadJobImageAsync(Guid jobId, JobImageCreateDto dto, Guid userId);
         Task<JobImageDto> UpdateJobImageAsync(Guid imageId, JobImageCreateDto dto, Guid userId);
         Task<List<JobImageDto>> GetJobImagesAsync(Guid jobId);
+        Task DeleteJobImageAsync(Guid imageId, Guid userId);
     }
 
     public class PaginatedResult<T>

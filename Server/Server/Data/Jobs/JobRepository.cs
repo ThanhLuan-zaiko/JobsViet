@@ -85,5 +85,11 @@ namespace Server.Data.Jobs
                 .Include(j => j.Company)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task DeleteJobImageAsync(JobImage jobImage)
+        {
+            _context.JobImages.Remove(jobImage);
+            await Task.CompletedTask;
+        }
     }
 }

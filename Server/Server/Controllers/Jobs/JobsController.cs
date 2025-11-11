@@ -143,5 +143,24 @@ namespace Server.Controllers.Jobs
             var images = await _jobService.GetJobImagesAsync(jobId);
             return Ok(images);
         }
+
+        [HttpDelete("images/{imageId}")]
+        public async Task<IActionResult> DeleteJobImage(Guid imageId)
+        {
+            await HttpContext.Session.LoadAsync();
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
+                return Unauthorized("Invalid user ID");
+
+            try
+            {
+                await _jobService.DeleteJobImageAsync(imageId, userId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

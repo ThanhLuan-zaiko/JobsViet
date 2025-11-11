@@ -12,5 +12,6 @@ namespace Server.Data.Jobs
         Task<JobImage?> GetJobImageByIdAsync(Guid imageId);
         Task UpdateJobImageAsync(JobImage jobImage);
         Task<List<JobImage>> GetJobImagesByJobIdAsync(Guid jobId);
+        Task DeleteJobImageAsync(JobImage jobImage);
     }
 }
