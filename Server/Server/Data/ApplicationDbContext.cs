@@ -68,6 +68,12 @@ namespace Server.Data.Jobs
                 entity.Property(e => e.GenderPreference).HasColumnName("GENDERPREFERENCE");
                 entity.Property(e => e.SkillsRequired).HasColumnName("SKILLSREQUIRED");
                 entity.Property(e => e.CategoryId).HasColumnName("CATEGORYID");
+
+                // Define relationship with Company
+                entity.HasOne(j => j.Company)
+                    .WithMany()
+                    .HasForeignKey(j => j.CompanyId)
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<JobCategory>(entity =>

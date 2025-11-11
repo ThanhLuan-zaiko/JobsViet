@@ -1,4 +1,5 @@
 using System;
+using Server.Models.Profiles;
 
 namespace Server.Models.Jobs
 {
@@ -28,5 +29,7 @@ namespace Server.Models.Jobs
         public string? SkillsRequired { get; set; }
         public Guid? CategoryId { get; set; }
 
+        // Navigation property
+        public Company? Company { get; set; }
     }
 }

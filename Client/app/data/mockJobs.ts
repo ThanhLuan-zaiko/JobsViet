@@ -6,6 +6,8 @@ export interface Job {
   salary: string;
   description: string;
   imageUrl: string;
+  companyName?: string;
+  companyLocation?: string;
 }
 
 interface JobDto {
@@ -29,6 +31,8 @@ interface JobDto {
   skillsRequired?: string;
   categoryId?: string;
   images?: JobImageDto[];
+  companyName?: string;
+  companyLocation?: string;
 }
 
 interface JobImageDto {
@@ -87,14 +91,16 @@ export async function fetchJobs(
     return {
       id: dto.jobGuid,
       title: dto.title,
-      company: "Unknown Company", // Placeholder, as server doesn't have company
-      location: "Unknown Location", // Placeholder, as server doesn't have location
+      company: dto.companyName || "Unknown Company",
+      location: dto.companyLocation || "Unknown Location",
       salary:
         dto.salaryFrom && dto.salaryTo
           ? `${dto.salaryFrom.toLocaleString()} - ${dto.salaryTo.toLocaleString()} VND`
           : "Negotiable",
       description: dto.description || "No description available",
       imageUrl: imageUrl,
+      companyName: dto.companyName,
+      companyLocation: dto.companyLocation,
     };
   });
 

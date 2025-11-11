@@ -23,7 +23,9 @@ namespace Server.Data.Jobs
 
         public async Task<(List<Job> Jobs, int TotalCount)> GetJobsAsync(int page, int pageSize, string? search, string? category)
         {
-            IQueryable<Job> query = _context.Jobs.Where(j => j.IsActive == 1);
+            IQueryable<Job> query = _context.Jobs
+                .Where(j => j.IsActive == 1)
+                .Include(j => j.Company); // Include Company entity
 
             if (!string.IsNullOrEmpty(search))
             {

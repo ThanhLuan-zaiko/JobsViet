@@ -24,5 +24,7 @@ namespace Server.DTOs.Jobs
         public string? SkillsRequired { get; set; }
         public Guid? CategoryId { get; set; }
         public List<JobImageDto>? Images { get; set; }
+        public string? CompanyName { get; set; }
+        public string? CompanyLocation { get; set; }
     }
 }
