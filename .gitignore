@@ -21,6 +21,7 @@
 # ========================
 # User-specific files
 /Server/.vs/
+/Server/.idea/
 /Server/*.user
 /Server/*.suo
 
