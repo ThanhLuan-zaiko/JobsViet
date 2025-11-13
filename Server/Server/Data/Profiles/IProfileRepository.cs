@@ -12,6 +12,7 @@ namespace Server.Data.Profiles
 
         // Employer Profile
         Task<EmployerProfile?> GetEmployerProfileByUserIdAsync(Guid userId);
+        Task<EmployerProfile?> GetEmployerProfileByIdAsync(Guid employerId);
         Task<EmployerProfile> CreateEmployerProfileAsync(EmployerProfile profile);
         Task<EmployerProfile> UpdateEmployerProfileAsync(EmployerProfile profile);
 

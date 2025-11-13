@@ -1,4 +1,5 @@
 using System;
+using Server.DTOs.Profiles;
 
 namespace Server.DTOs.Jobs
 {
@@ -26,5 +27,7 @@ namespace Server.DTOs.Jobs
         public List<JobImageDto>? Images { get; set; }
         public string? CompanyName { get; set; }
         public string? CompanyLocation { get; set; }
+        public EmployerProfileDto? EmployerProfile { get; set; }
+        public CompanyDto? Company { get; set; }
     }
 }

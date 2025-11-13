@@ -42,6 +42,11 @@ namespace Server.Data.Profiles
                 .FirstOrDefaultAsync(ep => ep.UserId == userId);
         }
 
+        public async Task<EmployerProfile?> GetEmployerProfileByIdAsync(Guid employerId)
+        {
+            return await _context.EmployerProfiles.FindAsync(employerId);
+        }
+
         public async Task<EmployerProfile> CreateEmployerProfileAsync(EmployerProfile profile)
         {
             _context.EmployerProfiles.Add(profile);
