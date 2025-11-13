@@ -68,6 +68,7 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
         foundedYear: "",
         address: "",
         contactEmail: "",
+        position: "",
       },
     ]);
   };
@@ -113,7 +114,6 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
       ContactPhone: formData.contactPhone || null,
       Bio: formData.bio || null,
       Industry: formData.industry || null,
-      Position: formData.position || null,
       YearsOfExperience: formData.yearsOfExperience
         ? parseInt(formData.yearsOfExperience)
         : null,
@@ -133,6 +133,7 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
       FoundedYear: company.foundedYear ? parseInt(company.foundedYear) : null,
       Address: company.address || null,
       ContactEmail: company.contactEmail || null,
+      Role: company.position || null,
     }));
 
     onSubmit(cleanedFormData, cleanedCompanies, profileImage, companyImages);
@@ -171,19 +172,7 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Chức vụ
-            </label>
-            <input
-              type="text"
-              name="position"
-              value={formData.position}
-              onChange={handleInputChange}
-              placeholder="Ví dụ: HR Manager, CEO"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Số năm kinh nghiệm
@@ -363,6 +352,20 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
                     }
                     min="1800"
                     max={new Date().getFullYear()}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Chức vụ tại công ty
+                  </label>
+                  <input
+                    type="text"
+                    value={company.position}
+                    onChange={(e) =>
+                      handleCompanyChange(index, "position", e.target.value)
+                    }
+                    placeholder="Ví dụ: CEO, HR Manager"
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>

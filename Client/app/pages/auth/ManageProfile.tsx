@@ -30,23 +30,45 @@ const ManageProfile: React.FC = () => {
       }
 
       try {
-        const [candidateRes, employerRes] = await Promise.all([
-          axios.get(`${import.meta.env.VITE_API_BASE_URL}/profiles/candidate`, {
-            withCredentials: true,
-          }),
-          axios.get(`${import.meta.env.VITE_API_BASE_URL}/profiles/employer`, {
-            withCredentials: true,
-          }),
-        ]);
-
-        if (candidateRes.data) {
-          setCandidateProfile(candidateRes.data);
+        // Load candidate profile
+        try {
+          const candidateRes = await axios.get(
+            `${import.meta.env.VITE_API_BASE_URL}/profiles/candidate`,
+            {
+              withCredentials: true,
+            }
+          );
+          if (candidateRes.data) {
+            setCandidateProfile(candidateRes.data);
+          }
+        } catch (candidateError: any) {
+          // 404 means no profile exists, which is fine - user can create one
+          if (candidateError.response?.status !== 404) {
+            console.error("Error loading candidate profile:", candidateError);
+          }
+          // Leave candidateProfile as null for 404 or other errors
         }
-        if (employerRes.data) {
-          setEmployerProfile(employerRes.data);
+
+        // Load employer profile
+        try {
+          const employerRes = await axios.get(
+            `${import.meta.env.VITE_API_BASE_URL}/profiles/employer`,
+            {
+              withCredentials: true,
+            }
+          );
+          if (employerRes.data) {
+            setEmployerProfile(employerRes.data);
+          }
+        } catch (employerError: any) {
+          // 404 means no profile exists, which is fine - user can create one
+          if (employerError.response?.status !== 404) {
+            console.error("Error loading employer profile:", employerError);
+          }
+          // Leave employerProfile as null for 404 or other errors
         }
       } catch (error) {
-        console.error("Error loading profiles:", error);
+        console.error("Unexpected error loading profiles:", error);
       } finally {
         setLoading(false);
       }
@@ -217,13 +239,41 @@ const ManageProfile: React.FC = () => {
   ) => {
     setSaving(true);
     try {
-      // Save employer profile
       const method = employerProfile ? "put" : "post";
-      const employerResponse = await axios[method](
-        `${import.meta.env.VITE_API_BASE_URL}/profiles/employer`,
-        formData,
-        { withCredentials: true }
-      );
+      let employerResponse;
+
+      if (method === "post") {
+        // For creation, send employer data with companies
+        const dataToSend = {
+          ...formData,
+          Companies: companies.map((company, index) => ({
+            Name: company.name,
+            LogoURL: company.logoURL,
+            Website: company.website,
+            Description: company.description,
+            Industry: company.industry,
+            CompanySize: company.companySize,
+            FoundedYear: company.foundedYear,
+            Address: company.address,
+            ContactEmail: company.contactEmail,
+            Role: company.position || "Owner",
+            IsPrimary: index === 0, // First company is primary
+          })),
+        };
+        employerResponse = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}/profiles/employer`,
+          dataToSend,
+          { withCredentials: true }
+        );
+      } else {
+        // For update, send only employer data
+        employerResponse = await axios.put(
+          `${import.meta.env.VITE_API_BASE_URL}/profiles/employer`,
+          formData,
+          { withCredentials: true }
+        );
+      }
+
       setEmployerProfile(employerResponse.data);
 
       // Upload profile image if selected
@@ -266,65 +316,125 @@ const ManageProfile: React.FC = () => {
         }
       }
 
-      // Save companies and upload company images
-      for (const company of companies) {
-        let companyResponse;
-        if (company.id.startsWith("temp-")) {
-          // New company - use the new endpoint that associates with employer
-          companyResponse = await axios.post(
-            `${import.meta.env.VITE_API_BASE_URL}/profiles/company/with-employer`,
-            company,
-            { withCredentials: true }
-          );
-        } else {
-          // Update existing company
-          companyResponse = await axios.put(
-            `${import.meta.env.VITE_API_BASE_URL}/profiles/company/${company.id}`,
-            company,
-            { withCredentials: true }
-          );
+      if (method === "post") {
+        // Companies are already created, upload images for each
+        if (employerResponse.data.companies) {
+          for (const createdCompany of employerResponse.data.companies) {
+            const companyId = createdCompany.companyId;
+            const originalCompany = companies.find(
+              (c) => c.name === createdCompany.name
+            );
+            if (
+              originalCompany &&
+              companyImages[originalCompany.id] &&
+              companyImages[originalCompany.id].length > 0
+            ) {
+              for (const image of companyImages[originalCompany.id]) {
+                try {
+                  const imageFormData = new FormData();
+                  imageFormData.append("file", image);
+
+                  const uploadResponse = await axios.post(
+                    `${import.meta.env.VITE_IMAGES_SERVICE}/upload/company/${companyId}`,
+                    imageFormData,
+                    {
+                      headers: { "Content-Type": "multipart/form-data" },
+                    }
+                  );
+
+                  // Send metadata to ASP.NET server
+                  const metadata = {
+                    ImageType: "company",
+                    FilePath: uploadResponse.data.image_url,
+                    FileName: uploadResponse.data.file_name,
+                    FileSize: uploadResponse.data.file_size,
+                    FileType: uploadResponse.data.mime_type,
+                  };
+
+                  await axios.post(
+                    `${import.meta.env.VITE_API_BASE_URL}/profiles/company/${companyId}/images`,
+                    metadata,
+                    {
+                      withCredentials: true,
+                      headers: { "Content-Type": "application/json" },
+                    }
+                  );
+                } catch (imageError: any) {
+                  console.error("Error uploading company image:", imageError);
+                  setNotification({
+                    type: "warning",
+                    message:
+                      "Công ty đã được lưu nhưng một số ảnh công ty không thể tải lên.",
+                  });
+                }
+              }
+            }
+          }
         }
+      } else {
+        // For update, save companies separately
+        for (const company of companies) {
+          let companyResponse;
+          if (company.id.startsWith("temp-")) {
+            // New company - use the new endpoint that associates with employer
+            companyResponse = await axios.post(
+              `${import.meta.env.VITE_API_BASE_URL}/profiles/company/with-employer`,
+              company,
+              { withCredentials: true }
+            );
+          } else {
+            // Update existing company
+            companyResponse = await axios.put(
+              `${import.meta.env.VITE_API_BASE_URL}/profiles/company/${company.id}`,
+              company,
+              { withCredentials: true }
+            );
+          }
 
-        // Upload company images if selected
-        const companyId = companyResponse.data.companyId || company.id;
-        if (companyImages[company.id] && companyImages[company.id].length > 0) {
-          for (const image of companyImages[company.id]) {
-            try {
-              const imageFormData = new FormData();
-              imageFormData.append("file", image);
+          // Upload company images if selected
+          const companyId = companyResponse.data.companyId || company.id;
+          if (
+            companyImages[company.id] &&
+            companyImages[company.id].length > 0
+          ) {
+            for (const image of companyImages[company.id]) {
+              try {
+                const imageFormData = new FormData();
+                imageFormData.append("file", image);
 
-              const uploadResponse = await axios.post(
-                `${import.meta.env.VITE_IMAGES_SERVICE}/upload/company/${companyId}`,
-                imageFormData,
-                {
-                  headers: { "Content-Type": "multipart/form-data" },
-                }
-              );
+                const uploadResponse = await axios.post(
+                  `${import.meta.env.VITE_IMAGES_SERVICE}/upload/company/${companyId}`,
+                  imageFormData,
+                  {
+                    headers: { "Content-Type": "multipart/form-data" },
+                  }
+                );
 
-              // Send metadata to ASP.NET server
-              const metadata = {
-                ImageType: "company",
-                FilePath: uploadResponse.data.image_url,
-                FileName: uploadResponse.data.file_name,
-                FileSize: uploadResponse.data.file_size,
-                FileType: uploadResponse.data.mime_type,
-              };
+                // Send metadata to ASP.NET server
+                const metadata = {
+                  ImageType: "company",
+                  FilePath: uploadResponse.data.image_url,
+                  FileName: uploadResponse.data.file_name,
+                  FileSize: uploadResponse.data.file_size,
+                  FileType: uploadResponse.data.mime_type,
+                };
 
-              await axios.post(
-                `${import.meta.env.VITE_API_BASE_URL}/profiles/company/${companyId}/images`,
-                metadata,
-                {
-                  withCredentials: true,
-                  headers: { "Content-Type": "application/json" },
-                }
-              );
-            } catch (imageError: any) {
-              console.error("Error uploading company image:", imageError);
-              setNotification({
-                type: "warning",
-                message:
-                  "Công ty đã được lưu nhưng một số ảnh công ty không thể tải lên.",
-              });
+                await axios.post(
+                  `${import.meta.env.VITE_API_BASE_URL}/profiles/company/${companyId}/images`,
+                  metadata,
+                  {
+                    withCredentials: true,
+                    headers: { "Content-Type": "application/json" },
+                  }
+                );
+              } catch (imageError: any) {
+                console.error("Error uploading company image:", imageError);
+                setNotification({
+                  type: "warning",
+                  message:
+                    "Công ty đã được lưu nhưng một số ảnh công ty không thể tải lên.",
+                });
+              }
             }
           }
         }

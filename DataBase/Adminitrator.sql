@@ -57,11 +57,11 @@ END;
 PROMPT === 4. HIỂN THỊ SESSION CỦA USER (&schema_name) ===
 SELECT sid, serial#, status, username, machine
 FROM v$session
-WHERE username = UPPER('&schema_name');
+WHERE username = UPPER('JOBVIET');
 
 PROMPT === 5. KILL TẤT CẢ SESSION CỦA USER TRƯỚC KHI XÓA ===
 BEGIN
-    FOR s IN (SELECT sid, serial# FROM v$session WHERE username = UPPER('&schema_name')) LOOP
+    FOR s IN (SELECT sid, serial# FROM v$session WHERE username = UPPER('JOBVIET')) LOOP
         EXECUTE IMMEDIATE 'ALTER SYSTEM KILL SESSION '''||s.sid||','||s.serial#||''' IMMEDIATE';
     END LOOP;
 END;
@@ -70,7 +70,7 @@ PROMPT >>> Kill session hoàn tất.
 
 PROMPT === 6. XÓA USER (SCHEMA) TOÀN BỘ ===
 BEGIN
-    EXECUTE IMMEDIATE 'DROP USER &schema_name CASCADE';
+    EXECUTE IMMEDIATE 'DROP USER JOBVIET CASCADE';
 EXCEPTION WHEN OTHERS THEN
     IF SQLCODE = -01918 THEN
         DBMS_OUTPUT.PUT_LINE('User không tồn tại hoặc đã bị xóa trước đó.');
