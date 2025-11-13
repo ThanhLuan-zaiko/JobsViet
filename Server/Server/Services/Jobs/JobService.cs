@@ -6,6 +6,7 @@ using Server.DTOs.Profiles;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Server.Models.Jobs;
+using Server.Models.Profiles;
 
 namespace Server.Services.Jobs
 {
@@ -77,83 +78,89 @@ namespace Server.Services.Jobs
             var jobDto = _mapper.Map<JobDto>(job);
             jobDto.Images = await GetJobImagesAsync(jobDto.JobId);
 
-            // Fetch employer profile if EmployerProfileId is set
+            // Fetch employer profile if EmployerProfileId is set, otherwise fetch by PostedByUserId
+            EmployerProfile? employerProfile = null;
             if (job.EmployerProfileId.HasValue)
             {
-                var employerProfile = await _profileUnitOfWork.ProfileRepository.GetEmployerProfileByIdAsync(job.EmployerProfileId.Value);
-                if (employerProfile != null)
-                {
-                    var employerImages = await _profileUnitOfWork.ProfileRepository.GetEmployerProfileImagesAsync(employerProfile.EmployerId);
-                    var employerCompanies = await _profileUnitOfWork.ProfileRepository.GetCompaniesByEmployerIdAsync(employerProfile.EmployerId);
+                employerProfile = await _profileUnitOfWork.ProfileRepository.GetEmployerProfileByIdAsync(job.EmployerProfileId.Value);
+            }
+            else
+            {
+                employerProfile = await _profileUnitOfWork.ProfileRepository.GetEmployerProfileByUserIdAsync(job.PostedByUserId);
+            }
 
-                    jobDto.EmployerProfile = new EmployerProfileDto
+            if (employerProfile != null)
+            {
+                var employerImages = await _profileUnitOfWork.ProfileRepository.GetEmployerProfileImagesAsync(employerProfile.EmployerId);
+                var employerCompanies = await _profileUnitOfWork.ProfileRepository.GetCompaniesByEmployerIdAsync(employerProfile.EmployerId);
+
+                jobDto.EmployerProfile = new EmployerProfileDto
+                {
+                    EmployerId = employerProfile.EmployerId,
+                    UserId = employerProfile.UserId,
+                    DisplayName = employerProfile.DisplayName,
+                    ContactPhone = employerProfile.ContactPhone,
+                    Bio = employerProfile.Bio,
+                    Industry = employerProfile.Industry,
+                    Position = employerProfile.Position,
+                    YearsOfExperience = employerProfile.YearsOfExperience,
+                    LinkedInProfile = employerProfile.LinkedInProfile,
+                    Website = employerProfile.Website,
+                    CreatedAt = employerProfile.CreatedAt,
+                    UpdatedAt = employerProfile.UpdatedAt,
+                    Images = employerImages.Select(img => new EmployerProfileImageDto
                     {
-                        EmployerId = employerProfile.EmployerId,
-                        UserId = employerProfile.UserId,
-                        DisplayName = employerProfile.DisplayName,
-                        ContactPhone = employerProfile.ContactPhone,
-                        Bio = employerProfile.Bio,
-                        Industry = employerProfile.Industry,
-                        Position = employerProfile.Position,
-                        YearsOfExperience = employerProfile.YearsOfExperience,
-                        LinkedInProfile = employerProfile.LinkedInProfile,
-                        Website = employerProfile.Website,
-                        CreatedAt = employerProfile.CreatedAt,
-                        UpdatedAt = employerProfile.UpdatedAt,
-                        Images = employerImages.Select(img => new EmployerProfileImageDto
+                        ImageId = img.ImageId,
+                        EmployerId = img.EmployerId,
+                        FilePath = img.FilePath,
+                        FileName = img.FileName,
+                        FileSize = img.FileSize,
+                        FileType = img.FileType,
+                        Caption = img.Caption,
+                        SortOrder = img.SortOrder,
+                        IsPrimary = img.IsPrimary,
+                        IsActive = img.IsActive,
+                        UploadedByUserId = img.UploadedByUserId,
+                        CreatedAt = img.CreatedAt,
+                        UpdatedAt = img.UpdatedAt
+                    }).ToList(),
+                    Companies = (await Task.WhenAll(employerCompanies.Select(async c =>
+                    {
+                        var companyImages = await _profileUnitOfWork.ProfileRepository.GetCompanyImagesAsync(c.CompanyId);
+                        return new CompanyDto
                         {
-                            ImageId = img.ImageId,
-                            EmployerId = img.EmployerId,
-                            FilePath = img.FilePath,
-                            FileName = img.FileName,
-                            FileSize = img.FileSize,
-                            FileType = img.FileType,
-                            Caption = img.Caption,
-                            SortOrder = img.SortOrder,
-                            IsPrimary = img.IsPrimary,
-                            IsActive = img.IsActive,
-                            UploadedByUserId = img.UploadedByUserId,
-                            CreatedAt = img.CreatedAt,
-                            UpdatedAt = img.UpdatedAt
-                        }).ToList(),
-                        Companies = (await Task.WhenAll(employerCompanies.Select(async c =>
-                        {
-                            var companyImages = await _profileUnitOfWork.ProfileRepository.GetCompanyImagesAsync(c.CompanyId);
-                            return new CompanyDto
+                            CompanyId = c.CompanyId,
+                            Name = c.Name ?? string.Empty,
+                            CompanyCode = c.CompanyCode,
+                            Website = c.Website,
+                            Description = c.Description,
+                            Industry = c.Industry,
+                            CompanySize = c.CompanySize,
+                            FoundedYear = c.FoundedYear,
+                            LogoURL = c.LogoURL,
+                            Address = c.Address,
+                            ContactEmail = c.ContactEmail,
+                            CreatedAt = c.CreatedAt,
+                            UpdatedAt = c.UpdatedAt,
+                            Images = companyImages.Select(img => new CompanyImageDto
                             {
-                                CompanyId = c.CompanyId,
-                                Name = c.Name ?? string.Empty,
-                                CompanyCode = c.CompanyCode,
-                                Website = c.Website,
-                                Description = c.Description,
-                                Industry = c.Industry,
-                                CompanySize = c.CompanySize,
-                                FoundedYear = c.FoundedYear,
-                                LogoURL = c.LogoURL,
-                                Address = c.Address,
-                                ContactEmail = c.ContactEmail,
-                                CreatedAt = c.CreatedAt,
-                                UpdatedAt = c.UpdatedAt,
-                                Images = companyImages.Select(img => new CompanyImageDto
-                                {
-                                    CompanyImageId = img.CompanyImageId,
-                                    CompanyId = img.CompanyId,
-                                    FilePath = img.FilePath,
-                                    FileName = img.FileName,
-                                    FileSize = img.FileSize,
-                                    FileType = img.FileType,
-                                    Caption = img.Caption,
-                                    SortOrder = img.SortOrder,
-                                    IsPrimary = img.IsPrimary,
-                                    IsActive = img.IsActive,
-                                    UploadedByUserId = img.UploadedByUserId,
-                                    CreatedAt = img.CreatedAt,
-                                    UpdatedAt = img.UpdatedAt
-                                }).ToList()
-                            };
-                        }))).ToList()
-                    };
-                }
+                                CompanyImageId = img.CompanyImageId,
+                                CompanyId = img.CompanyId,
+                                FilePath = img.FilePath,
+                                FileName = img.FileName,
+                                FileSize = img.FileSize,
+                                FileType = img.FileType,
+                                Caption = img.Caption,
+                                SortOrder = img.SortOrder,
+                                IsPrimary = img.IsPrimary,
+                                IsActive = img.IsActive,
+                                UploadedByUserId = img.UploadedByUserId,
+                                CreatedAt = img.CreatedAt,
+                                UpdatedAt = img.UpdatedAt
+                            }).ToList()
+                        };
+                    }))).ToList()
+                };
             }
 
             // Fetch company details if CompanyId is set
@@ -216,7 +223,8 @@ namespace Server.Services.Jobs
             job.HiringStatus = "OPEN"; // Auto-approved
             job.IsActive = 1; // Active
             job.CreatedAt = DateTime.UtcNow;
-            job.EmployerProfileId = null; // TODO: Fetch from user profile
+            var employerProfile = await _profileUnitOfWork.ProfileRepository.GetEmployerProfileByUserIdAsync(userId);
+            job.EmployerProfileId = employerProfile?.EmployerId;
             job.CompanyId = jobCreateDto.CompanyId; // Optional
 
             await _unitOfWork.JobRepository.CreateJobAsync(job);
