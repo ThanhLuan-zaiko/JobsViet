@@ -133,6 +133,7 @@ namespace Server.Services.Profiles
 
             var images = await _unitOfWork.ProfileRepository.GetEmployerProfileImagesAsync(profile.EmployerId);
             var companies = await _unitOfWork.ProfileRepository.GetCompaniesByEmployerIdAsync(profile.EmployerId);
+            var employerCompanies = await _unitOfWork.ProfileRepository.GetEmployerCompaniesByEmployerIdAsync(profile.EmployerId);
 
             return new EmployerProfileDto
             {
@@ -167,6 +168,8 @@ namespace Server.Services.Profiles
                 Companies = (await Task.WhenAll(companies.Select(async c =>
                 {
                     var images = await _unitOfWork.ProfileRepository.GetCompanyImagesAsync(c.CompanyId);
+                    // Find the role for this company from employer-company relationship
+                    var employerCompany = employerCompanies.FirstOrDefault(ec => ec.CompanyId == c.CompanyId);
                     return new CompanyDto
                     {
                         CompanyId = c.CompanyId,
@@ -180,6 +183,7 @@ namespace Server.Services.Profiles
                         LogoURL = c.LogoURL,
                         Address = c.Address,
                         ContactEmail = c.ContactEmail,
+                        Role = employerCompany?.Role,
                         CreatedAt = c.CreatedAt,
                         UpdatedAt = c.UpdatedAt,
                         Images = images.Select(img => new CompanyImageDto

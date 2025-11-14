@@ -58,6 +58,12 @@ namespace Server.Validators.Profiles
                     .InclusiveBetween(1800, DateTime.Now.Year).WithMessage($"Founded year must be between 1800 and {DateTime.Now.Year}.")
                     .When(c => c.FoundedYear.HasValue);
 
+                company.RuleFor(c => c.LogoURL)
+                    .MaximumLength(300).WithMessage("Logo URL cannot exceed 300 characters.")
+                    .Must(uri => uri == null || Uri.TryCreate(uri, UriKind.Absolute, out _))
+                    .WithMessage("Invalid logo URL.")
+                    .When(c => !string.IsNullOrEmpty(c.LogoURL));
+
                 company.RuleFor(c => c.Address)
                     .MaximumLength(500).WithMessage("Address cannot exceed 500 characters.");
 
@@ -67,6 +73,7 @@ namespace Server.Validators.Profiles
                     .When(c => !string.IsNullOrEmpty(c.ContactEmail));
 
                 company.RuleFor(c => c.Role)
+                    .NotEmpty().WithMessage("Role is required.")
                     .MaximumLength(100).WithMessage("Role cannot exceed 100 characters.");
 
                 // Image files validation

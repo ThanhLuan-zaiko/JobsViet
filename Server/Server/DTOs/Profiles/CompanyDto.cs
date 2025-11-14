@@ -29,10 +29,9 @@ namespace Server.DTOs.Profiles
         [Range(1800, 2100, ErrorMessage = "Founded year must be between 1800 and 2100.")]
         public int? FoundedYear { get; set; }
 
-        [Required(ErrorMessage = "LogoURL is required.")]
         [StringLength(300, ErrorMessage = "Logo URL cannot exceed 300 characters.")]
         [Url(ErrorMessage = "Invalid logo URL.")]
-        public string LogoURL { get; set; } = string.Empty;
+        public string? LogoURL { get; set; }
 
         [StringLength(500, ErrorMessage = "Address cannot exceed 500 characters.")]
         public string? Address { get; set; }
@@ -40,6 +39,10 @@ namespace Server.DTOs.Profiles
         [StringLength(255, ErrorMessage = "Contact email cannot exceed 255 characters.")]
         [EmailAddress(ErrorMessage = "Invalid email address.")]
         public string? ContactEmail { get; set; }
+
+        // Role in the company (e.g., "Owner", "HR", "Manager")
+        [StringLength(100, ErrorMessage = "Role cannot exceed 100 characters.")]
+        public string? Role { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

@@ -68,7 +68,7 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
         foundedYear: "",
         address: "",
         contactEmail: "",
-        position: "",
+        role: "",
       },
     ]);
   };
@@ -133,7 +133,7 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
       FoundedYear: company.foundedYear ? parseInt(company.foundedYear) : null,
       Address: company.address || null,
       ContactEmail: company.contactEmail || null,
-      Role: company.position || null,
+      Role: company.role || null,
     }));
 
     onSubmit(cleanedFormData, cleanedCompanies, profileImage, companyImages);
@@ -282,7 +282,7 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Logo URL
+                    Logo URL <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="url"
@@ -292,6 +292,7 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
                     }
                     placeholder="https://example.com/logo.png"
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
                   />
                 </div>
                 <div>
@@ -357,16 +358,17 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Chức vụ tại công ty
+                    Chức vụ tại công ty <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
-                    value={company.position}
+                    value={company.role}
                     onChange={(e) =>
-                      handleCompanyChange(index, "position", e.target.value)
+                      handleCompanyChange(index, "role", e.target.value)
                     }
                     placeholder="Ví dụ: CEO, HR Manager"
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
                   />
                 </div>
                 <div>

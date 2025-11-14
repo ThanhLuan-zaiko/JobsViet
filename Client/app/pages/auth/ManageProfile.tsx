@@ -256,7 +256,7 @@ const ManageProfile: React.FC = () => {
             FoundedYear: company.foundedYear,
             Address: company.address,
             ContactEmail: company.contactEmail,
-            Role: company.position || "Owner",
+            Role: company.role || "Owner",
             IsPrimary: index === 0, // First company is primary
           })),
         };
@@ -273,8 +273,6 @@ const ManageProfile: React.FC = () => {
           { withCredentials: true }
         );
       }
-
-      setEmployerProfile(employerResponse.data);
 
       // Upload profile image if selected
       if (profileImage) {
@@ -457,6 +455,7 @@ const ManageProfile: React.FC = () => {
         type: "success",
         message: "Hồ sơ nhà tuyển dụng đã được lưu thành công!",
       });
+      setActiveTab("employer");
       setEditingEmployer(false);
     } catch (error: any) {
       console.error("Error saving employer profile:", error);
