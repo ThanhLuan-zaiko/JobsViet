@@ -217,7 +217,7 @@ namespace Server.Services.Profiles
                 ContactPhone = dto.ContactPhone,
                 Bio = dto.Bio,
                 Industry = dto.Industry,
-                Position = dto.Position,
+                Position = dto.Position ?? dto.Companies?.FirstOrDefault()?.Role,
                 YearsOfExperience = dto.YearsOfExperience,
                 LinkedInProfile = dto.LinkedInProfile,
                 Website = dto.Website,
@@ -241,7 +241,7 @@ namespace Server.Services.Profiles
                         Industry = companyDto.Industry,
                         CompanySize = companyDto.CompanySize,
                         FoundedYear = companyDto.FoundedYear,
-                        LogoURL = companyDto.LogoURL ?? string.Empty,
+                        LogoURL = companyDto.LogoURL,
                         Address = companyDto.Address,
                         ContactEmail = companyDto.ContactEmail,
                         CreatedAt = DateTime.UtcNow

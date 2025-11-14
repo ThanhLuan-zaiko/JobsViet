@@ -13,8 +13,10 @@ namespace Server.Profiles
             CreateMap<CompanyUpdateDto, Company>();
 
             CreateMap<EmployerProfile, EmployerProfileDto>();
-            CreateMap<EmployerProfileCreateDto, EmployerProfile>();
-            CreateMap<EmployerProfileUpdateDto, EmployerProfile>();
+            CreateMap<EmployerProfileCreateDto, EmployerProfile>()
+                .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.Position));
+            CreateMap<EmployerProfileUpdateDto, EmployerProfile>()
+                .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.Position));
 
             CreateMap<CandidateProfile, CandidateProfileDto>();
             CreateMap<CandidateProfileCreateDto, CandidateProfile>();

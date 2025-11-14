@@ -20,6 +20,7 @@ namespace Server.Validators.Profiles
                 .MaximumLength(255).WithMessage("Industry cannot exceed 255 characters.");
 
             RuleFor(x => x.Position)
+                .NotEmpty().WithMessage("Position is required.")
                 .MaximumLength(255).WithMessage("Position cannot exceed 255 characters.");
 
             RuleFor(x => x.YearsOfExperience)
@@ -60,9 +61,8 @@ namespace Server.Validators.Profiles
 
                 company.RuleFor(c => c.LogoURL)
                     .MaximumLength(300).WithMessage("Logo URL cannot exceed 300 characters.")
-                    .Must(uri => uri == null || Uri.TryCreate(uri, UriKind.Absolute, out _))
-                    .WithMessage("Invalid logo URL.")
-                    .When(c => !string.IsNullOrEmpty(c.LogoURL));
+                    .Must(uri => string.IsNullOrEmpty(uri) || Uri.TryCreate(uri, UriKind.Absolute, out _))
+                    .WithMessage("Invalid logo URL.");
 
                 company.RuleFor(c => c.Address)
                     .MaximumLength(500).WithMessage("Address cannot exceed 500 characters.");

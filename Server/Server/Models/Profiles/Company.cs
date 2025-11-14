@@ -13,10 +13,8 @@ namespace Server.Models.Profiles
         public string? Industry { get; set; }
         public string? CompanySize { get; set; }
         public int? FoundedYear { get; set; }
-        [Required(ErrorMessage = "LogoURL is required.")]
         [StringLength(300, ErrorMessage = "Logo URL cannot exceed 300 characters.")]
-        [Url(ErrorMessage = "Invalid logo URL.")]
-        public string LogoURL { get; set; } = string.Empty;
+        public string? LogoURL { get; set; }
         public string? Address { get; set; }
         public string? ContactEmail { get; set; }
         public DateTime CreatedAt { get; set; }

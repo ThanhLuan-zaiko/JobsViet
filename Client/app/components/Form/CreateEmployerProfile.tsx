@@ -114,6 +114,7 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
       ContactPhone: formData.contactPhone || null,
       Bio: formData.bio || null,
       Industry: formData.industry || null,
+      Position: formData.position,
       YearsOfExperience: formData.yearsOfExperience
         ? parseInt(formData.yearsOfExperience)
         : null,
@@ -173,6 +174,38 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
             />
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Chức vụ <span className="text-red-500">*</span>
+            </label>
+            <select
+              name="position"
+              value={formData.position}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            >
+              <option value="">Chọn chức vụ</option>
+              <option value="Công ty dịch vụ nhân sự">
+                Công ty dịch vụ nhân sự
+              </option>
+              <option value="Công ty săn đầu người">
+                Công ty săn đầu người
+              </option>
+              <option value="Trung tâm giới thiệu việc làm">
+                Trung tâm giới thiệu việc làm
+              </option>
+              <option value="Doanh nghiệp cung ứng lao động">
+                Doanh nghiệp cung ứng lao động
+              </option>
+              <option value="Chuyên viên săn đầu người">
+                Chuyên viên săn đầu người
+              </option>
+              <option value="Cộng tác viên tuyển dụng">
+                Cộng tác viên tuyển dụng
+              </option>
+            </select>
+          </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Số năm kinh nghiệm
@@ -358,7 +391,7 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Chức vụ tại công ty <span className="text-red-500">*</span>
+                    Vai trò với công ty <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -366,7 +399,7 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
                     onChange={(e) =>
                       handleCompanyChange(index, "role", e.target.value)
                     }
-                    placeholder="Ví dụ: CEO, HR Manager"
+                    placeholder="Ví dụ: Người đại diện, Đối tác cung ứng"
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   />

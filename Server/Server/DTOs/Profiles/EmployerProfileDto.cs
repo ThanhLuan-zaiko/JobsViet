@@ -20,6 +20,7 @@ namespace Server.DTOs.Profiles
         [StringLength(255, ErrorMessage = "Industry cannot exceed 255 characters.")]
         public string? Industry { get; set; }
 
+        [Required(ErrorMessage = "Position is required.")]
         [StringLength(255, ErrorMessage = "Position cannot exceed 255 characters.")]
         public string? Position { get; set; }
 
@@ -59,8 +60,9 @@ namespace Server.DTOs.Profiles
         [StringLength(255, ErrorMessage = "Industry cannot exceed 255 characters.")]
         public string? Industry { get; set; }
 
+        [Required(ErrorMessage = "Position is required.")]
         [StringLength(255, ErrorMessage = "Position cannot exceed 255 characters.")]
-        public string? Position { get; set; }
+        public string Position { get; set; } = string.Empty;
 
         [Range(0, 50, ErrorMessage = "Years of experience must be between 0 and 50.")]
         public int? YearsOfExperience { get; set; }
@@ -102,8 +104,7 @@ namespace Server.DTOs.Profiles
         public int? FoundedYear { get; set; }
 
         [StringLength(300, ErrorMessage = "Logo URL cannot exceed 300 characters.")]
-        [Url(ErrorMessage = "Invalid logo URL.")]
-        public string? LogoURL { get; set; }
+        public string LogoURL { get; set; } = string.Empty;
 
         [StringLength(500, ErrorMessage = "Address cannot exceed 500 characters.")]
         public string? Address { get; set; }

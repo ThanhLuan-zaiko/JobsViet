@@ -70,18 +70,18 @@ CREATE TABLE UserPermissions (
 CREATE TABLE CandidateProfiles (
   CandidateId RAW(16) DEFAULT SYS_GUID() PRIMARY KEY,
   UserId RAW(16) NOT NULL UNIQUE,                -- Liên kết 1-1 với Users
-  FullName VARCHAR2(200),
-  Phone VARCHAR2(50),
-  Headline VARCHAR2(300),
-  DateOfBirth DATE,                              -- Ngày sinh
-  Gender VARCHAR2(20),                           -- Giới tính (Male, Female, Other)
-  Address VARCHAR2(500),                         -- Địa chỉ
-  EducationLevel VARCHAR2(100),                  -- Trình độ học vấn (Bachelor, Master, etc.)
-  ExperienceYears NUMBER,                        -- Số năm kinh nghiệm
-  Skills VARCHAR2(2000),                         -- Kỹ năng (danh sách cách nhau bởi dấu phẩy)
-  LinkedInProfile VARCHAR2(300),                 -- Liên kết LinkedIn
-  PortfolioURL VARCHAR2(300),                    -- Liên kết portfolio
-  Bio CLOB,                                      -- Tiểu sử chi tiết
+  FullName VARCHAR2(200) NOT NULL,
+  Phone VARCHAR2(50) NOT NULL,
+  Headline VARCHAR2(300) NOT NULL,
+  DateOfBirth DATE NOT NULL,                              -- Ngày sinh
+  Gender VARCHAR2(20) NOT NULL,                           -- Giới tính (Male, Female, Other)
+  Address VARCHAR2(500) NOT NULL,                         -- Địa chỉ
+  EducationLevel VARCHAR2(100) NOT NULL,                  -- Trình độ học vấn (Bachelor, Master, etc.)
+  ExperienceYears NUMBER NOT NULL,                        -- Số năm kinh nghiệm
+  Skills VARCHAR2(2000) NOT NULL,                         -- Kỹ năng (danh sách cách nhau bởi dấu phẩy)
+  LinkedInProfile VARCHAR2(300) NOT NULL,                 -- Liên kết LinkedIn
+  PortfolioURL VARCHAR2(300) NOT NULL,                    -- Liên kết portfolio
+  Bio CLOB NOT NULL,                                      -- Tiểu sử chi tiết
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
   UpdatedAt TIMESTAMP,
   CONSTRAINT FkCandidateUser FOREIGN KEY (UserId) REFERENCES Users(UserId)
@@ -114,14 +114,14 @@ CREATE TABLE CandidateImages (
 CREATE TABLE EmployerProfiles (
   EmployerProfileId RAW(16) DEFAULT SYS_GUID() PRIMARY KEY,
   UserId RAW(16) NOT NULL UNIQUE,                -- Liên kết 1-1 với Users
-  DisplayName VARCHAR2(200),
-  ContactPhone VARCHAR2(50),
-  Bio CLOB,                                      -- Tiểu sử nhà tuyển dụng
-  Industry VARCHAR2(100),                        -- Ngành nghề
-  Position VARCHAR2(100),                        -- Chức vụ
-  YearsOfExperience NUMBER,                      -- Số năm kinh nghiệm
-  LinkedInProfile VARCHAR2(300),                 -- Liên kết LinkedIn
-  Website VARCHAR2(300),                         -- Website cá nhân
+  DisplayName VARCHAR2(200) NOT NULL,
+  ContactPhone VARCHAR2(50) NOT NULL,
+  Bio CLOB NOT NULL,                                      -- Tiểu sử nhà tuyển dụng
+  Industry VARCHAR2(100) NOT NULL,                        -- Ngành nghề
+  Position VARCHAR2(100) NOT NULL,                        -- Chức vụ
+  YearsOfExperience NUMBER NOT NULL,                      -- Số năm kinh nghiệm
+  LinkedInProfile VARCHAR2(300) NOT NULL,                 -- Liên kết LinkedIn
+  Website VARCHAR2(300) NOT NULL,                         -- Website cá nhân
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
   UpdatedAt TIMESTAMP,
   CONSTRAINT FkEmployerUser FOREIGN KEY (UserId) REFERENCES Users(UserId)
@@ -155,14 +155,14 @@ CREATE TABLE Companies (
   CompanyId RAW(16) DEFAULT SYS_GUID() PRIMARY KEY,
   Name VARCHAR2(300) NOT NULL,
   CompanyCode VARCHAR2(100) DEFAULT SYS_GUID() UNIQUE,              -- Mã công ty duy nhất
-  Website VARCHAR2(300),
-  Description CLOB,                              -- Mô tả công ty
-  Industry VARCHAR2(100),                        -- Ngành nghề
-  CompanySize VARCHAR2(50),                      -- Quy mô công ty (Small, Medium, Large)
-  FoundedYear NUMBER,                            -- Năm thành lập
+  Website VARCHAR2(300) NOT NULL,
+  Description CLOB NOT NULL,                              -- Mô tả công ty
+  Industry VARCHAR2(100) NOT NULL,                        -- Ngành nghề
+  CompanySize VARCHAR2(50) NOT NULL,                      -- Quy mô công ty (Small, Medium, Large)
+  FoundedYear NUMBER NOT NULL,                            -- Năm thành lập
   LogoURL VARCHAR2(300) NOT NULL,                         -- URL logo công ty
-  Address VARCHAR2(500),                         -- Địa chỉ công ty
-  ContactEmail VARCHAR2(200),                    -- Email liên hệ
+  Address VARCHAR2(500) NOT NULL,                         -- Địa chỉ công ty
+  ContactEmail VARCHAR2(200) NOT NULL,                    -- Email liên hệ
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
   UpdatedAt TIMESTAMP
 );
@@ -195,7 +195,7 @@ CREATE TABLE EmployerCompanies (
   Id RAW(16) DEFAULT SYS_GUID() PRIMARY KEY,
   EmployerProfileId RAW(16) NOT NULL,
   CompanyId RAW(16) NOT NULL,
-  Role VARCHAR2(100),                            -- Vai trò (HR, Admin…)
+  Role VARCHAR2(100) NOT NULL,                            -- Vai trò (HR, Admin…)
   IsPrimary NUMBER(1) DEFAULT 0,
   CONSTRAINT FkEcEmployer FOREIGN KEY (EmployerProfileId) REFERENCES EmployerProfiles(EmployerProfileId),
   CONSTRAINT FkEcCompany FOREIGN KEY (CompanyId) REFERENCES Companies(CompanyId),
@@ -208,7 +208,7 @@ CREATE TABLE EmployerCompanies (
 CREATE TABLE JobCategories (
   CategoryId RAW(16) DEFAULT SYS_GUID() PRIMARY KEY,
   Name VARCHAR2(100) NOT NULL UNIQUE,             -- Tên category (IT, Marketing, etc.)
-  Description VARCHAR2(4000),                      -- Mô tả category
+  Description VARCHAR2(4000) NOT NULL,                      -- Mô tả category
   IsActive NUMBER(1) DEFAULT 1 NOT NULL,          -- 1=active, 0=inactive
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL
 );
@@ -220,13 +220,13 @@ CREATE TABLE Jobs (
   JobId RAW(16) DEFAULT SYS_GUID() PRIMARY KEY,
   JobGuid RAW(16) DEFAULT SYS_GUID() NOT NULL UNIQUE,
   PostedByUserId RAW(16) NOT NULL,               -- Ai đăng tin
-  EmployerProfileId RAW(16),
-  CompanyId RAW(16),
+  EmployerProfileId RAW(16) NOT NULL,
+  CompanyId RAW(16) NOT NULL,
   Title VARCHAR2(4000) NOT NULL,
-  Description CLOB,
-  EmploymentType VARCHAR2(50),
-  SalaryFrom NUMBER,
-  SalaryTo NUMBER,
+  Description CLOB NOT NULL,
+  EmploymentType VARCHAR2(50) NOT NULL,
+  SalaryFrom NUMBER NOT NULL,
+  SalaryTo NUMBER NOT NULL,
   IsActive NUMBER(1) DEFAULT 1 NOT NULL,
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
   CONSTRAINT FkJobsPoster FOREIGN KEY (PostedByUserId) REFERENCES Users(UserId),
@@ -241,14 +241,14 @@ ALTER TABLE Jobs ADD (
   HiringStatus VARCHAR2(20) DEFAULT 'OPEN' NOT NULL, -- OPEN, CLOSED, PAUSED, DRAFT, PENDING_APPROVAL, REJECTED
   PositionsNeeded NUMBER DEFAULT 1 NOT NULL,         -- Số lượng cần tuyển
   PositionsFilled NUMBER DEFAULT 0 NOT NULL,         -- Số lượng đã tuyển
-  DeadlineDate DATE,                                 -- Hạn nộp hồ sơ
-  MinAge NUMBER,                                     -- Tuổi tối thiểu
-  MaxAge NUMBER,                                     -- Tuổi tối đa
-  RequiredExperienceYears NUMBER,                    -- Kinh nghiệm tối thiểu
-  RequiredDegree VARCHAR2(1000),                      -- Bằng cấp yêu cầu
-  GenderPreference VARCHAR2(20),                     -- Nam/Nữ/Không yêu cầu
-  SkillsRequired CLOB,                               -- Kỹ năng yêu cầu (text)
-  CategoryId RAW(16),                                -- FK tới JobCategories
+  DeadlineDate DATE NOT NULL,                                 -- Hạn nộp hồ sơ
+  MinAge NUMBER NOT NULL,                                     -- Tuổi tối thiểu
+  MaxAge NUMBER NOT NULL,                                     -- Tuổi tối đa
+  RequiredExperienceYears NUMBER NOT NULL,                    -- Kinh nghiệm tối thiểu
+  RequiredDegree VARCHAR2(1000) NOT NULL,                      -- Bằng cấp yêu cầu
+  GenderPreference VARCHAR2(20) NOT NULL,                     -- Nam/Nữ/Không yêu cầu
+  SkillsRequired CLOB NOT NULL,                               -- Kỹ năng yêu cầu (text)
+  CategoryId RAW(16) NOT NULL,                                -- FK tới JobCategories
   CONSTRAINT FkJobsCategory FOREIGN KEY (CategoryId) REFERENCES JobCategories(CategoryId)
 );
 
@@ -279,8 +279,8 @@ CREATE TABLE JobImages (
 CREATE TABLE Resumes (
   ResumeId RAW(16) DEFAULT SYS_GUID() PRIMARY KEY,
   CandidateId RAW(16) NOT NULL,
-  Title VARCHAR2(250),
-  Content CLOB,
+  Title VARCHAR2(250) NOT NULL,
+  Content CLOB NOT NULL,
   IsPublic NUMBER(1) DEFAULT 0,
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
   CONSTRAINT FkResumeCandidate FOREIGN KEY (CandidateId) REFERENCES CandidateProfiles(CandidateId)
@@ -293,7 +293,7 @@ CREATE TABLE Applications (
   ApplicationId RAW(16) DEFAULT SYS_GUID() PRIMARY KEY,
   JobId RAW(16) NOT NULL,
   CandidateId RAW(16) NOT NULL,
-  ResumeId RAW(16),
+  ResumeId RAW(16) NOT NULL,
   Status VARCHAR2(50) DEFAULT 'APPLIED' NOT NULL,
   AppliedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
   UpdatedAt TIMESTAMP,
@@ -309,12 +309,12 @@ CREATE TABLE Applications (
 CREATE TABLE Reports (
   ReportId RAW(16) DEFAULT SYS_GUID() PRIMARY KEY,
   ReporterUserId RAW(16) NOT NULL,        -- Ai báo cáo
-  TargetJobId RAW(16),                    -- Tin tuyển dụng bị tố cáo
-  TargetUserId RAW(16),                   -- Hoặc người dùng bị tố cáo
+  TargetJobId RAW(16) NOT NULL,                    -- Tin tuyển dụng bị tố cáo
+  TargetUserId RAW(16) NOT NULL,                   -- Hoặc người dùng bị tố cáo
   Reason VARCHAR2(500) NOT NULL,          -- Lý do tố cáo
   Status VARCHAR2(20) DEFAULT 'NEW',      -- NEW, IN_REVIEW, RESOLVED, REJECTED
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
-  ReviewedByAdminId RAW(16),              -- Ai xử lý (Admin/Moderator)
+  ReviewedByAdminId RAW(16) NOT NULL,              -- Ai xử lý (Admin/Moderator)
   ReviewedAt TIMESTAMP,
   CONSTRAINT FkReportsReporter FOREIGN KEY (ReporterUserId) REFERENCES Users(UserId),
   CONSTRAINT FkReportsJob FOREIGN KEY (TargetJobId) REFERENCES Jobs(JobId),
@@ -330,7 +330,7 @@ CREATE TABLE JobReviews (
   JobId RAW(16) NOT NULL,                        -- Tin tuyển dụng được đánh giá
   ReviewerUserId RAW(16) NOT NULL,               -- Người đánh giá
   Rating NUMBER(1) NOT NULL CHECK (Rating BETWEEN 1 AND 5), -- Điểm 1-5
-  Comments CLOB,                                 -- Nhận xét chi tiết
+  Comments CLOB NOT NULL,                                 -- Nhận xét chi tiết
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
   CONSTRAINT FkJobReviewsJob FOREIGN KEY (JobId) REFERENCES Jobs(JobId),
   CONSTRAINT FkJobReviewsUser FOREIGN KEY (ReviewerUserId) REFERENCES Users(UserId),
@@ -345,9 +345,9 @@ CREATE TABLE CompanyReviews (
   CompanyId RAW(16) NOT NULL,                    -- Công ty được đánh giá
   ReviewerUserId RAW(16) NOT NULL,
   Rating NUMBER(1) NOT NULL CHECK (Rating BETWEEN 1 AND 5),
-  Pros CLOB,                                     -- Điểm mạnh
-  Cons CLOB,                                     -- Điểm yếu
-  Comments CLOB,
+  Pros CLOB NOT NULL,                                     -- Điểm mạnh
+  Cons CLOB NOT NULL,                                     -- Điểm yếu
+  Comments CLOB NOT NULL,
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
   CONSTRAINT FkCompanyReviewsCompany FOREIGN KEY (CompanyId) REFERENCES Companies(CompanyId),
   CONSTRAINT FkCompanyReviewsUser FOREIGN KEY (ReviewerUserId) REFERENCES Users(UserId),
@@ -362,7 +362,7 @@ CREATE TABLE EmployerReviews (
   EmployerProfileId RAW(16) NOT NULL,            -- Nhà tuyển dụng được đánh giá
   ReviewerUserId RAW(16) NOT NULL,
   Rating NUMBER(1) NOT NULL CHECK (Rating BETWEEN 1 AND 5),
-  Comments VARCHAR2(1000),
+  Comments VARCHAR2(1000) NOT NULL,
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
   CONSTRAINT FkEmployerReviewsEmployer FOREIGN KEY (EmployerProfileId) REFERENCES EmployerProfiles(EmployerProfileId),
   CONSTRAINT FkEmployerReviewsUser FOREIGN KEY (ReviewerUserId) REFERENCES Users(UserId),
@@ -377,10 +377,10 @@ CREATE TABLE Notifications (
   UserId RAW(16) NOT NULL,                       -- Người nhận thông báo
   Type VARCHAR2(50) NOT NULL,                    -- Loại thông báo (JobUpdate, ApplicationStatus, etc.)
   Title VARCHAR2(200) NOT NULL,
-  Message VARCHAR2(1000),
+  Message VARCHAR2(1000) NOT NULL,
   IsRead NUMBER(1) DEFAULT 0 NOT NULL,           -- 1 = đã đọc, 0 = chưa đọc
-  RelatedJobId RAW(16),                          -- Liên kết tới Job nếu có
-  RelatedApplicationId RAW(16),                  -- Liên kết tới Application nếu có
+  RelatedJobId RAW(16) NOT NULL,                          -- Liên kết tới Job nếu có
+  RelatedApplicationId RAW(16) NOT NULL,                  -- Liên kết tới Application nếu có
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
   CONSTRAINT FkNotificationsUser FOREIGN KEY (UserId) REFERENCES Users(UserId),
   CONSTRAINT FkNotificationsJob FOREIGN KEY (RelatedJobId) REFERENCES Jobs(JobId),
@@ -394,7 +394,7 @@ CREATE TABLE Messages (
   MessageId RAW(16) DEFAULT SYS_GUID() PRIMARY KEY,
   SenderUserId RAW(16) NOT NULL,                 -- Người gửi
   ReceiverUserId RAW(16) NOT NULL,               -- Người nhận
-  Subject VARCHAR2(200),
+  Subject VARCHAR2(200) NOT NULL,
   Content VARCHAR2(2000) NOT NULL,
   IsRead NUMBER(1) DEFAULT 0 NOT NULL,           -- 1 = đã đọc, 0 = chưa đọc
   CreatedAt TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
