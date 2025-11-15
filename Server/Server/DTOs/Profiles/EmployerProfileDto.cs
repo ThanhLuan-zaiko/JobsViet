@@ -41,6 +41,9 @@ namespace Server.DTOs.Profiles
         // Related images
         public List<EmployerProfileImageDto>? Images { get; set; }
 
+        // Related employer-company relationships
+        public List<EmployerCompanyDto>? EmployerCompanies { get; set; }
+
         // Related companies
         public List<CompanyDto>? Companies { get; set; }
     }

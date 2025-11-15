@@ -135,6 +135,15 @@ namespace Server.Services.Profiles
             var companies = await _unitOfWork.ProfileRepository.GetCompaniesByEmployerIdAsync(profile.EmployerId);
             var employerCompanies = await _unitOfWork.ProfileRepository.GetEmployerCompaniesByEmployerIdAsync(profile.EmployerId);
 
+            var employerCompanyDtos = employerCompanies.Select(ec => new EmployerCompanyDto
+            {
+                Id = ec.Id,
+                EmployerProfileId = ec.EmployerProfileId,
+                CompanyId = ec.CompanyId,
+                Role = ec.Role ?? string.Empty,
+                IsPrimary = ec.IsPrimary
+            }).ToList();
+
             return new EmployerProfileDto
             {
                 EmployerId = profile.EmployerId,
@@ -144,6 +153,7 @@ namespace Server.Services.Profiles
                 Bio = profile.Bio,
                 Industry = profile.Industry,
                 Position = profile.Position,
+                EmployerCompanies = employerCompanyDtos,
                 YearsOfExperience = profile.YearsOfExperience,
                 LinkedInProfile = profile.LinkedInProfile,
                 Website = profile.Website,
@@ -217,7 +227,7 @@ namespace Server.Services.Profiles
                 ContactPhone = dto.ContactPhone,
                 Bio = dto.Bio,
                 Industry = dto.Industry,
-                Position = dto.Position ?? dto.Companies?.FirstOrDefault()?.Role,
+                Position = dto.Position,
                 YearsOfExperience = dto.YearsOfExperience,
                 LinkedInProfile = dto.LinkedInProfile,
                 Website = dto.Website,
@@ -689,7 +699,7 @@ namespace Server.Services.Profiles
 
             if (dto.FilePath != null) existingImage.FilePath = dto.FilePath;
             if (dto.FileName != null) existingImage.FileName = dto.FileName;
-            if (dto.FileSize != 0) existingImage.FileSize = dto.FileSize;
+            existingImage.FileSize = dto.FileSize;
             if (dto.FileType != null) existingImage.FileType = dto.FileType;
             if (dto.Caption != null) existingImage.Caption = dto.Caption;
             if (dto.SortOrder.HasValue) existingImage.SortOrder = dto.SortOrder.Value;
@@ -725,7 +735,7 @@ namespace Server.Services.Profiles
 
             if (dto.FilePath != null) existingImage.FilePath = dto.FilePath;
             if (dto.FileName != null) existingImage.FileName = dto.FileName;
-            if (dto.FileSize != 0) existingImage.FileSize = dto.FileSize;
+            existingImage.FileSize = dto.FileSize;
             if (dto.FileType != null) existingImage.FileType = dto.FileType;
             if (dto.Caption != null) existingImage.Caption = dto.Caption;
             if (dto.SortOrder.HasValue) existingImage.SortOrder = dto.SortOrder.Value;
@@ -761,7 +771,7 @@ namespace Server.Services.Profiles
 
             if (dto.FilePath != null) existingImage.FilePath = dto.FilePath;
             if (dto.FileName != null) existingImage.FileName = dto.FileName;
-            if (dto.FileSize != 0) existingImage.FileSize = dto.FileSize;
+            existingImage.FileSize = dto.FileSize;
             if (dto.FileType != null) existingImage.FileType = dto.FileType;
             if (dto.Caption != null) existingImage.Caption = dto.Caption;
             if (dto.SortOrder.HasValue) existingImage.SortOrder = dto.SortOrder.Value;

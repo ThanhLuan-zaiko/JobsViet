@@ -92,7 +92,7 @@ namespace Server.Services.Jobs
             if (employerProfile != null)
             {
                 var employerImages = await _profileUnitOfWork.ProfileRepository.GetEmployerProfileImagesAsync(employerProfile.EmployerId);
-                var employerCompanies = await _profileUnitOfWork.ProfileRepository.GetCompaniesByEmployerIdAsync(employerProfile.EmployerId);
+                var employerCompanies = await _profileUnitOfWork.ProfileRepository.GetEmployerCompaniesByEmployerIdAsync(employerProfile.EmployerId);
 
                 jobDto.EmployerProfile = new EmployerProfileDto
                 {
@@ -124,24 +124,27 @@ namespace Server.Services.Jobs
                         CreatedAt = img.CreatedAt,
                         UpdatedAt = img.UpdatedAt
                     }).ToList(),
-                    Companies = (await Task.WhenAll(employerCompanies.Select(async c =>
+                    Companies = (await Task.WhenAll(employerCompanies.Select(async ec =>
                     {
-                        var companyImages = await _profileUnitOfWork.ProfileRepository.GetCompanyImagesAsync(c.CompanyId);
+                        var company = await _profileUnitOfWork.ProfileRepository.GetCompanyByIdAsync(ec.CompanyId);
+                        if (company == null) return null!;
+                        var companyImages = await _profileUnitOfWork.ProfileRepository.GetCompanyImagesAsync(ec.CompanyId);
                         return new CompanyDto
                         {
-                            CompanyId = c.CompanyId,
-                            Name = c.Name ?? string.Empty,
-                            CompanyCode = c.CompanyCode,
-                            Website = c.Website,
-                            Description = c.Description,
-                            Industry = c.Industry,
-                            CompanySize = c.CompanySize,
-                            FoundedYear = c.FoundedYear,
-                            LogoURL = c.LogoURL,
-                            Address = c.Address,
-                            ContactEmail = c.ContactEmail,
-                            CreatedAt = c.CreatedAt,
-                            UpdatedAt = c.UpdatedAt,
+                            CompanyId = company.CompanyId,
+                            Name = company.Name ?? string.Empty,
+                            CompanyCode = company.CompanyCode,
+                            Website = company.Website,
+                            Description = company.Description,
+                            Industry = company.Industry,
+                            CompanySize = company.CompanySize,
+                            FoundedYear = company.FoundedYear,
+                            LogoURL = company.LogoURL,
+                            Address = company.Address,
+                            ContactEmail = company.ContactEmail,
+                            Role = ec.Role,
+                            CreatedAt = company.CreatedAt,
+                            UpdatedAt = company.UpdatedAt,
                             Images = companyImages.Select(img => new CompanyImageDto
                             {
                                 CompanyImageId = img.CompanyImageId,
@@ -159,7 +162,7 @@ namespace Server.Services.Jobs
                                 UpdatedAt = img.UpdatedAt
                             }).ToList()
                         };
-                    }))).ToList()
+                    }))).Where(c => c != null).ToList()
                 };
             }
 
