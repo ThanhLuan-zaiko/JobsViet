@@ -227,7 +227,7 @@ namespace Server.Services.Profiles
                         Id = Guid.NewGuid(),
                         EmployerProfileId = createdProfile.EmployerId,
                         CompanyId = createdCompany.CompanyId,
-                        Role = companyDto.Role, // Use the role from DTO
+                        Role = companyDto.Role ?? "Owner", // Use the role from DTO or default to "Owner"
                         IsPrimary = companyDto.IsPrimary
                     };
 
