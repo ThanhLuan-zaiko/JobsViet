@@ -181,6 +181,7 @@ namespace Server.Services.Profiles
 
         public async Task<EmployerProfileDto> CreateEmployerProfileAsync(Guid userId, EmployerProfileCreateDto dto)
         {
+            // Step 1: Create EmployerProfile first (as per database schema order)
             var profile = new EmployerProfile
             {
                 EmployerId = Guid.NewGuid(),
@@ -197,11 +198,9 @@ namespace Server.Services.Profiles
             };
 
             var createdProfile = await _unitOfWork.ProfileRepository.CreateEmployerProfileAsync(profile);
+            await _unitOfWork.SaveChangesAsync(); // Save EmployerProfile first
 
-            // Save the employer profile first to ensure it exists in the database
-            await _unitOfWork.SaveChangesAsync();
-
-            // Create companies if provided
+            // Step 2: Create Companies (as per database schema order)
             if (dto.Companies != null && dto.Companies.Any())
             {
                 foreach (var companyDto in dto.Companies)
@@ -223,20 +222,22 @@ namespace Server.Services.Profiles
                     };
 
                     var createdCompany = await _unitOfWork.ProfileRepository.CreateCompanyAsync(company);
+                    await _unitOfWork.SaveChangesAsync(); // Save Company
 
-                    // Create employer-company relationship
+                    // Step 3: Create EmployerCompany relationship (as per database schema order)
                     var employerCompany = new EmployerCompany
                     {
                         Id = Guid.NewGuid(),
                         EmployerProfileId = createdProfile.EmployerId,
                         CompanyId = createdCompany.CompanyId,
-                        Role = companyDto.Role ?? "Owner", // Use the role from DTO or default to "Owner"
+                        Role = companyDto.Role ?? "Owner",
                         IsPrimary = companyDto.IsPrimary
                     };
 
                     await _unitOfWork.ProfileRepository.CreateEmployerCompanyAsync(employerCompany);
+                    await _unitOfWork.SaveChangesAsync(); // Save EmployerCompany relationship
 
-                    // Upload company images if provided
+                    // Step 4: Upload CompanyImages (as per database schema order)
                     if (companyDto.Images != null && companyDto.Images.Any())
                     {
                         foreach (var imageFile in companyDto.Images)
@@ -264,6 +265,7 @@ namespace Server.Services.Profiles
                                 };
 
                                 await _unitOfWork.ProfileRepository.CreateCompanyImageAsync(companyImage);
+                                await _unitOfWork.SaveChangesAsync(); // Save CompanyImage
                             }
                             catch (Exception ex)
                             {
@@ -275,7 +277,9 @@ namespace Server.Services.Profiles
                 }
             }
 
-            await _unitOfWork.SaveChangesAsync();
+            // Step 5: Create EmployerImages if needed (though not in current DTO)
+            // Note: EmployerProfileCreateDto doesn't include images, but following schema order
+
             return await GetEmployerProfileByUserIdAsync(userId) ?? throw new Exception("Failed to create employer profile");
         }
 
