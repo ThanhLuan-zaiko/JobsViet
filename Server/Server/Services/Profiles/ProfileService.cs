@@ -265,7 +265,7 @@ namespace Server.Services.Profiles
                         Id = Guid.NewGuid(),
                         EmployerProfileId = createdProfile.EmployerId,
                         CompanyId = createdCompany.CompanyId,
-                        Role = companyDto.Role,
+                        Role = "Owner", // Default role since Role is removed from DTO
                         IsPrimary = companyDto.IsPrimary
                     };
 

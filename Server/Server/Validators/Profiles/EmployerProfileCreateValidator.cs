@@ -29,12 +29,12 @@ namespace Server.Validators.Profiles
 
             RuleFor(x => x.LinkedInProfile)
                 .MaximumLength(500).WithMessage("LinkedIn profile URL cannot exceed 500 characters.")
-                .Must(uri => uri == null || Uri.TryCreate(uri, UriKind.Absolute, out _))
+                .Must(uri => string.IsNullOrEmpty(uri) || Uri.TryCreate(uri, UriKind.Absolute, out _))
                 .WithMessage("Invalid LinkedIn profile URL.");
 
             RuleFor(x => x.Website)
                 .MaximumLength(500).WithMessage("Website URL cannot exceed 500 characters.")
-                .Must(uri => uri == null || Uri.TryCreate(uri, UriKind.Absolute, out _))
+                .Must(uri => string.IsNullOrEmpty(uri) || Uri.TryCreate(uri, UriKind.Absolute, out _))
                 .WithMessage("Invalid website URL.");
 
             // Companies validation
@@ -46,8 +46,9 @@ namespace Server.Validators.Profiles
 
                 company.RuleFor(c => c.Website)
                     .MaximumLength(500).WithMessage("Website URL cannot exceed 500 characters.")
-                    .Must(uri => uri == null || Uri.TryCreate(uri, UriKind.Absolute, out _))
-                    .WithMessage("Invalid website URL.");
+                    .Must(uri => string.IsNullOrEmpty(uri) || Uri.TryCreate(uri, UriKind.Absolute, out _))
+                    .WithMessage("Invalid website URL.")
+                    .When(c => !string.IsNullOrEmpty(c.Website));
 
                 company.RuleFor(c => c.Industry)
                     .MaximumLength(255).WithMessage("Industry cannot exceed 255 characters.");
@@ -62,7 +63,8 @@ namespace Server.Validators.Profiles
                 company.RuleFor(c => c.LogoURL)
                     .MaximumLength(300).WithMessage("Logo URL cannot exceed 300 characters.")
                     .Must(uri => string.IsNullOrEmpty(uri) || Uri.TryCreate(uri, UriKind.Absolute, out _))
-                    .WithMessage("Invalid logo URL.");
+                    .WithMessage("Invalid logo URL.")
+                    .When(c => !string.IsNullOrEmpty(c.LogoURL));
 
                 company.RuleFor(c => c.Address)
                     .MaximumLength(500).WithMessage("Address cannot exceed 500 characters.");
@@ -71,10 +73,6 @@ namespace Server.Validators.Profiles
                     .MaximumLength(255).WithMessage("Contact email cannot exceed 255 characters.")
                     .EmailAddress().WithMessage("Invalid email address.")
                     .When(c => !string.IsNullOrEmpty(c.ContactEmail));
-
-                company.RuleFor(c => c.Role)
-                    .NotEmpty().WithMessage("Role is required.")
-                    .MaximumLength(100).WithMessage("Role cannot exceed 100 characters.");
 
                 // Image files validation
                 company.RuleForEach(c => c.Images).ChildRules(image =>

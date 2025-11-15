@@ -16,8 +16,11 @@ namespace Server.Validators.Profiles
 
             RuleFor(x => x.Website)
                 .MaximumLength(500).WithMessage("Website URL cannot exceed 500 characters.")
-                .Must(uri => uri == null || Uri.TryCreate(uri, UriKind.Absolute, out _))
+                .Must(uri => string.IsNullOrEmpty(uri) || Uri.TryCreate(uri, UriKind.Absolute, out _))
                 .WithMessage("Invalid website URL.");
+
+            RuleFor(x => x.Description)
+                .MaximumLength(4000).WithMessage("Description cannot exceed 4000 characters.");
 
             RuleFor(x => x.Industry)
                 .MaximumLength(255).WithMessage("Industry cannot exceed 255 characters.");
@@ -30,9 +33,8 @@ namespace Server.Validators.Profiles
                 .When(x => x.FoundedYear.HasValue);
 
             RuleFor(x => x.LogoURL)
-                .NotEmpty().WithMessage("LogoURL is required.")
                 .MaximumLength(300).WithMessage("Logo URL cannot exceed 300 characters.")
-                .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out _))
+                .Must(uri => string.IsNullOrEmpty(uri) || Uri.TryCreate(uri, UriKind.Absolute, out _))
                 .WithMessage("Invalid logo URL.");
 
             RuleFor(x => x.Address)
