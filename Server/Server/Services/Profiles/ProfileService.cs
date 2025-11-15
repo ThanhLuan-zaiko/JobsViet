@@ -198,6 +198,9 @@ namespace Server.Services.Profiles
 
             var createdProfile = await _unitOfWork.ProfileRepository.CreateEmployerProfileAsync(profile);
 
+            // Save the employer profile first to ensure it exists in the database
+            await _unitOfWork.SaveChangesAsync();
+
             // Create companies if provided
             if (dto.Companies != null && dto.Companies.Any())
             {
@@ -207,15 +210,15 @@ namespace Server.Services.Profiles
                     {
                         CompanyId = Guid.NewGuid(),
                         Name = companyDto.Name,
-                        CompanyCode = companyDto.CompanyCode,
-                        Website = companyDto.Website,
-                        Description = companyDto.Description,
-                        Industry = companyDto.Industry,
-                        CompanySize = companyDto.CompanySize,
-                        FoundedYear = companyDto.FoundedYear,
+                        CompanyCode = GenerateCompanyCode(),
+                        Website = companyDto.Website ?? "",
+                        Description = companyDto.Description ?? "",
+                        Industry = companyDto.Industry ?? "",
+                        CompanySize = companyDto.CompanySize ?? "",
+                        FoundedYear = companyDto.FoundedYear ?? DateTime.Now.Year,
                         LogoURL = companyDto.LogoURL,
-                        Address = companyDto.Address,
-                        ContactEmail = companyDto.ContactEmail,
+                        Address = companyDto.Address ?? "",
+                        ContactEmail = companyDto.ContactEmail ?? "",
                         CreatedAt = DateTime.UtcNow
                     };
 
