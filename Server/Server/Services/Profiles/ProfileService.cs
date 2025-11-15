@@ -175,45 +175,7 @@ namespace Server.Services.Profiles
                     CreatedAt = img.CreatedAt,
                     UpdatedAt = img.UpdatedAt
                 }).ToList(),
-                Companies = (await Task.WhenAll(companies.Select(async c =>
-                {
-                    var images = await _unitOfWork.ProfileRepository.GetCompanyImagesAsync(c.CompanyId);
-                    // Find the role for this company from employer-company relationship
-                    var employerCompany = employerCompanies.FirstOrDefault(ec => ec.CompanyId == c.CompanyId);
-                    return new CompanyDto
-                    {
-                        CompanyId = c.CompanyId,
-                        Name = c.Name ?? string.Empty,
-                        CompanyCode = c.CompanyCode,
-                        Website = c.Website,
-                        Description = c.Description,
-                        Industry = c.Industry,
-                        CompanySize = c.CompanySize,
-                        FoundedYear = c.FoundedYear,
-                        LogoURL = c.LogoURL,
-                        Address = c.Address,
-                        ContactEmail = c.ContactEmail,
-                        Role = employerCompany?.Role,
-                        CreatedAt = c.CreatedAt,
-                        UpdatedAt = c.UpdatedAt,
-                        Images = images.Select(img => new CompanyImageDto
-                        {
-                            CompanyImageId = img.CompanyImageId,
-                            CompanyId = img.CompanyId,
-                            FilePath = img.FilePath,
-                            FileName = img.FileName,
-                            FileSize = img.FileSize,
-                            FileType = img.FileType,
-                            Caption = img.Caption,
-                            SortOrder = img.SortOrder,
-                            IsPrimary = img.IsPrimary,
-                            IsActive = img.IsActive,
-                            UploadedByUserId = img.UploadedByUserId,
-                            CreatedAt = img.CreatedAt,
-                            UpdatedAt = img.UpdatedAt
-                        }).ToList()
-                    };
-                }))).ToList()
+                Companies = await GetCompaniesSequentiallyAsync(companies, employerCompanies)
             };
         }
 
@@ -797,6 +759,51 @@ namespace Server.Services.Profiles
                 CreatedAt = updatedImage.CreatedAt,
                 UpdatedAt = updatedImage.UpdatedAt
             };
+        }
+
+        private async Task<List<CompanyDto>> GetCompaniesSequentiallyAsync(List<Company> companies, List<EmployerCompany> employerCompanies)
+        {
+            var companyDtos = new List<CompanyDto>();
+            foreach (var c in companies)
+            {
+                var images = await _unitOfWork.ProfileRepository.GetCompanyImagesAsync(c.CompanyId);
+                // Find the role for this company from employer-company relationship
+                var employerCompany = employerCompanies.FirstOrDefault(ec => ec.CompanyId == c.CompanyId);
+                companyDtos.Add(new CompanyDto
+                {
+                    CompanyId = c.CompanyId,
+                    Name = c.Name ?? string.Empty,
+                    CompanyCode = c.CompanyCode,
+                    Website = c.Website,
+                    Description = c.Description,
+                    Industry = c.Industry,
+                    CompanySize = c.CompanySize,
+                    FoundedYear = c.FoundedYear,
+                    LogoURL = c.LogoURL,
+                    Address = c.Address,
+                    ContactEmail = c.ContactEmail,
+                    Role = employerCompany?.Role,
+                    CreatedAt = c.CreatedAt,
+                    UpdatedAt = c.UpdatedAt,
+                    Images = images.Select(img => new CompanyImageDto
+                    {
+                        CompanyImageId = img.CompanyImageId,
+                        CompanyId = img.CompanyId,
+                        FilePath = img.FilePath,
+                        FileName = img.FileName,
+                        FileSize = img.FileSize,
+                        FileType = img.FileType,
+                        Caption = img.Caption,
+                        SortOrder = img.SortOrder,
+                        IsPrimary = img.IsPrimary,
+                        IsActive = img.IsActive,
+                        UploadedByUserId = img.UploadedByUserId,
+                        CreatedAt = img.CreatedAt,
+                        UpdatedAt = img.UpdatedAt
+                    }).ToList()
+                });
+            }
+            return companyDtos;
         }
 
         private async Task<ImageUploadResponse> UploadImageToServiceAsync(string companyId, IFormFile imageFile)
