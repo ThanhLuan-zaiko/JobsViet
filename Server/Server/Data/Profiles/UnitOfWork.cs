@@ -1,4 +1,5 @@
 using Server.Data.Jobs;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Server.Data.Profiles
 {
@@ -6,6 +7,7 @@ namespace Server.Data.Profiles
     {
         IProfileRepository ProfileRepository { get; }
         Task SaveChangesAsync();
+        Task<IDbContextTransaction> BeginTransactionAsync();
     }
 
     public class ProfileUnitOfWork : IProfileUnitOfWork
@@ -24,6 +26,11 @@ namespace Server.Data.Profiles
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _context.Database.BeginTransactionAsync();
         }
     }
 }

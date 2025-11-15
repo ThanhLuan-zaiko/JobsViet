@@ -157,6 +157,15 @@ namespace Server.Data.Jobs
                 entity.Property(e => e.CompanyId).HasColumnName("COMPANYID");
                 entity.Property(e => e.Role).HasColumnName("ROLE");
                 entity.Property(e => e.IsPrimary).HasColumnName("ISPRIMARY");
+
+                // Define relationships
+                entity.HasOne(ec => ec.EmployerProfile)
+                    .WithMany(ep => ep.EmployerCompanies)
+                    .HasForeignKey(ec => ec.EmployerProfileId);
+
+                entity.HasOne(ec => ec.Company)
+                    .WithMany(c => c.EmployerCompanies)
+                    .HasForeignKey(ec => ec.CompanyId);
             });
 
             // Image entities configuration

@@ -67,6 +67,18 @@ namespace Server.Data.Profiles
             return await _context.Companies.FindAsync(companyId);
         }
 
+        public async Task<Company?> GetCompanyByNameAndUserIdAsync(string name, Guid userId)
+        {
+            return await _context.EmployerCompanies
+                .Include(ec => ec.EmployerProfile)
+                .Where(ec => ec.EmployerProfile != null && ec.EmployerProfile.UserId == userId)
+                .Join(_context.Companies,
+                    ec => ec.CompanyId,
+                    c => c.CompanyId,
+                    (ec, c) => c)
+                .FirstOrDefaultAsync(c => c.Name == name);
+        }
+
         public async Task<Company> CreateCompanyAsync(Company company)
         {
             _context.Companies.Add(company);

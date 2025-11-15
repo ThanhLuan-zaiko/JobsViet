@@ -18,6 +18,7 @@ namespace Server.Data.Profiles
 
         // Company
         Task<Company?> GetCompanyByIdAsync(Guid companyId);
+        Task<Company?> GetCompanyByNameAndUserIdAsync(string name, Guid userId);
         Task<Company> CreateCompanyAsync(Company company);
         Task<Company> UpdateCompanyAsync(Company company);
         Task<List<Company>> GetCompaniesByEmployerIdAsync(Guid employerId);

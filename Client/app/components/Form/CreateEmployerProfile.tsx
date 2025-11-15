@@ -123,19 +123,28 @@ const CreateEmployerProfile: React.FC<EmployerProfileTabProps> = ({
     };
 
     // Clean companies data: map to PascalCase and null for optional fields, keep id for logic
-    const cleanedCompanies = companies.map((company) => ({
-      id: company.id,
-      Name: company.name || null,
-      LogoURL: company.logoURL || null,
-      Website: company.website || null,
-      Description: company.description || null,
-      Industry: company.industry || null,
-      CompanySize: company.companySize || null,
-      FoundedYear: company.foundedYear ? parseInt(company.foundedYear) : null,
-      Address: company.address || null,
-      ContactEmail: company.contactEmail || null,
-      Role: company.role || null,
-    }));
+    // Filter out companies without required fields
+    const cleanedCompanies = companies
+      .filter(
+        (company) =>
+          company.name &&
+          company.name.trim() &&
+          company.logoURL &&
+          company.logoURL.trim()
+      ) // Only include companies with required fields
+      .map((company) => ({
+        id: company.id,
+        Name: company.name.trim(),
+        LogoURL: company.logoURL.trim(),
+        Website: company.website?.trim() || null,
+        Description: company.description?.trim() || null,
+        Industry: company.industry?.trim() || null,
+        CompanySize: company.companySize?.trim() || null,
+        FoundedYear: company.foundedYear ? parseInt(company.foundedYear) : null,
+        Address: company.address?.trim() || null,
+        ContactEmail: company.contactEmail?.trim() || null,
+        Role: company.role?.trim() || "Owner",
+      }));
 
     onSubmit(cleanedFormData, cleanedCompanies, profileImage, companyImages);
   };

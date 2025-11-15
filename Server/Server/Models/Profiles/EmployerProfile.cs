@@ -16,5 +16,8 @@ namespace Server.Models.Profiles
         public string? Website { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+
+        // Navigation properties
+        public ICollection<EmployerCompany> EmployerCompanies { get; set; } = new List<EmployerCompany>();
     }
 }

@@ -181,106 +181,132 @@ namespace Server.Services.Profiles
 
         public async Task<EmployerProfileDto> CreateEmployerProfileAsync(Guid userId, EmployerProfileCreateDto dto)
         {
-            // Step 1: Create EmployerProfile first (as per corrected database schema order)
-            var profile = new EmployerProfile
+            // Begin database transaction to ensure atomicity
+            using var transaction = await _unitOfWork.BeginTransactionAsync();
+
+            try
             {
-                EmployerId = Guid.NewGuid(),
-                UserId = userId,
-                DisplayName = dto.DisplayName,
-                ContactPhone = dto.ContactPhone,
-                Bio = dto.Bio,
-                Industry = dto.Industry,
-                Position = dto.Position,
-                YearsOfExperience = dto.YearsOfExperience,
-                LinkedInProfile = dto.LinkedInProfile,
-                Website = dto.Website,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            var createdProfile = await _unitOfWork.ProfileRepository.CreateEmployerProfileAsync(profile);
-            await _unitOfWork.SaveChangesAsync(); // Save EmployerProfile first
-
-            // Step 2: Create EmployerImages if needed (though not in current DTO)
-            // Note: EmployerProfileCreateDto doesn't include images, but following schema order
-
-            // Step 3: Create Companies (as per corrected database schema order)
-            if (dto.Companies != null && dto.Companies.Any())
-            {
-                foreach (var companyDto in dto.Companies)
+                // Step 1: Create EmployerProfile first (as per corrected database schema order)
+                var profile = new EmployerProfile
                 {
-                    var company = new Company
-                    {
-                        CompanyId = Guid.NewGuid(),
-                        Name = companyDto.Name,
-                        CompanyCode = GenerateCompanyCode(),
-                        Website = companyDto.Website ?? "",
-                        Description = companyDto.Description ?? "",
-                        Industry = companyDto.Industry ?? "",
-                        CompanySize = companyDto.CompanySize ?? "",
-                        FoundedYear = companyDto.FoundedYear ?? DateTime.Now.Year,
-                        LogoURL = companyDto.LogoURL,
-                        Address = companyDto.Address ?? "",
-                        ContactEmail = companyDto.ContactEmail ?? "",
-                        CreatedAt = DateTime.UtcNow
-                    };
+                    EmployerId = Guid.NewGuid(),
+                    UserId = userId,
+                    DisplayName = dto.DisplayName,
+                    ContactPhone = dto.ContactPhone,
+                    Bio = dto.Bio,
+                    Industry = dto.Industry,
+                    Position = dto.Position,
+                    YearsOfExperience = dto.YearsOfExperience,
+                    LinkedInProfile = dto.LinkedInProfile,
+                    Website = dto.Website,
+                    CreatedAt = DateTime.UtcNow
+                };
 
-                    var createdCompany = await _unitOfWork.ProfileRepository.CreateCompanyAsync(company);
-                    await _unitOfWork.SaveChangesAsync(); // Save Company
+                var createdProfile = await _unitOfWork.ProfileRepository.CreateEmployerProfileAsync(profile);
+                await _unitOfWork.SaveChangesAsync(); // Save EmployerProfile first
 
-                    // Step 4: Upload CompanyImages (as per corrected database schema order)
-                    if (companyDto.Images != null && companyDto.Images.Any())
+                // Step 2: Create EmployerImages if needed (though not in current DTO)
+                // Note: EmployerProfileCreateDto doesn't include images, but following schema order
+
+                // Step 3: Create Companies (as per corrected database schema order)
+                if (dto.Companies != null && dto.Companies.Any())
+                {
+                    foreach (var companyDto in dto.Companies)
                     {
-                        foreach (var imageFile in companyDto.Images)
+                        var company = new Company
                         {
-                            try
-                            {
-                                // Upload to image service
-                                var imageUploadResponse = await UploadImageToServiceAsync(createdCompany.CompanyId.ToString(), imageFile);
+                            CompanyId = Guid.NewGuid(),
+                            Name = companyDto.Name,
+                            CompanyCode = GenerateCompanyCode(),
+                            Website = companyDto.Website ?? "",
+                            Description = companyDto.Description ?? "",
+                            Industry = companyDto.Industry ?? "",
+                            CompanySize = companyDto.CompanySize ?? "",
+                            FoundedYear = companyDto.FoundedYear ?? DateTime.Now.Year,
+                            LogoURL = companyDto.LogoURL,
+                            Address = companyDto.Address ?? "",
+                            ContactEmail = companyDto.ContactEmail ?? "",
+                            CreatedAt = DateTime.UtcNow
+                        };
 
-                                // Save metadata to database
-                                var companyImage = new CompanyImage
+                        var createdCompany = await _unitOfWork.ProfileRepository.CreateCompanyAsync(company);
+                        await _unitOfWork.SaveChangesAsync(); // Save Company
+
+                        // Step 5: Create EmployerCompany relationship (as per corrected database schema order)
+                        var employerCompany = new EmployerCompany
+                        {
+                            Id = Guid.NewGuid(),
+                            EmployerProfileId = createdProfile.EmployerId,
+                            CompanyId = createdCompany.CompanyId,
+                            Role = companyDto.Role ?? "Owner",
+                            IsPrimary = companyDto.IsPrimary
+                        };
+
+                        await _unitOfWork.ProfileRepository.CreateEmployerCompanyAsync(employerCompany);
+                        await _unitOfWork.SaveChangesAsync(); // Save EmployerCompany relationship
+                    }
+                }
+
+                // Step 4: Upload CompanyImages AFTER all database operations are complete
+                // This prevents transaction timeouts and deadlocks
+                if (dto.Companies != null && dto.Companies.Any())
+                {
+                    foreach (var companyDto in dto.Companies)
+                    {
+                        // Find the created company by name (since we don't have direct mapping)
+                        var createdCompany = await _unitOfWork.ProfileRepository.GetCompanyByNameAndUserIdAsync(companyDto.Name, userId);
+                        if (createdCompany != null && companyDto.Images != null && companyDto.Images.Any())
+                        {
+                            foreach (var imageFile in companyDto.Images)
+                            {
+                                try
                                 {
-                                    CompanyImageId = Guid.NewGuid(),
-                                    CompanyId = createdCompany.CompanyId,
-                                    FilePath = imageUploadResponse.image_url ?? string.Empty,
-                                    FileName = imageUploadResponse.file_name ?? string.Empty,
-                                    FileSize = (long)(imageUploadResponse.file_size ?? 0),
-                                    FileType = imageUploadResponse.mime_type ?? string.Empty,
-                                    Caption = null,
-                                    SortOrder = 0,
-                                    IsPrimary = false,
-                                    IsActive = true,
-                                    UploadedByUserId = userId,
-                                    CreatedAt = DateTime.UtcNow
-                                };
+                                    // Upload to image service (outside main transaction)
+                                    var imageUploadResponse = await UploadImageToServiceAsync(createdCompany.CompanyId.ToString(), imageFile);
 
-                                await _unitOfWork.ProfileRepository.CreateCompanyImageAsync(companyImage);
-                                await _unitOfWork.SaveChangesAsync(); // Save CompanyImage
-                            }
-                            catch (Exception ex)
-                            {
-                                // Log error but continue with other images
-                                Console.WriteLine($"Error uploading company image: {ex.Message}");
+                                    // Save metadata to database (separate transaction)
+                                    var companyImage = new CompanyImage
+                                    {
+                                        CompanyImageId = Guid.NewGuid(),
+                                        CompanyId = createdCompany.CompanyId,
+                                        FilePath = imageUploadResponse.image_url ?? string.Empty,
+                                        FileName = imageUploadResponse.file_name ?? string.Empty,
+                                        FileSize = (long)(imageUploadResponse.file_size ?? 0),
+                                        FileType = imageUploadResponse.mime_type ?? string.Empty,
+                                        Caption = null,
+                                        SortOrder = 0,
+                                        IsPrimary = false,
+                                        IsActive = true,
+                                        UploadedByUserId = userId,
+                                        CreatedAt = DateTime.UtcNow
+                                    };
+
+                                    await _unitOfWork.ProfileRepository.CreateCompanyImageAsync(companyImage);
+                                    await _unitOfWork.SaveChangesAsync(); // Save CompanyImage in separate transaction
+                                }
+                                catch (Exception ex)
+                                {
+                                    // Log error and rollback entire transaction
+                                    Console.WriteLine($"Error uploading company image: {ex.Message}");
+                                    await transaction.RollbackAsync();
+                                    throw new Exception($"Failed to upload company image for {companyDto.Name}: {ex.Message}");
+                                }
                             }
                         }
                     }
-
-                    // Step 5: Create EmployerCompany relationship (as per corrected database schema order)
-                    var employerCompany = new EmployerCompany
-                    {
-                        Id = Guid.NewGuid(),
-                        EmployerProfileId = createdProfile.EmployerId,
-                        CompanyId = createdCompany.CompanyId,
-                        Role = companyDto.Role ?? "Owner",
-                        IsPrimary = companyDto.IsPrimary
-                    };
-
-                    await _unitOfWork.ProfileRepository.CreateEmployerCompanyAsync(employerCompany);
-                    await _unitOfWork.SaveChangesAsync(); // Save EmployerCompany relationship
                 }
-            }
 
-            return await GetEmployerProfileByUserIdAsync(userId) ?? throw new Exception("Failed to create employer profile");
+                // Commit the transaction if everything succeeds
+                await transaction.CommitAsync();
+
+                return await GetEmployerProfileByUserIdAsync(userId) ?? throw new Exception("Failed to create employer profile");
+            }
+            catch (Exception ex)
+            {
+                // Rollback transaction on any error
+                await transaction.RollbackAsync();
+                throw new Exception($"Failed to create employer profile: {ex.Message}");
+            }
         }
 
         public async Task<EmployerProfileDto> UpdateEmployerProfileAsync(Guid userId, EmployerProfileUpdateDto dto)
