@@ -106,8 +106,10 @@ namespace Server.DTOs.Profiles
         [Range(1800, 2100, ErrorMessage = "Founded year must be between 1800 and 2100.")]
         public int? FoundedYear { get; set; }
 
+        [Required(ErrorMessage = "Logo URL is required.")]
         [StringLength(300, ErrorMessage = "Logo URL cannot exceed 300 characters.")]
-        public string? LogoURL { get; set; }
+        [Url(ErrorMessage = "Invalid logo URL.")]
+        public string LogoURL { get; set; } = string.Empty;
 
         [StringLength(500, ErrorMessage = "Address cannot exceed 500 characters.")]
         public string? Address { get; set; }
@@ -116,8 +118,10 @@ namespace Server.DTOs.Profiles
         [EmailAddress(ErrorMessage = "Invalid email address.")]
         public string? ContactEmail { get; set; }
 
-        // Role in the company (e.g., "Owner", "HR", "Manager") - moved to EmployerCompanies relationship
-        // Note: Role should not be in Company creation DTO as it belongs to EmployerCompanies table
+        // Role in the company (e.g., "Owner", "HR", "Manager")
+        [Required(ErrorMessage = "Role is required.")]
+        [StringLength(255, ErrorMessage = "Role cannot exceed 255 characters.")]
+        public string Role { get; set; } = string.Empty;
 
         // Whether this is the primary company
         public bool? IsPrimary { get; set; }

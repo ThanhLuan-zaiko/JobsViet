@@ -61,10 +61,10 @@ namespace Server.Validators.Profiles
                     .When(c => c.FoundedYear.HasValue);
 
                 company.RuleFor(c => c.LogoURL)
+                    .NotEmpty().WithMessage("Logo URL is required.")
                     .MaximumLength(300).WithMessage("Logo URL cannot exceed 300 characters.")
-                    .Must(uri => string.IsNullOrEmpty(uri) || Uri.TryCreate(uri, UriKind.Absolute, out _))
-                    .WithMessage("Invalid logo URL.")
-                    .When(c => !string.IsNullOrEmpty(c.LogoURL));
+                    .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out _))
+                    .WithMessage("Invalid logo URL.");
 
                 company.RuleFor(c => c.Address)
                     .MaximumLength(500).WithMessage("Address cannot exceed 500 characters.");
@@ -74,14 +74,21 @@ namespace Server.Validators.Profiles
                     .EmailAddress().WithMessage("Invalid email address.")
                     .When(c => !string.IsNullOrEmpty(c.ContactEmail));
 
-                // Image files validation
-                company.RuleForEach(c => c.Images).ChildRules(image =>
-                {
-                    image.RuleFor(i => i.Length)
-                        .LessThanOrEqualTo(5 * 1024 * 1024).WithMessage("Image file size cannot exceed 5MB.");
+                company.RuleFor(c => c.Role)
+                    .NotEmpty().WithMessage("Role is required.")
+                    .MaximumLength(255).WithMessage("Role cannot exceed 255 characters.");
 
-                    image.RuleFor(i => i.ContentType)
-                        .Must(contentType => contentType.StartsWith("image/")).WithMessage("Only image files are allowed.");
+                // Image files validation - only when images are provided
+                company.When(c => c.Images != null && c.Images.Any(), () =>
+                {
+                    company.RuleForEach(c => c.Images).ChildRules(image =>
+                    {
+                        image.RuleFor(i => i.Length)
+                            .LessThanOrEqualTo(5 * 1024 * 1024).WithMessage("Image file size cannot exceed 5MB.");
+
+                        image.RuleFor(i => i.ContentType)
+                            .Must(contentType => contentType.StartsWith("image/")).WithMessage("Only image files are allowed.");
+                    });
                 });
             });
         }
