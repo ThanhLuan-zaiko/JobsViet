@@ -247,16 +247,16 @@ const ManageProfile: React.FC = () => {
         const dataToSend = {
           ...formData,
           Companies: companies.map((company, index) => ({
-            Name: company.name,
-            LogoURL: company.logoURL,
-            Website: company.website,
-            Description: company.description,
-            Industry: company.industry,
-            CompanySize: company.companySize,
-            FoundedYear: company.foundedYear,
-            Address: company.address,
-            ContactEmail: company.contactEmail,
-            Role: company.role || "Owner",
+            Name: company.Name,
+            LogoURL: company.LogoURL,
+            Website: company.Website,
+            Description: company.Description,
+            Industry: company.Industry,
+            CompanySize: company.CompanySize,
+            FoundedYear: company.FoundedYear,
+            Address: company.Address,
+            ContactEmail: company.ContactEmail,
+            Role: company.Role || "Owner",
             IsPrimary: index === 0, // First company is primary
           })),
         };
@@ -320,7 +320,7 @@ const ManageProfile: React.FC = () => {
           for (const createdCompany of employerResponse.data.companies) {
             const companyId = createdCompany.companyId;
             const originalCompany = companies.find(
-              (c) => c.name === createdCompany.name
+              (c) => c.Name === createdCompany.name
             );
             if (
               originalCompany &&
