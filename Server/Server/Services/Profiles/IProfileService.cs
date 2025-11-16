@@ -17,6 +17,7 @@ namespace Server.Services.Profiles
         // Company
         Task<CompanyDto> CreateCompanyAsync(CompanyCreateDto dto);
         Task<CompanyDto> UpdateCompanyAsync(Guid companyId, CompanyUpdateDto dto);
+        Task DeleteCompanyAsync(Guid companyId);
         Task<CompanyDto?> GetCompanyByIdAsync(Guid companyId);
         Task<List<CompanyDto>> GetCompaniesByEmployerIdAsync(Guid employerId);
 

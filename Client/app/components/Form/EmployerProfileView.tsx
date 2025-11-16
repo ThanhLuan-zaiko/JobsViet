@@ -11,21 +11,50 @@ import {
   FaCalendarAlt,
   FaUsers,
   FaTimes,
+  FaTrash,
 } from "react-icons/fa";
+import ConfirmationDialog from "../Message/ConfirmationDialog";
 
 interface EmployerProfileViewProps {
   profile: any;
   onEdit: () => void;
+  onDeleteCompany?: (companyId: string) => void;
 }
 
 const EmployerProfileView: React.FC<EmployerProfileViewProps> = ({
   profile,
   onEdit,
+  onDeleteCompany,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [companyToDelete, setCompanyToDelete] = useState<string | null>(null);
+  const [companyNameToDelete, setCompanyNameToDelete] = useState<string>("");
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const openDeleteDialog = (companyId: string) => {
+    const company = profile.companies?.find(
+      (c: any) => c.companyId === companyId
+    );
+    setCompanyToDelete(companyId);
+    setCompanyNameToDelete(company?.name || "");
+    setIsDeleteDialogOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setIsDeleteDialogOpen(false);
+    setCompanyToDelete(null);
+    setCompanyNameToDelete("");
+  };
+
+  const handleDeleteConfirm = () => {
+    if (companyToDelete && onDeleteCompany) {
+      onDeleteCompany(companyToDelete);
+    }
+    closeDeleteDialog();
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -120,7 +149,7 @@ const EmployerProfileView: React.FC<EmployerProfileViewProps> = ({
                   {profile.companies.map((company: any, index: number) => (
                     <div
                       key={company.companyId || index}
-                      className="bg-gray-50 rounded-lg p-6 hover:shadow-md transition-shadow duration-300"
+                      className="bg-gray-50 rounded-lg p-6 hover:shadow-md transition-shadow duration-300 relative"
                     >
                       <div className="flex items-start space-x-4">
                         <div className="w-20 h-20 bg-white rounded-lg shadow-sm flex items-center justify-center flex-shrink-0">
@@ -135,14 +164,23 @@ const EmployerProfileView: React.FC<EmployerProfileViewProps> = ({
                           )}
                         </div>
                         <div className="flex-1">
-                          <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                            {company.name}
-                            {company.companyCode && (
-                              <span className="text-sm text-gray-500 ml-2">
-                                ({company.companyCode})
-                              </span>
-                            )}
-                          </h3>
+                          <div className="flex items-start justify-between mb-2">
+                            <h3 className="text-xl font-semibold text-gray-900">
+                              {company.name}
+                              {company.companyCode && (
+                                <span className="text-sm text-gray-500 ml-2">
+                                  ({company.companyCode})
+                                </span>
+                              )}
+                            </h3>
+                            <button
+                              onClick={() => openDeleteDialog(company.companyId)}
+                              className="ml-4 p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors duration-200 flex-shrink-0"
+                              title="Xóa công ty"
+                            >
+                              <FaTrash className="text-lg" />
+                            </button>
+                          </div>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             {company.industry && (
                               <div className="flex items-center space-x-2 text-gray-600">
@@ -316,7 +354,7 @@ const EmployerProfileView: React.FC<EmployerProfileViewProps> = ({
                     {profile.companies.map((company: any, index: number) => (
                       <div
                         key={company.companyId || index}
-                        className="bg-gray-50 rounded-lg p-6 hover:shadow-md transition-shadow duration-300"
+                        className="bg-gray-50 rounded-lg p-6 hover:shadow-md transition-shadow duration-300 relative"
                       >
                         <div className="flex items-start space-x-4">
                           <div className="w-20 h-20 bg-white rounded-lg shadow-sm flex items-center justify-center flex-shrink-0">
@@ -334,14 +372,23 @@ const EmployerProfileView: React.FC<EmployerProfileViewProps> = ({
                             )}
                           </div>
                           <div className="flex-1">
-                            <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                              {company.name}
-                              {company.companyCode && (
-                                <span className="text-sm text-gray-500 ml-2">
-                                  ({company.companyCode})
-                                </span>
-                              )}
-                            </h3>
+                            <div className="flex items-start justify-between mb-2">
+                              <h3 className="text-xl font-semibold text-gray-900">
+                                {company.name}
+                                {company.companyCode && (
+                                  <span className="text-sm text-gray-500 ml-2">
+                                    ({company.companyCode})
+                                  </span>
+                                )}
+                              </h3>
+                              <button
+                                onClick={() => openDeleteDialog(company.companyId)}
+                                className="ml-4 p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors duration-200 flex-shrink-0"
+                                title="Xóa công ty"
+                              >
+                                <FaTrash className="text-lg" />
+                              </button>
+                            </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                               {company.industry && (
                                 <div className="flex items-center space-x-2 text-gray-600">
@@ -433,6 +480,21 @@ const EmployerProfileView: React.FC<EmployerProfileViewProps> = ({
             </div>
           </div>
         )}
+
+        {/* Confirmation Dialog for Delete */}
+        <ConfirmationDialog
+          isOpen={isDeleteDialogOpen}
+          title="Xóa công ty"
+          message={
+            companyNameToDelete
+              ? `Bạn có chắc chắn muốn xóa công ty "${companyNameToDelete}"? Hành động này không thể hoàn tác.`
+              : "Bạn có chắc chắn muốn xóa công ty này? Hành động này không thể hoàn tác."
+          }
+          confirmText="Xóa"
+          cancelText="Hủy"
+          onConfirm={handleDeleteConfirm}
+          onCancel={closeDeleteDialog}
+        />
       </div>
     </div>
   );

@@ -422,6 +422,12 @@ namespace Server.Services.Profiles
             };
         }
 
+        public async Task DeleteCompanyAsync(Guid companyId)
+        {
+            await _unitOfWork.ProfileRepository.DeleteCompanyAsync(companyId);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
         public async Task<CompanyDto?> GetCompanyByIdAsync(Guid companyId)
         {
             var company = await _unitOfWork.ProfileRepository.GetCompanyByIdAsync(companyId);

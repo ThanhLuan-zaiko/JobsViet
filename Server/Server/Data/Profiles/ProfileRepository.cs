@@ -93,6 +93,30 @@ namespace Server.Data.Profiles
             return company;
         }
 
+        public async Task DeleteCompanyAsync(Guid companyId)
+        {
+            var company = await _context.Companies.FindAsync(companyId);
+            if (company == null)
+                throw new Exception("Company not found");
+
+            // Delete related EmployerCompany relationships
+            var employerCompanies = await _context.EmployerCompanies
+                .Where(ec => ec.CompanyId == companyId)
+                .ToListAsync();
+            _context.EmployerCompanies.RemoveRange(employerCompanies);
+
+            // Delete related CompanyImages
+            var companyImages = await _context.CompanyImages
+                .Where(ci => ci.CompanyId == companyId)
+                .ToListAsync();
+            _context.CompanyImages.RemoveRange(companyImages);
+
+            // Delete the company
+            _context.Companies.Remove(company);
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<List<Company>> GetCompaniesByEmployerIdAsync(Guid employerId)
         {
             return await _context.EmployerCompanies

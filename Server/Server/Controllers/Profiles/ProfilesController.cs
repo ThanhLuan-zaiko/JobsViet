@@ -246,6 +246,20 @@ namespace Server.Controllers.Profiles
             }
         }
 
+        [HttpDelete("company/{companyId}")]
+        public async Task<IActionResult> DeleteCompany(Guid companyId)
+        {
+            try
+            {
+                await _profileService.DeleteCompanyAsync(companyId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("employer/companies")]
         public async Task<IActionResult> GetEmployerCompanies()
         {

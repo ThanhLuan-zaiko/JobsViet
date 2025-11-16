@@ -477,6 +477,48 @@ const ManageProfile: React.FC = () => {
     }
   };
 
+  const handleDeleteCompany = async (companyId: string) => {
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_API_BASE_URL}/profiles/company/${companyId}`,
+        { withCredentials: true }
+      );
+
+      // Reload employer profile to get updated companies list
+      try {
+        const updatedResponse = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/profiles/employer`,
+          {
+            withCredentials: true,
+          }
+        );
+        setEmployerProfile(updatedResponse.data);
+      } catch (error) {
+        console.error("Error reloading employer profile:", error);
+      }
+
+      setNotification({
+        type: "success",
+        message: "Công ty đã được xóa thành công!",
+      });
+    } catch (error: any) {
+      console.error("Error deleting company:", error);
+      if (error.response?.status === 401) {
+        logout();
+        setNotification({
+          type: "warning",
+          message: "Phiên đăng nhập hết hạn, vui lòng đăng nhập lại!",
+        });
+      } else {
+        setNotification({
+          type: "error",
+          message:
+            error.response?.data?.message || "Có lỗi xảy ra khi xóa công ty",
+        });
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">Đang tải...</div>
@@ -544,6 +586,7 @@ const ManageProfile: React.FC = () => {
             <EmployerProfileView
               profile={employerProfile}
               onEdit={() => setEditingEmployer(true)}
+              onDeleteCompany={handleDeleteCompany}
             />
           )}
         </>
