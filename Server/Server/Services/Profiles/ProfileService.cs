@@ -1,4 +1,5 @@
 using System.Net.Http;
+using System.Linq;
 using Server.Data.Profiles;
 using Server.DTOs.Profiles;
 using Server.Models.Profiles;
@@ -424,8 +425,71 @@ namespace Server.Services.Profiles
 
         public async Task DeleteCompanyAsync(Guid companyId)
         {
+            // First, delete all company images from Images service
+            try
+            {
+                var companyImages = await _unitOfWork.ProfileRepository.GetCompanyImagesAsync(companyId);
+                foreach (var image in companyImages)
+                {
+                    // Extract filename from file path
+                    // FilePath format: /images/company/{companyId}/{filename}
+                    var fileName = image.FileName;
+                    if (string.IsNullOrEmpty(fileName) && !string.IsNullOrEmpty(image.FilePath))
+                    {
+                        // Extract filename from path if FileName is empty
+                        fileName = image.FilePath.Split('/').LastOrDefault() ?? "";
+                    }
+
+                    if (!string.IsNullOrEmpty(fileName))
+                    {
+                        try
+                        {
+                            await DeleteCompanyImageFromImagesServiceAsync(companyId.ToString(), fileName);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log but continue with other images
+                            Console.WriteLine($"Warning: Failed to delete image {fileName} from Images service: {ex.Message}");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error but continue with database deletion
+                // This ensures database consistency even if Images service fails
+                Console.WriteLine($"Warning: Failed to delete company images from Images service: {ex.Message}");
+            }
+
+            // Then delete from database
             await _unitOfWork.ProfileRepository.DeleteCompanyAsync(companyId);
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        private async Task DeleteCompanyImageFromImagesServiceAsync(string companyId, string fileName)
+        {
+            var imagesServiceUrl = _configuration["ImagesService:Url"];
+            if (string.IsNullOrEmpty(imagesServiceUrl))
+            {
+                // Try alternative key name
+                imagesServiceUrl = _configuration["ImagesService:BaseUrl"];
+            }
+            
+            if (string.IsNullOrEmpty(imagesServiceUrl))
+                throw new Exception("Images service URL not configured");
+
+            var requestUrl = $"{imagesServiceUrl}/images/company/{companyId}/{fileName}";
+            var request = new HttpRequestMessage(HttpMethod.Delete, requestUrl);
+
+            var response = await _httpClient.SendAsync(request);
+            
+            // Don't throw if 404 - image might not exist (idempotent operation)
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return;
+            }
+            
+            response.EnsureSuccessStatusCode();
         }
 
         public async Task<CompanyDto?> GetCompanyByIdAsync(Guid companyId)
@@ -847,7 +911,13 @@ namespace Server.Services.Profiles
 
         private async Task<ImageUploadResponse> UploadImageToServiceAsync(string companyId, IFormFile imageFile)
         {
-            var imagesServiceUrl = _configuration["ImagesService:BaseUrl"];
+            var imagesServiceUrl = _configuration["ImagesService:Url"];
+            if (string.IsNullOrEmpty(imagesServiceUrl))
+            {
+                // Try alternative key name
+                imagesServiceUrl = _configuration["ImagesService:BaseUrl"];
+            }
+            
             if (string.IsNullOrEmpty(imagesServiceUrl))
                 throw new Exception("Images service URL not configured");
 

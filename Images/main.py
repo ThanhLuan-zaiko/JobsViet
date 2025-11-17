@@ -24,6 +24,7 @@ app.add_middleware(
 )
 
 security = HTTPBearer()
+security_optional = HTTPBearer(auto_error=False)
 
 # Configuration
 UPLOAD_DIR = Path("uploads")
@@ -347,15 +348,30 @@ async def delete_employer_image(
 async def delete_company_image(
     company_id: str,
     filename: str,
-    credentials: HTTPAuthorizationCredentials = Depends(security)
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security_optional)
 ):
-    """Delete company image."""
+    """Delete company image. Authentication is optional for internal service calls.
+    After deleting the image, if the directory is empty, it will be removed as well."""
     file_path = UPLOAD_DIR / company_id / filename
     if not file_path.exists():
         raise HTTPException(status_code=404, detail="Image not found")
 
     try:
+        # Delete the image file
         file_path.unlink()
+        
+        # Check if the directory is empty and remove it if so
+        company_dir = UPLOAD_DIR / company_id
+        if company_dir.exists():
+            # Check if directory is empty (no files or subdirectories)
+            try:
+                # Try to remove the directory - will raise OSError if not empty
+                company_dir.rmdir()
+                return {"message": "Image deleted successfully and directory removed"}
+            except OSError:
+                # Directory is not empty, which is fine
+                pass
+        
         return {"message": "Image deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete image: {str(e)}")
