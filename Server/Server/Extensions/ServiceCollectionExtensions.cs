@@ -123,6 +123,7 @@ namespace Server.Extensions
             services.AddHttpClient();
             services.AddScoped<IJobService, JobService>();
             services.AddScoped<IJobCategoryService, JobCategoryService>();
+            services.AddScoped<IApplicationService, ApplicationService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<JwtService>();
             services.AddScoped<IProfileService, ProfileService>();

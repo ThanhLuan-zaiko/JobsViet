@@ -124,46 +124,50 @@ namespace Server.Services.Jobs
                         CreatedAt = img.CreatedAt,
                         UpdatedAt = img.UpdatedAt
                     }).ToList(),
-                    Companies = (await Task.WhenAll(employerCompanies.Select(async ec =>
-                    {
-                        var company = await _profileUnitOfWork.ProfileRepository.GetCompanyByIdAsync(ec.CompanyId);
-                        if (company == null) return null!;
-                        var companyImages = await _profileUnitOfWork.ProfileRepository.GetCompanyImagesAsync(ec.CompanyId);
-                        return new CompanyDto
-                        {
-                            CompanyId = company.CompanyId,
-                            Name = company.Name ?? string.Empty,
-                            CompanyCode = company.CompanyCode,
-                            Website = company.Website,
-                            Description = company.Description,
-                            Industry = company.Industry,
-                            CompanySize = company.CompanySize,
-                            FoundedYear = company.FoundedYear,
-                            LogoURL = company.LogoURL,
-                            Address = company.Address,
-                            ContactEmail = company.ContactEmail,
-                            Role = ec.Role,
-                            CreatedAt = company.CreatedAt,
-                            UpdatedAt = company.UpdatedAt,
-                            Images = companyImages.Select(img => new CompanyImageDto
-                            {
-                                CompanyImageId = img.CompanyImageId,
-                                CompanyId = img.CompanyId,
-                                FilePath = img.FilePath,
-                                FileName = img.FileName,
-                                FileSize = img.FileSize,
-                                FileType = img.FileType,
-                                Caption = img.Caption,
-                                SortOrder = img.SortOrder,
-                                IsPrimary = img.IsPrimary,
-                                IsActive = img.IsActive,
-                                UploadedByUserId = img.UploadedByUserId,
-                                CreatedAt = img.CreatedAt,
-                                UpdatedAt = img.UpdatedAt
-                            }).ToList()
-                        };
-                    }))).Where(c => c != null).ToList()
+                    Companies = new List<CompanyDto>()
                 };
+                
+                // Process companies sequentially to avoid DbContext concurrency issues
+                foreach (var ec in employerCompanies)
+                {
+                    var company = await _profileUnitOfWork.ProfileRepository.GetCompanyByIdAsync(ec.CompanyId);
+                    if (company == null) continue;
+                    
+                    var companyImages = await _profileUnitOfWork.ProfileRepository.GetCompanyImagesAsync(ec.CompanyId);
+                    jobDto.EmployerProfile.Companies.Add(new CompanyDto
+                    {
+                        CompanyId = company.CompanyId,
+                        Name = company.Name ?? string.Empty,
+                        CompanyCode = company.CompanyCode,
+                        Website = company.Website,
+                        Description = company.Description,
+                        Industry = company.Industry,
+                        CompanySize = company.CompanySize,
+                        FoundedYear = company.FoundedYear,
+                        LogoURL = company.LogoURL,
+                        Address = company.Address,
+                        ContactEmail = company.ContactEmail,
+                        Role = ec.Role,
+                        CreatedAt = company.CreatedAt,
+                        UpdatedAt = company.UpdatedAt,
+                        Images = companyImages.Select(img => new CompanyImageDto
+                        {
+                            CompanyImageId = img.CompanyImageId,
+                            CompanyId = img.CompanyId,
+                            FilePath = img.FilePath,
+                            FileName = img.FileName,
+                            FileSize = img.FileSize,
+                            FileType = img.FileType,
+                            Caption = img.Caption,
+                            SortOrder = img.SortOrder,
+                            IsPrimary = img.IsPrimary,
+                            IsActive = img.IsActive,
+                            UploadedByUserId = img.UploadedByUserId,
+                            CreatedAt = img.CreatedAt,
+                            UpdatedAt = img.UpdatedAt
+                        }).ToList()
+                    });
+                }
             }
 
             // Fetch company details if CompanyId is set

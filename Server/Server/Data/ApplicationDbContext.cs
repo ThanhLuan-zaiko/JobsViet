@@ -26,6 +26,10 @@ namespace Server.Data.Jobs
         public DbSet<CompanyImage> CompanyImages { get; set; }
         public DbSet<JobImage> JobImages { get; set; }
 
+        // Application entities
+        public DbSet<Resume> Resumes { get; set; }
+        public DbSet<Application> Applications { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>(entity =>
@@ -243,6 +247,36 @@ namespace Server.Data.Jobs
                 entity.Property(e => e.UploadedByUserId).HasColumnName("UPLOADEDBYUSERID");
                 entity.Property(e => e.CreatedAt).HasColumnName("CREATEDAT");
                 entity.Property(e => e.UpdatedAt).HasColumnName("UPDATEDAT");
+            });
+
+            // Resume configuration
+            modelBuilder.Entity<Resume>(entity =>
+            {
+                entity.ToTable("RESUMES");
+                entity.HasKey(e => e.ResumeId);
+                entity.Property(e => e.ResumeId).HasColumnName("RESUMEID");
+                entity.Property(e => e.CandidateId).HasColumnName("CANDIDATEID");
+                entity.Property(e => e.Title).HasColumnName("TITLE").HasMaxLength(250);
+                entity.Property(e => e.Content).HasColumnName("CONTENT");
+                entity.Property(e => e.IsPublic).HasColumnName("ISPUBLIC");
+                entity.Property(e => e.CreatedAt).HasColumnName("CREATEDAT");
+            });
+
+            // Application configuration
+            modelBuilder.Entity<Application>(entity =>
+            {
+                entity.ToTable("APPLICATIONS");
+                entity.HasKey(e => e.ApplicationId);
+                entity.Property(e => e.ApplicationId).HasColumnName("APPLICATIONID");
+                entity.Property(e => e.JobId).HasColumnName("JOBID");
+                entity.Property(e => e.CandidateId).HasColumnName("CANDIDATEID");
+                entity.Property(e => e.ResumeId).HasColumnName("RESUMEID");
+                entity.Property(e => e.Status).HasColumnName("STATUS").HasMaxLength(50);
+                entity.Property(e => e.AppliedAt).HasColumnName("APPLIEDAT");
+                entity.Property(e => e.UpdatedAt).HasColumnName("UPDATEDAT");
+
+                // Unique constraint: một candidate chỉ có thể ứng tuyển một job một lần
+                entity.HasIndex(e => new { e.JobId, e.CandidateId }).IsUnique();
             });
         }
     }

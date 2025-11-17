@@ -19,12 +19,18 @@ namespace Server.Controllers.Jobs
     public class JobsController : ControllerBase
     {
         private readonly IJobService _jobService;
+        private readonly IApplicationService _applicationService;
         private readonly ILogger<JobsController> _logger;
         private readonly IHubContext<JobsHub> _hubContext;
 
-        public JobsController(IJobService jobService, ILogger<JobsController> logger, IHubContext<JobsHub> hubContext)
+        public JobsController(
+            IJobService jobService,
+            IApplicationService applicationService,
+            ILogger<JobsController> logger,
+            IHubContext<JobsHub> hubContext)
         {
             _jobService = jobService;
+            _applicationService = applicationService;
             _logger = logger;
             _hubContext = hubContext;
         }
@@ -160,6 +166,38 @@ namespace Server.Controllers.Jobs
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+
+        // Application Endpoint
+        [HttpPost("{jobGuid}/apply")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ApplyToJob(Guid jobGuid)
+        {
+            await HttpContext.Session.LoadAsync();
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
+            {
+                return Unauthorized(new ApplicationResponseDto
+                {
+                    Message = "Bạn cần đăng nhập để ứng tuyển",
+                    MessageType = "error"
+                });
+            }
+
+            try
+            {
+                var result = await _applicationService.ApplyToJobAsync(jobGuid, userId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error applying to job {JobGuid} for user {UserId}", jobGuid, userId);
+                return StatusCode(500, new ApplicationResponseDto
+                {
+                    Message = "Lỗi hệ thống, vui lòng thử lại",
+                    MessageType = "error"
+                });
             }
         }
     }

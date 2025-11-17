@@ -9,6 +9,7 @@
 /Client/dist/
 
 /Images/uploads/
+/Images/__pycache__/
 
 # misc
 /Client/.DS_Store

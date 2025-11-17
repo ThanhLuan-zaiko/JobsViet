@@ -7,6 +7,8 @@ namespace Server.Data.Jobs
     {
         IJobRepository JobRepository { get; }
         IJobCategoryRepository JobCategoryRepository { get; }
+        IApplicationRepository ApplicationRepository { get; }
+        IResumeRepository ResumeRepository { get; }
         Task<int> SaveChangesAsync();
         Task BeginTransactionAsync();
         Task CommitTransactionAsync();
@@ -23,10 +25,14 @@ namespace Server.Data.Jobs
             _context = context;
             JobRepository = new JobRepository(_context);
             JobCategoryRepository = new JobCategoryRepository(_context);
+            ApplicationRepository = new ApplicationRepository(_context);
+            ResumeRepository = new ResumeRepository(_context);
         }
 
         public IJobRepository JobRepository { get; }
         public IJobCategoryRepository JobCategoryRepository { get; }
+        public IApplicationRepository ApplicationRepository { get; }
+        public IResumeRepository ResumeRepository { get; }
 
         public async Task<int> SaveChangesAsync()
         {
