@@ -162,10 +162,14 @@ export default function JobDetail() {
   }, [jobGuid]);
 
   const handleApply = async () => {
-    if (!jobGuid || !user) {
+    if (!jobGuid) {
+      return;
+    }
+
+    if (!user) {
       setNotification({
-        message: "Bạn cần đăng nhập để ứng tuyển",
-        type: "error",
+        message: "Bạn phải đăng nhập để dùng chức năng này",
+        type: "info",
       });
       return;
     }
@@ -255,22 +259,20 @@ export default function JobDetail() {
                   <h1 className="text-3xl font-bold text-gray-900">
                     {job.title}
                   </h1>
-                  {user && (
-                    <button
-                      onClick={handleApply}
-                      disabled={applying}
-                      className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center gap-2"
-                    >
-                      {applying ? (
-                        <>
-                          <FaSpinner className="animate-spin" />
-                          Đang xử lý...
-                        </>
-                      ) : (
-                        "Ứng tuyển ngay"
-                      )}
-                    </button>
-                  )}
+                  <button
+                    onClick={handleApply}
+                    disabled={applying}
+                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center gap-2"
+                  >
+                    {applying ? (
+                      <>
+                        <FaSpinner className="animate-spin" />
+                        Đang xử lý...
+                      </>
+                    ) : (
+                      "Ứng tuyển ngay"
+                    )}
+                  </button>
                 </div>
 
                 {/* Job Description */}

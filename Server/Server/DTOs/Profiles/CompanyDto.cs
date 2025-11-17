@@ -87,6 +87,9 @@ namespace Server.DTOs.Profiles
         public string? ContactEmail { get; set; }
 
         public Guid? EmployerId { get; set; }
+
+        [StringLength(100, ErrorMessage = "Role cannot exceed 100 characters.")]
+        public string? Role { get; set; }
     }
 
     public class CompanyUpdateDto

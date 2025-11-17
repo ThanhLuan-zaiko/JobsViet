@@ -239,7 +239,7 @@ namespace Server.Services.Profiles
                             Id = Guid.NewGuid(),
                             EmployerProfileId = createdProfile.EmployerId,
                             CompanyId = createdCompany.CompanyId,
-                            Role = companyDto.Role ?? "Owner",
+                            Role = !string.IsNullOrWhiteSpace(companyDto.Role) ? companyDto.Role : "Owner",
                             IsPrimary = companyDto.IsPrimary
                         };
 
@@ -361,7 +361,7 @@ namespace Server.Services.Profiles
                     Id = Guid.NewGuid(),
                     EmployerProfileId = dto.EmployerId.Value,
                     CompanyId = createdCompany.CompanyId,
-                    Role = "Owner", // Default role
+                    Role = !string.IsNullOrWhiteSpace(dto.Role) ? dto.Role : null,
                     IsPrimary = true
                 };
 

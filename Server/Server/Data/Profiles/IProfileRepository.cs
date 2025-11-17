@@ -7,6 +7,7 @@ namespace Server.Data.Profiles
     {
         // Candidate Profile
         Task<CandidateProfile?> GetCandidateProfileByUserIdAsync(Guid userId);
+        Task<CandidateProfile?> GetCandidateProfileByIdAsync(Guid candidateId);
         Task<CandidateProfile> CreateCandidateProfileAsync(CandidateProfile profile);
         Task<CandidateProfile> UpdateCandidateProfileAsync(CandidateProfile profile);
 
@@ -41,5 +42,8 @@ namespace Server.Data.Profiles
         Task<List<CandidateProfileImage>> GetCandidateProfileImagesAsync(Guid candidateId);
         Task<List<EmployerProfileImage>> GetEmployerProfileImagesAsync(Guid employerId);
         Task<List<CompanyImage>> GetCompanyImagesAsync(Guid companyId);
+
+        // User
+        Task<Server.Models.Auth.User?> GetUserByIdAsync(Guid userId);
     }
 }

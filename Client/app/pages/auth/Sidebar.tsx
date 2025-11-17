@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router";
 import {
   FaHome,
@@ -13,9 +13,38 @@ import {
   FaCog,
   FaSignOutAlt,
 } from "react-icons/fa";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
+  const { user } = useAuth();
+  const [applicationCount, setApplicationCount] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchApplicationCount = async () => {
+      if (!user) return;
+
+      try {
+        const baseUrl =
+          import.meta.env.VITE_API_BASE_URL || "http://localhost:5174/api/v1.0";
+        const response = await fetch(
+          `${baseUrl}/applications/employer`,
+          { credentials: "include" }
+        );
+        if (response.ok) {
+          const applications = await response.json();
+          setApplicationCount(applications.length);
+        }
+      } catch (error) {
+        console.error("Error fetching application count:", error);
+      }
+    };
+
+    fetchApplicationCount();
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchApplicationCount, 30000);
+    return () => clearInterval(interval);
+  }, [user]);
 
   const userMenus = [
     { to: "/", icon: <FaHome />, label: "Trang chủ" },
@@ -33,7 +62,12 @@ const Sidebar: React.FC = () => {
       label: "Quản lý tin đăng",
     },
     { to: "/manage-profile", icon: <FaUser />, label: "Quản lý hồ sơ" },
-    { to: "/applicants", icon: <FaUserFriends />, label: "Ứng viên ứng tuyển" },
+    {
+      to: "/applicants",
+      icon: <FaUserFriends />,
+      label: "Ứng viên ứng tuyển",
+      badge: applicationCount > 0 ? applicationCount : undefined,
+    },
   ];
 
   const settingsMenus = [
@@ -44,24 +78,32 @@ const Sidebar: React.FC = () => {
     to: string;
     icon: React.ReactElement;
     label: string;
+    badge?: number;
   }) => {
     const active = location.pathname === menu.to;
     return (
       <Link
         key={menu.to}
         to={menu.to}
-        className={`flex items-center space-x-3 p-2 rounded-lg transition-colors duration-200 ${
+        className={`flex items-center justify-between p-2 rounded-lg transition-colors duration-200 ${
           active
             ? "bg-blue-100 text-blue-600 font-semibold"
             : "hover:bg-gray-100 text-gray-700"
         }`}
       >
-        <span
-          className={`h-5 w-5 ${active ? "text-blue-600" : "text-gray-600"}`}
-        >
-          {menu.icon}
-        </span>
-        <span>{menu.label}</span>
+        <div className="flex items-center space-x-3">
+          <span
+            className={`h-5 w-5 ${active ? "text-blue-600" : "text-gray-600"}`}
+          >
+            {menu.icon}
+          </span>
+          <span>{menu.label}</span>
+        </div>
+        {menu.badge !== undefined && menu.badge > 0 && (
+          <span className="bg-blue-600 text-white text-xs font-bold rounded-full px-2 py-0.5 min-w-[20px] text-center">
+            {menu.badge}
+          </span>
+        )}
       </Link>
     );
   };

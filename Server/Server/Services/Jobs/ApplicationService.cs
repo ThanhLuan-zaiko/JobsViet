@@ -109,6 +109,73 @@ namespace Server.Services.Jobs
                 ApplicationId = application.ApplicationId
             };
         }
+
+        public async Task<List<ApplicationDto>> GetApplicationsByEmployerIdAsync(Guid employerId)
+        {
+            var applications = await _unitOfWork.ApplicationRepository.GetApplicationsByEmployerIdAsync(employerId);
+            var applicationDtos = new List<ApplicationDto>();
+
+            foreach (var app in applications)
+            {
+                var candidateProfile = await _profileUnitOfWork.ProfileRepository.GetCandidateProfileByIdAsync(app.CandidateId);
+                var job = app.Job;
+
+                applicationDtos.Add(new ApplicationDto
+                {
+                    ApplicationId = app.ApplicationId,
+                    JobId = app.JobId,
+                    JobTitle = job?.Title ?? "N/A",
+                    CandidateId = app.CandidateId,
+                    CandidateName = candidateProfile?.FullName ?? "N/A",
+                    CandidateEmail = candidateProfile != null ? (await _profileUnitOfWork.ProfileRepository.GetUserByIdAsync(candidateProfile.UserId))?.Email : null,
+                    CandidatePhone = candidateProfile?.Phone,
+                    Status = app.Status,
+                    AppliedAt = app.AppliedAt,
+                    UpdatedAt = app.UpdatedAt
+                });
+            }
+
+            return applicationDtos;
+        }
+
+        public async Task<List<ApplicationDto>> GetApplicationsByJobIdAsync(Guid jobId)
+        {
+            var applications = await _unitOfWork.ApplicationRepository.GetApplicationsByJobIdAsync(jobId);
+            var applicationDtos = new List<ApplicationDto>();
+
+            foreach (var app in applications)
+            {
+                var candidateProfile = await _profileUnitOfWork.ProfileRepository.GetCandidateProfileByIdAsync(app.CandidateId);
+                var job = await _unitOfWork.JobRepository.GetJobByIdAsync(jobId);
+
+                applicationDtos.Add(new ApplicationDto
+                {
+                    ApplicationId = app.ApplicationId,
+                    JobId = app.JobId,
+                    JobTitle = job?.Title ?? "N/A",
+                    CandidateId = app.CandidateId,
+                    CandidateName = candidateProfile?.FullName ?? "N/A",
+                    CandidateEmail = candidateProfile != null ? (await _profileUnitOfWork.ProfileRepository.GetUserByIdAsync(candidateProfile.UserId))?.Email : null,
+                    CandidatePhone = candidateProfile?.Phone,
+                    Status = app.Status,
+                    AppliedAt = app.AppliedAt,
+                    UpdatedAt = app.UpdatedAt
+                });
+            }
+
+            return applicationDtos;
+        }
+
+        public async Task<List<JobApplicationCountDto>> GetJobApplicationCountsByEmployerIdAsync(Guid employerId)
+        {
+            var counts = await _unitOfWork.ApplicationRepository.GetApplicationCountsByEmployerIdAsync(employerId);
+            return counts.Select(c => new JobApplicationCountDto
+            {
+                JobId = c.JobId,
+                JobTitle = c.JobTitle,
+                ApplicationCount = c.Count
+            }).ToList();
+        }
     }
 }
 

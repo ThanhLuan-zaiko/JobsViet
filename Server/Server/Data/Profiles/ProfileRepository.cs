@@ -2,6 +2,7 @@
 using Server.Models.Profiles;
 using Microsoft.EntityFrameworkCore;
 using Server.Data.Jobs;
+using Server.Models.Auth;
 
 namespace Server.Data.Profiles
 {
@@ -19,6 +20,12 @@ namespace Server.Data.Profiles
         {
             return await _context.CandidateProfiles
                 .FirstOrDefaultAsync(cp => cp.UserId == userId);
+        }
+
+        public async Task<CandidateProfile?> GetCandidateProfileByIdAsync(Guid candidateId)
+        {
+            return await _context.CandidateProfiles
+                .FirstOrDefaultAsync(cp => cp.CandidateId == candidateId);
         }
 
         public async Task<CandidateProfile> CreateCandidateProfileAsync(CandidateProfile profile)
@@ -220,6 +227,12 @@ namespace Server.Data.Profiles
             return await _context.CompanyImages
                 .Where(img => img.CompanyId == companyId)
                 .ToListAsync();
+        }
+
+        // User
+        public async Task<User?> GetUserByIdAsync(Guid userId)
+        {
+            return await _context.Users.FindAsync(userId);
         }
     }
 }

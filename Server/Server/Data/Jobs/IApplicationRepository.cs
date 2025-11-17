@@ -7,6 +7,10 @@ namespace Server.Data.Jobs
         Task<Application?> GetApplicationByJobIdAndCandidateIdAsync(Guid jobId, Guid candidateId);
         Task<Application> CreateApplicationAsync(Application application);
         Task<bool> HasApplicationAsync(Guid jobId, Guid candidateId);
+        Task<List<Application>> GetApplicationsByEmployerIdAsync(Guid employerId);
+        Task<List<Application>> GetApplicationsByJobIdAsync(Guid jobId);
+        Task<int> GetApplicationCountByJobIdAsync(Guid jobId);
+        Task<List<(Guid JobId, string JobTitle, int Count)>> GetApplicationCountsByEmployerIdAsync(Guid employerId);
     }
 }
 

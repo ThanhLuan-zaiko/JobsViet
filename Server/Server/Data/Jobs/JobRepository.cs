@@ -86,6 +86,14 @@ namespace Server.Data.Jobs
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<Job?> GetJobByIdAsync(Guid jobId)
+        {
+            return await _context.Jobs
+                .Where(j => j.JobId == jobId && j.IsActive == 1)
+                .Include(j => j.Company)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task DeleteJobImageAsync(JobImage jobImage)
         {
             _context.JobImages.Remove(jobImage);
