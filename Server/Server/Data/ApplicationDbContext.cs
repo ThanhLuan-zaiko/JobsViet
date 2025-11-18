@@ -274,6 +274,8 @@ namespace Server.Data.Jobs
                 entity.Property(e => e.Status).HasColumnName("STATUS").HasMaxLength(50);
                 entity.Property(e => e.AppliedAt).HasColumnName("APPLIEDAT");
                 entity.Property(e => e.UpdatedAt).HasColumnName("UPDATEDAT");
+                entity.Property(e => e.IsViewedByEmployer).HasColumnName("ISVIEWEDBYEMPLOYER");
+                entity.Property(e => e.EmployerViewedAt).HasColumnName("EMPLOYERVIEWEDAT");
 
                 // Unique constraint: một candidate chỉ có thể ứng tuyển một job một lần
                 entity.HasIndex(e => new { e.JobId, e.CandidateId }).IsUnique();

@@ -12,6 +12,7 @@ import "./app.css";
 import "./animations.css";
 import { AuthProvider } from "./contexts/AuthContext";
 import { SignalRProvider } from "./contexts/SignalRContext";
+import { ApplicationNotificationsProvider } from "./contexts/ApplicationNotificationsContext";
 import Notification from "./components/Message/Notification";
 import { useAuth } from "./contexts/AuthContext";
 
@@ -67,7 +68,9 @@ export default function App() {
   return (
     <AuthProvider>
       <SignalRProvider>
-        <AppContent />
+        <ApplicationNotificationsProvider>
+          <AppContent />
+        </ApplicationNotificationsProvider>
       </SignalRProvider>
     </AuthProvider>
   );

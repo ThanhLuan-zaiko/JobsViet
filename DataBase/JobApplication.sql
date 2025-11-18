@@ -851,3 +851,31 @@ VALUES ('Blockchain and Web3', 'Ngành công nghệ chuỗi khối: phát triể
 
 INSERT INTO JobCategories (Name, Description, IsActive)
 VALUES ('Game Development', 'Ngành phát triển game: thiết kế, lập trình, đồ họa, âm thanh', 1);
+
+------------------------------------------------------------
+-- MIGRATION: Add IsViewedByEmployer and EmployerViewedAt columns to APPLICATIONS table
+-- Date: 2025-11-18
+-- Description: Add tracking for when employer views applications
+------------------------------------------------------------
+
+-- Add ISVIEWEDBYEMPLOYER column (NUMBER(1) for boolean: 0 = false, 1 = true)
+ALTER TABLE APPLICATIONS
+  ADD ISVIEWEDBYEMPLOYER NUMBER(1) DEFAULT 0 NOT NULL;
+
+-- Add comment to explain the column
+COMMENT ON COLUMN APPLICATIONS.ISVIEWEDBYEMPLOYER IS 'Flag indicating if employer has viewed this application (0 = false, 1 = true)';
+
+-- Add EMPLOYERVIEWEDAT column (nullable TIMESTAMP)
+ALTER TABLE APPLICATIONS
+  ADD EMPLOYERVIEWEDAT TIMESTAMP;
+
+-- Add comment to explain the column
+COMMENT ON COLUMN APPLICATIONS.EMPLOYERVIEWEDAT IS 'Timestamp when employer first viewed this application';
+
+-- Update existing records: if they were created before this migration, they are considered not viewed
+-- (This is already handled by DEFAULT 0, but we can be explicit)
+UPDATE APPLICATIONS
+SET ISVIEWEDBYEMPLOYER = 0
+WHERE ISVIEWEDBYEMPLOYER IS NULL;
+
+COMMIT;

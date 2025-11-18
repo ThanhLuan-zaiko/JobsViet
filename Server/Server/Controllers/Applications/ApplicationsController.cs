@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Services.Jobs;
@@ -101,6 +102,68 @@ namespace Server.Controllers.Applications
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error getting job application counts for employer {UserId}", userId);
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("employer/summary")]
+        public async Task<IActionResult> GetEmployerApplicationsSummary()
+        {
+            await HttpContext.Session.LoadAsync();
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
+            {
+                return Unauthorized("User not authenticated");
+            }
+
+            try
+            {
+                var employerProfile = await _profileUnitOfWork.ProfileRepository.GetEmployerProfileByUserIdAsync(userId);
+                if (employerProfile == null)
+                {
+                    return NotFound("Employer profile not found");
+                }
+
+                var summary = await _applicationService.GetEmployerApplicationsSummaryAsync(employerProfile.EmployerId);
+                return Ok(summary);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting applications summary for employer {UserId}", userId);
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpPost("employer/jobs/{jobId}/mark-read")]
+        public async Task<IActionResult> MarkJobApplicationsAsRead(Guid jobId)
+        {
+            await HttpContext.Session.LoadAsync();
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
+            {
+                return Unauthorized("User not authenticated");
+            }
+
+            try
+            {
+                var employerProfile = await _profileUnitOfWork.ProfileRepository.GetEmployerProfileByUserIdAsync(userId);
+                if (employerProfile == null)
+                {
+                    return NotFound("Employer profile not found");
+                }
+
+                var updated = await _applicationService.MarkJobApplicationsAsReadAsync(employerProfile.EmployerId, jobId);
+                var summary = await _applicationService.GetEmployerApplicationsSummaryAsync(employerProfile.EmployerId);
+
+                return Ok(new
+                {
+                    updated,
+                    summary
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error marking job {JobId} applications as read", jobId);
                 return StatusCode(500, "Internal server error");
             }
         }

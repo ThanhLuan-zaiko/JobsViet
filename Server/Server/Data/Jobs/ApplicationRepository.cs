@@ -1,6 +1,6 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Server.Models.Jobs;
-using Server.Models.Profiles;
 
 namespace Server.Data.Jobs
 {
@@ -68,6 +68,62 @@ namespace Server.Data.Jobs
                 .ToListAsync();
 
             return jobs.Select(j => (j.JobId, j.Title, j.Count)).ToList();
+        }
+
+        public async Task<List<(Guid JobId, string JobTitle, int TotalCount, int UnreadCount)>> GetApplicationCountsWithUnreadByEmployerIdAsync(Guid employerId)
+        {
+            var jobs = await _context.Jobs
+                .Where(j => j.EmployerProfileId == employerId)
+                .Select(j => new
+                {
+                    j.JobId,
+                    j.Title,
+                    TotalCount = _context.Applications.Count(a => a.JobId == j.JobId),
+                    UnreadCount = _context.Applications.Count(a => a.JobId == j.JobId && !a.IsViewedByEmployer)
+                })
+                .ToListAsync();
+
+            return jobs.Select(j => (j.JobId, j.Title, j.TotalCount, j.UnreadCount)).ToList();
+        }
+
+        public async Task<int> GetTotalUnreadApplicationsByEmployerIdAsync(Guid employerId)
+        {
+            return await _context.Applications
+                .Include(a => a.Job)
+                .Where(a => a.Job != null && a.Job.EmployerProfileId == employerId && !a.IsViewedByEmployer)
+                .CountAsync();
+        }
+
+        public async Task<List<Application>> GetRecentApplicationsByEmployerIdAsync(Guid employerId, int take)
+        {
+            return await _context.Applications
+                .Include(a => a.Job)
+                .Where(a => a.Job != null && a.Job.EmployerProfileId == employerId)
+                .OrderByDescending(a => a.AppliedAt)
+                .ThenByDescending(a => a.ApplicationId)
+                .Take(take)
+                .ToListAsync();
+        }
+
+        public async Task<int> MarkApplicationsAsViewedByJobAsync(Guid employerId, Guid jobId)
+        {
+            var applications = await _context.Applications
+                .Include(a => a.Job)
+                .Where(a => a.JobId == jobId && a.Job != null && a.Job.EmployerProfileId == employerId && !a.IsViewedByEmployer)
+                .ToListAsync();
+
+            foreach (var application in applications)
+            {
+                application.IsViewedByEmployer = true;
+                application.EmployerViewedAt = DateTime.UtcNow;
+            }
+
+            if (applications.Count > 0)
+            {
+                await _context.SaveChangesAsync();
+            }
+
+            return applications.Count;
         }
     }
 }

@@ -12,11 +12,14 @@ import {
   HubConnectionBuilder,
   LogLevel,
 } from "@microsoft/signalr";
-import type { Job } from "../data/mockJobs";
 
 interface SignalRContextType {
   connection: HubConnection | null;
   isConnected: boolean;
+  subscribe: (
+    eventName: string,
+    handler: (...args: any[]) => void
+  ) => () => void;
   setJobCallback: (callback: ((jobDto: any) => void) | null) => void;
 }
 
@@ -26,21 +29,96 @@ interface SignalRProviderProps {
   children: ReactNode;
 }
 
+const normalizeEventName = (eventName: string) =>
+  eventName.trim().toLowerCase();
+
 export const SignalRProvider: React.FC<SignalRProviderProps> = ({
   children,
 }) => {
   const [connection, setConnection] = useState<HubConnection | null>(null);
   const [isConnected, setIsConnected] = useState(false);
-  const [jobCallback, setJobCallbackState] = useState<
-    ((jobDto: any) => void) | null
-  >(null);
+
+  const handlersRef = useRef<
+    Map<string, Set<(...args: any[]) => void>>
+  >(new Map());
+  const dispatchersRef = useRef<Map<string, (...args: any[]) => void>>(
+    new Map()
+  );
+  const connectionRef = useRef<HubConnection | null>(null);
+  const jobSubscriptionRef = useRef<(() => void) | null>(null);
+
+  const ensureDispatcher = useCallback(
+    (normalizedEvent: string) => {
+      if (dispatchersRef.current.has(normalizedEvent)) {
+        return dispatchersRef.current.get(normalizedEvent);
+      }
+
+      const dispatcher = (...args: any[]) => {
+        const handlers = handlersRef.current.get(normalizedEvent);
+        if (!handlers) return;
+
+        handlers.forEach((handler) => {
+          try {
+            handler(...args);
+          } catch (error) {
+            console.error(`SignalR handler error for ${normalizedEvent}:`, error);
+          }
+        });
+      };
+
+      dispatchersRef.current.set(normalizedEvent, dispatcher);
+      if (connectionRef.current) {
+        connectionRef.current.on(normalizedEvent, dispatcher);
+      }
+
+      return dispatcher;
+    },
+    []
+  );
+
+  const subscribe = useCallback(
+    (eventName: string, handler: (...args: any[]) => void) => {
+      const normalized = normalizeEventName(eventName);
+
+      if (!handlersRef.current.has(normalized)) {
+        handlersRef.current.set(normalized, new Set());
+      }
+
+      handlersRef.current.get(normalized)!.add(handler);
+      ensureDispatcher(normalized);
+
+      return () => {
+        const handlers = handlersRef.current.get(normalized);
+        if (!handlers) return;
+
+        handlers.delete(handler);
+
+        if (handlers.size === 0) {
+          handlersRef.current.delete(normalized);
+
+          const dispatcher = dispatchersRef.current.get(normalized);
+          if (dispatcher && connectionRef.current) {
+            connectionRef.current.off(normalized, dispatcher);
+          }
+          dispatchersRef.current.delete(normalized);
+        }
+      };
+    },
+    [ensureDispatcher]
+  );
 
   const setJobCallback = useCallback(
     (callback: ((jobDto: any) => void) | null) => {
-      console.log("setJobCallback called with callback:", callback);
-      setJobCallbackState(callback);
+      if (jobSubscriptionRef.current) {
+        jobSubscriptionRef.current();
+        jobSubscriptionRef.current = null;
+      }
+
+      if (callback) {
+        jobSubscriptionRef.current = subscribe("receivenewjob", callback);
+      }
     },
-    []
+    [subscribe]
   );
 
   useEffect(() => {
@@ -50,7 +128,6 @@ export const SignalRProvider: React.FC<SignalRProviderProps> = ({
       const baseUrl =
         import.meta.env.VITE_API_BASE_URL || "http://localhost:5174/api/v1.0";
       const hubUrl = `${baseUrl.replace("/api/v1.0", "")}/jobsHub`;
-      console.log("Creating SignalR connection to:", hubUrl);
 
       const newConnection = new HubConnectionBuilder()
         .withUrl(hubUrl, { withCredentials: true })
@@ -58,30 +135,23 @@ export const SignalRProvider: React.FC<SignalRProviderProps> = ({
         .configureLogging(LogLevel.Information)
         .build();
 
-      // Handle connection events
       newConnection.onclose(() => {
-        console.log("SignalR connection closed");
         if (isMounted) setIsConnected(false);
       });
 
-      newConnection.onreconnecting(() => {
-        console.log("SignalR reconnecting...");
-      });
-
       newConnection.onreconnected(() => {
-        console.log("SignalR reconnected");
         if (isMounted) setIsConnected(true);
       });
 
       try {
         await newConnection.start();
-        console.log("SignalR Connected!");
         if (isMounted) {
           setIsConnected(true);
           setConnection(newConnection);
+          connectionRef.current = newConnection;
         }
       } catch (err) {
-        console.log("SignalR Connection failed: ", err);
+        console.error("SignalR Connection failed: ", err);
         if (isMounted) setIsConnected(false);
       }
     };
@@ -89,41 +159,34 @@ export const SignalRProvider: React.FC<SignalRProviderProps> = ({
     createConnection();
 
     return () => {
-      console.log("Cleaning up SignalR connection");
       isMounted = false;
-      if (connection) {
-        connection.stop();
+      if (connectionRef.current) {
+        connectionRef.current.stop();
       }
     };
   }, []);
 
-  // Set up the job event handler when connection or callback changes
   useEffect(() => {
-    if (connection && jobCallback) {
-      console.log("Setting up job event handler");
-      connection.on("receivenewjob", (jobDto: any) => {
-        console.log("SignalR received new job in context:", jobDto);
-        console.log("Calling job callback");
-        try {
-          jobCallback(jobDto);
-          console.log("Job callback called successfully");
-        } catch (error) {
-          console.error("Error in job callback:", error);
-        }
-      });
+    if (!connection) return;
 
-      return () => {
-        console.log("Removing job event handler");
-        connection.off("receivenewjob");
-      };
-    }
-  }, [connection, jobCallback]);
+    connectionRef.current = connection;
+    dispatchersRef.current.forEach((dispatcher, eventName) => {
+      connection.on(eventName, dispatcher);
+    });
+
+    return () => {
+      dispatchersRef.current.forEach((dispatcher, eventName) => {
+        connection.off(eventName, dispatcher);
+      });
+    };
+  }, [connection]);
 
   return (
     <SignalRContext.Provider
       value={{
         connection,
         isConnected,
+        subscribe,
         setJobCallback,
       }}
     >

@@ -8,6 +8,8 @@ namespace Server.Services.Jobs
         Task<List<ApplicationDto>> GetApplicationsByEmployerIdAsync(Guid employerId);
         Task<List<ApplicationDto>> GetApplicationsByJobIdAsync(Guid jobId);
         Task<List<JobApplicationCountDto>> GetJobApplicationCountsByEmployerIdAsync(Guid employerId);
+        Task<EmployerApplicationsSummaryDto> GetEmployerApplicationsSummaryAsync(Guid employerId);
+        Task<int> MarkJobApplicationsAsReadAsync(Guid employerId, Guid jobId);
     }
 }
 

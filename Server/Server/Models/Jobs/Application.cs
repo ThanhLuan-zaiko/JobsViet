@@ -11,6 +11,8 @@ namespace Server.Models.Jobs
         public string Status { get; set; } = "APPLIED";
         public DateTime AppliedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public bool IsViewedByEmployer { get; set; } = false;
+        public DateTime? EmployerViewedAt { get; set; }
 
         // Navigation properties
         public Job? Job { get; set; }

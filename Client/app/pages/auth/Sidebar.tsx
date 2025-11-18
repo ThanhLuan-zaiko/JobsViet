@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link, useLocation } from "react-router";
 import {
   FaHome,
@@ -13,38 +13,11 @@ import {
   FaCog,
   FaSignOutAlt,
 } from "react-icons/fa";
-import { useAuth } from "../../contexts/AuthContext";
+import { useApplicationNotifications } from "../../contexts/ApplicationNotificationsContext";
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
-  const { user } = useAuth();
-  const [applicationCount, setApplicationCount] = useState<number>(0);
-
-  useEffect(() => {
-    const fetchApplicationCount = async () => {
-      if (!user) return;
-
-      try {
-        const baseUrl =
-          import.meta.env.VITE_API_BASE_URL || "http://localhost:5174/api/v1.0";
-        const response = await fetch(
-          `${baseUrl}/applications/employer`,
-          { credentials: "include" }
-        );
-        if (response.ok) {
-          const applications = await response.json();
-          setApplicationCount(applications.length);
-        }
-      } catch (error) {
-        console.error("Error fetching application count:", error);
-      }
-    };
-
-    fetchApplicationCount();
-    // Refresh every 30 seconds
-    const interval = setInterval(fetchApplicationCount, 30000);
-    return () => clearInterval(interval);
-  }, [user]);
+  const { totalUnread } = useApplicationNotifications();
 
   const userMenus = [
     { to: "/", icon: <FaHome />, label: "Trang chủ" },
@@ -66,7 +39,12 @@ const Sidebar: React.FC = () => {
       to: "/applicants",
       icon: <FaUserFriends />,
       label: "Ứng viên ứng tuyển",
-      badge: applicationCount > 0 ? applicationCount : undefined,
+      badge:
+        totalUnread > 0
+          ? totalUnread > 99
+            ? "99+"
+            : totalUnread
+          : undefined,
     },
   ];
 
@@ -78,7 +56,7 @@ const Sidebar: React.FC = () => {
     to: string;
     icon: React.ReactElement;
     label: string;
-    badge?: number;
+    badge?: number | string;
   }) => {
     const active = location.pathname === menu.to;
     return (
@@ -99,7 +77,7 @@ const Sidebar: React.FC = () => {
           </span>
           <span>{menu.label}</span>
         </div>
-        {menu.badge !== undefined && menu.badge > 0 && (
+        {menu.badge !== undefined && menu.badge !== 0 && (
           <span className="bg-blue-600 text-white text-xs font-bold rounded-full px-2 py-0.5 min-w-[20px] text-center">
             {menu.badge}
           </span>
