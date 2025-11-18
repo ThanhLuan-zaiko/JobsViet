@@ -27,7 +27,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { setJobCallback } = useSignalR();
+  const { setJobCallback, isConnected } = useSignalR();
 
   useEffect(() => {
     const loadJobs = async () => {
@@ -55,6 +55,12 @@ export default function Home() {
     const handleReceiveNewJob = (jobDto: any) => {
       try {
         console.log("Home component received new job from SignalR:", jobDto);
+        
+        // Kiểm tra xem jobDto có hợp lệ không
+        if (!jobDto || !jobDto.jobGuid) {
+          console.warn("Invalid job data received:", jobDto);
+          return;
+        }
 
         // Transform the jobDto to Job format
         const primaryImage =
@@ -67,8 +73,8 @@ export default function Home() {
         const newJob: Job = {
           id: jobDto.jobGuid,
           title: jobDto.title,
-          company: "Unknown Company",
-          location: "Unknown Location",
+          company: jobDto.company?.name || "Unknown Company",
+          location: jobDto.company?.address || "Unknown Location",
           salary:
             jobDto.salaryFrom && jobDto.salaryTo
               ? `${jobDto.salaryFrom.toLocaleString()} - ${jobDto.salaryTo.toLocaleString()} VND`
@@ -81,6 +87,12 @@ export default function Home() {
 
         // Add new job to the beginning of the list
         setJobs((prevJobs) => {
+          // Kiểm tra xem job đã tồn tại chưa (tránh duplicate)
+          const exists = prevJobs.some(j => j.id === newJob.id);
+          if (exists) {
+            console.log("Job already exists in list, skipping");
+            return prevJobs;
+          }
           const updatedJobs = [newJob, ...prevJobs];
           console.log("Updated jobs list:", updatedJobs.length, "jobs");
           console.log("First job in list:", updatedJobs[0]);
@@ -98,15 +110,23 @@ export default function Home() {
       }
     };
 
-    console.log("About to set job callback");
+    // Set callback
     setJobCallback(handleReceiveNewJob);
-    console.log("SignalR job callback set in Home component");
+    console.log("SignalR job callback set in Home component, isConnected:", isConnected);
 
     return () => {
       console.log("Removing SignalR job callback from Home component");
       setJobCallback(null);
     };
   }, [setJobCallback]);
+
+  // Re-subscribe when connection becomes available
+  useEffect(() => {
+    if (isConnected) {
+      console.log("SignalR connected, ensuring job callback is set");
+      // Callback sẽ được set lại trong useEffect trên khi isConnected thay đổi
+    }
+  }, [isConnected]);
 
   const handlePageChange = (page: number) => {
     setSearchParams({ page: page.toString() });

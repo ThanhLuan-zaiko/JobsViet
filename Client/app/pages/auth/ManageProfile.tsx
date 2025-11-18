@@ -101,12 +101,19 @@ const ManageProfile: React.FC = () => {
     setSaving(true);
     try {
       // Save profile data first
-      const method = candidateProfile ? "put" : "post";
+      // Kiểm tra chính xác hơn: nếu có candidateId thì là update, không có thì là create
+      const isUpdate = candidateProfile && candidateProfile.candidateId;
+      const method = isUpdate ? "put" : "post";
+      
+      console.log("Saving candidate profile:", { method, isUpdate, candidateId: candidateProfile?.candidateId });
+      
       const response = await axios[method](
         `${import.meta.env.VITE_API_BASE_URL}/profiles/candidate`,
         formData,
         { withCredentials: true }
       );
+      
+      console.log("Profile saved successfully:", response.data);
       setCandidateProfile(response.data);
 
       // Upload profile image if selected
@@ -193,7 +200,7 @@ const ManageProfile: React.FC = () => {
         }
       }
 
-      // Reload profile to get any uploaded images
+      // Reload profile to get any uploaded images and ensure data is fresh
       try {
         const updatedResponse = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/profiles/candidate`,
@@ -201,14 +208,21 @@ const ManageProfile: React.FC = () => {
             withCredentials: true,
           }
         );
+        console.log("Reloaded profile:", updatedResponse.data);
         setCandidateProfile(updatedResponse.data);
       } catch (error) {
         console.error("Error reloading profile:", error);
+        // Nếu reload thất bại nhưng update thành công, vẫn dùng response.data
+        if (response.data) {
+          setCandidateProfile(response.data);
+        }
       }
 
       setNotification({
         type: "success",
-        message: "Hồ sơ ứng cử viên đã được lưu thành công!",
+        message: isUpdate 
+          ? "Hồ sơ ứng cử viên đã được cập nhật thành công!" 
+          : "Hồ sơ ứng cử viên đã được tạo thành công!",
       });
       setEditingCandidate(false);
     } catch (error: any) {
