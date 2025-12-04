@@ -51,7 +51,6 @@ export default function Applicants() {
 
         if (summaryResponse.ok) {
           // User có employer profile
-          console.log("✅ User has employer profile");
           const summaryData = (await summaryResponse.json()) as {
             totalUnread: number;
             jobCounts: typeof jobCounts;
@@ -60,7 +59,6 @@ export default function Applicants() {
           
           setHasEmployerProfile(true);
           setLocalJobCounts(summaryData.jobCounts || []);
-          console.log("✅ Job counts loaded:", summaryData.jobCounts?.length || 0);
           
           // Lấy danh sách applications
           const appsResponse = await fetch(
@@ -71,7 +69,6 @@ export default function Applicants() {
           if (appsResponse.ok) {
             const apps = (await appsResponse.json()) as ApplicationItem[];
             setApplications(apps);
-            console.log("✅ Applications loaded:", apps.length);
           }
           
           // Gọi refreshSummary sau khi đã set state
@@ -111,7 +108,6 @@ export default function Applicants() {
   // Đồng bộ localJobCounts với jobCounts từ context khi context được cập nhật
   useEffect(() => {
     if (jobCounts.length > 0 && localJobCounts.length === 0) {
-      console.log("🔄 Syncing localJobCounts from context:", jobCounts.length);
       setLocalJobCounts(jobCounts);
     }
   }, [jobCounts, localJobCounts.length]);
@@ -153,11 +149,7 @@ export default function Applicants() {
           .filter(Boolean)
       : [];
 
-  // Debug log
-  console.log("🔍 Render check - isAuthenticated:", isAuthenticated, "hasEmployerProfile:", hasEmployerProfile, "loading:", loading, "localJobCounts:", localJobCounts.length, "contextJobCounts:", jobCounts.length, "effectiveJobCounts:", sortedJobCounts.length);
-
   if (!isAuthenticated) {
-    console.log("📍 Returning: Not authenticated");
     return (
       <MainLayout>
         <div className="container mx-auto px-4 py-16 text-center">
@@ -175,7 +167,6 @@ export default function Applicants() {
   }
 
   if (hasEmployerProfile === false && !loading) {
-    console.log("📍 Returning: 'Chỉ dành cho nhà tuyển dụng' message");
     return (
       <MainLayout>
         <div className="container mx-auto px-4 py-16 text-center">
@@ -193,7 +184,6 @@ export default function Applicants() {
   }
 
   if (loading) {
-    console.log("📍 Returning: Loading state");
     return (
       <MainLayout>
         <div className="container mx-auto px-4 py-8">
@@ -209,7 +199,6 @@ export default function Applicants() {
   const hasJobPosts = sortedJobCounts.length > 0;
 
   if (!loading && hasEmployerProfile === true && !hasJobPosts) {
-    console.log("📍 Returning: No job posts");
     return (
       <MainLayout>
         <div className="container mx-auto px-4 py-16 text-center">
@@ -233,11 +222,9 @@ export default function Applicants() {
 
   // Chỉ hiển thị danh sách khi có employer profile và đã tải xong
   if (hasEmployerProfile !== true) {
-    console.log("📍 Returning: null (hasEmployerProfile !== true)");
     return null; // Sẽ được xử lý bởi các điều kiện trên
   }
 
-  console.log("📍 Returning: Main content (applications list)");
 
   return (
     <MainLayout>
