@@ -56,6 +56,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     // Check for existing session on app load
+    // Always call /auth/me - the session cookie (.JobViet.Session) is HttpOnly
+    // so JavaScript cannot read it, but it will be sent automatically with withCredentials: true
     const checkAuthStatus = async () => {
       try {
         const response = await axios.get(
@@ -68,14 +70,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setUser(response.data);
         }
       } catch (error: any) {
-        // Only log if it's not a 401 (which is expected when not logged in)
+        // 401 is expected when not logged in, don't log it
         if (error.response?.status !== 401) {
           console.log(
             "Auth check error:",
             error.response?.status || error.message
           );
         }
-        // Don't set user to null here, as 401 is expected when not logged in
+        // User is not logged in or session expired - that's fine
       }
     };
 

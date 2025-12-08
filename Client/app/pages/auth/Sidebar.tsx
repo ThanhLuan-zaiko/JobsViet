@@ -14,10 +14,20 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 import { useApplicationNotifications } from "../../contexts/ApplicationNotificationsContext";
+import ConfirmationModal from "../../components/Common/ConfirmationModal";
+import { useState } from "react";
+
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
   const { totalUnread } = useApplicationNotifications();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  const handleLogout = () => {
+    // Implement actual logout logic here if available, or just redirect
+    window.location.href = "/login"; // Placeholder redirect
+  };
+
 
   const userMenus = [
     { to: "/", icon: <FaHome />, label: "Trang chủ" },
@@ -63,11 +73,10 @@ const Sidebar: React.FC = () => {
       <Link
         key={menu.to}
         to={menu.to}
-        className={`flex items-center justify-between p-2 rounded-lg transition-colors duration-200 ${
-          active
+        className={`flex items-center justify-between p-2 rounded-lg transition-colors duration-200 ${active
             ? "bg-blue-100 text-blue-600 font-semibold"
             : "hover:bg-gray-100 text-gray-700"
-        }`}
+          }`}
       >
         <div className="flex items-center space-x-3">
           <span
@@ -111,14 +120,25 @@ const Sidebar: React.FC = () => {
         {/* Đăng xuất */}
         <button
           className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 w-full text-left transition-colors duration-200 text-gray-700"
-          onClick={() => alert("Đăng xuất thành công!")}
+          onClick={() => setShowLogoutModal(true)}
         >
+
           <FaSignOutAlt className="h-5 w-5 text-gray-600" />
           <span>Đăng xuất</span>
         </button>
       </nav>
+      <ConfirmationModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleLogout}
+        title="Đăng xuất"
+        message="Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?"
+        confirmText="Đăng xuất"
+        type="warning"
+      />
     </aside>
   );
+
 };
 
 export default Sidebar;

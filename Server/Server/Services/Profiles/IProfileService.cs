@@ -29,6 +29,9 @@ namespace Server.Services.Profiles
         Task<CompanyImageDto> UploadCompanyImageAsync(Guid companyId, CompanyImageCreateDto dto);
         Task<CompanyImageDto> UpdateCompanyImageAsync(Guid imageId, CompanyImageCreateDto dto);
         Task<List<CandidateProfileImageDto>> GetCandidateProfileImagesAsync(Guid candidateId);
+        Task DeleteCandidateProfileImageAsync(Guid imageId, Guid userId);
+        Task DeleteEmployerProfileImageAsync(Guid imageId, Guid userId);
+        Task DeleteCompanyImageAsync(Guid imageId, Guid userId);
         Task<List<EmployerProfileImageDto>> GetEmployerProfileImagesAsync(Guid employerId);
         Task<List<CompanyImageDto>> GetCompanyImagesAsync(Guid companyId);
     }

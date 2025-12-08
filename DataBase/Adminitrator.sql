@@ -1,93 +1,72 @@
--- ==========================================================
---  SCRIPT TẠO + QUẢN LÝ + XÓA SCHEMA (USER) TRONG ORACLE 23ai
---  Chạy bằng user SYSTEM hoặc SYS AS SYSDBA
--- ==========================================================
-
--- ==== CONFIG: Đổi tên user & password ở đây nếu cần ====
-DEFINE schema_name = 'JOBVIET';
-DEFINE schema_password = '123456';
--- =======================================================
-
-PROMPT === 1. TẠO USER (SCHEMA) ===
+/* SCRIPT TẠO USER JOBVIET 
+   Tương thích: DBeaver & Oracle Docker
+*/
+DECLARE
+    v_user VARCHAR2(30) := 'JOBVIET';   -- Tên user
+    v_pass VARCHAR2(30) := '123456';    -- Mật khẩu
+    v_count NUMBER;
 BEGIN
-    EXECUTE IMMEDIATE '
-        CREATE USER &schema_name IDENTIFIED BY "&schema_password"
-        DEFAULT TABLESPACE users
-        TEMPORARY TABLESPACE temp
-        QUOTA 100M ON users
-    ';
-EXCEPTION WHEN OTHERS THEN
-    IF SQLCODE = -01920 THEN
-        DBMS_OUTPUT.PUT_LINE('User đã tồn tại, bỏ qua bước tạo USER.');
+    -- 1. KIỂM TRA VÀ TẠO USER
+    SELECT count(*) INTO v_count FROM all_users WHERE username = v_user;
+    
+    IF v_count = 0 THEN
+        EXECUTE IMMEDIATE 'CREATE USER ' || v_user || ' IDENTIFIED BY "' || v_pass || '" DEFAULT TABLESPACE users QUOTA UNLIMITED ON users';
+        DBMS_OUTPUT.PUT_LINE('Result: Da tao user ' || v_user || ' thanh cong.');
     ELSE
-        RAISE;
+        DBMS_OUTPUT.PUT_LINE('Result: User ' || v_user || ' da ton tai. Bo qua buoc tao.');
     END IF;
-END;
-/
 
-PROMPT === 2. CẤP QUYỀN CHO USER ===
-BEGIN
-    EXECUTE IMMEDIATE 'GRANT CREATE SESSION TO &schema_name';
-    EXECUTE IMMEDIATE 'GRANT CREATE TABLE TO &schema_name';
-    EXECUTE IMMEDIATE 'GRANT CREATE SEQUENCE TO &schema_name';
-    EXECUTE IMMEDIATE 'GRANT CREATE VIEW TO &schema_name';
-    EXECUTE IMMEDIATE 'GRANT CREATE PROCEDURE TO &schema_name';
-EXCEPTION WHEN OTHERS THEN
-    DBMS_OUTPUT.PUT_LINE('Có thể quyền đã được cấp trước đó, bỏ qua.');
-END;
-/
+    -- 2. CẤP QUYỀN (GRANT)
+    -- Cấp các quyền mạnh nhất cho môi trường Dev để không bị lỗi vặt
+    EXECUTE IMMEDIATE 'GRANT CONNECT, RESOURCE TO ' || v_user;
+    EXECUTE IMMEDIATE 'GRANT UNLIMITED TABLESPACE TO ' || v_user;
+    EXECUTE IMMEDIATE 'GRANT CREATE SESSION TO ' || v_user;
+    EXECUTE IMMEDIATE 'GRANT CREATE TABLE TO ' || v_user;
+    EXECUTE IMMEDIATE 'GRANT CREATE VIEW TO ' || v_user;
+    EXECUTE IMMEDIATE 'GRANT CREATE SEQUENCE TO ' || v_user;
+    EXECUTE IMMEDIATE 'GRANT CREATE PROCEDURE TO ' || v_user;
 
-PROMPT === 3. TẠO ROLE (TÙY CHỌN) ===
-BEGIN
-    EXECUTE IMMEDIATE 'CREATE ROLE app_role';
-EXCEPTION WHEN OTHERS THEN
-    IF SQLCODE = -01921 THEN
-        DBMS_OUTPUT.PUT_LINE('Role app_role đã tồn tại, bỏ qua.');
-    ELSE
-        RAISE;
+    DBMS_OUTPUT.PUT_LINE('Result: Da cap quyen day du cho ' || v_user);
+
+    -- 3. TẠO ROLE (Tùy chọn - đã sửa lỗi logic)
+    SELECT count(*) INTO v_count FROM dba_roles WHERE role = 'APP_ROLE';
+    IF v_count = 0 THEN
+        EXECUTE IMMEDIATE 'CREATE ROLE APP_ROLE';
+        EXECUTE IMMEDIATE 'GRANT CREATE SESSION, CREATE TABLE TO APP_ROLE';
+        DBMS_OUTPUT.PUT_LINE('Result: Da tao role APP_ROLE.');
     END IF;
+    
+    -- Gán role cho user
+    EXECUTE IMMEDIATE 'GRANT APP_ROLE TO ' || v_user;
+    
+    COMMIT;
 END;
-/ 
-BEGIN
-    EXECUTE IMMEDIATE 'GRANT CREATE SESSION, CREATE TABLE, CREATE SEQUENCE, CREATE VIEW, CREATE PROCEDURE TO app_role';
-    EXECUTE IMMEDIATE 'GRANT app_role TO &schema_name';
-END;
-/
 
-PROMPT === 4. HIỂN THỊ SESSION CỦA USER (&schema_name) ===
-SELECT sid, serial#, status, username, machine
-FROM v$session
-WHERE username = UPPER('JOBVIET');
-
-PROMPT === 5. KILL TẤT CẢ SESSION CỦA USER TRƯỚC KHI XÓA ===
+/* SCRIPT XÓA USER JOBVIET (CLEANUP)
+   Lưu ý: Dữ liệu của user này sẽ mất hết
+*/
+DECLARE
+    v_user VARCHAR2(30) := 'JOBVIET';
+    v_count NUMBER;
 BEGIN
-    FOR s IN (SELECT sid, serial# FROM v$session WHERE username = UPPER('JOBVIET')) LOOP
-        EXECUTE IMMEDIATE 'ALTER SYSTEM KILL SESSION '''||s.sid||','||s.serial#||''' IMMEDIATE';
+    -- 1. KILL SESSION (Đuổi user ra khỏi hệ thống trước)
+    FOR s IN (SELECT sid, serial# FROM v$session WHERE username = v_user) LOOP
+        EXECUTE IMMEDIATE 'ALTER SYSTEM KILL SESSION ''' || s.sid || ',' || s.serial# || ''' IMMEDIATE';
+        DBMS_OUTPUT.PUT_LINE('Da kill session: ' || s.sid);
     END LOOP;
-END;
-/  
-PROMPT >>> Kill session hoàn tất.
 
-PROMPT === 6. XÓA USER (SCHEMA) TOÀN BỘ ===
-BEGIN
-    EXECUTE IMMEDIATE 'DROP USER JOBVIET CASCADE';
-EXCEPTION WHEN OTHERS THEN
-    IF SQLCODE = -01918 THEN
-        DBMS_OUTPUT.PUT_LINE('User không tồn tại hoặc đã bị xóa trước đó.');
+    -- 2. XÓA USER
+    SELECT count(*) INTO v_count FROM all_users WHERE username = v_user;
+    
+    IF v_count > 0 THEN
+        EXECUTE IMMEDIATE 'DROP USER ' || v_user || ' CASCADE';
+        DBMS_OUTPUT.PUT_LINE('Result: Da xoa user ' || v_user || ' thanh cong!');
     ELSE
-        RAISE;
+        DBMS_OUTPUT.PUT_LINE('Result: User ' || v_user || ' khong ton tai.');
     END IF;
 END;
-/
-PROMPT >>> DROP USER hoàn tất!
 
-SELECT owner, table_name FROM all_tables WHERE owner = 'JOBVIET';
+SELECT username, account_status FROM dba_users WHERE username = 'JOBVIET';
 
 SELECT column_name FROM all_tab_columns
-WHERE owner = 'JOBVIET' AND table_name = 'JOBS';
-
-SELECT column_name FROM all_tab_columns
-WHERE owner = 'JOBVIET' AND table_name = 'USERS';
-
-SELECT column_name FROM all_tab_columns
-WHERE owner = 'JOBVIET' AND table_name = 'EMPLOYERPROFILES';
+WHERE owner = 'JOBVIET';

@@ -73,35 +73,35 @@ namespace Server.Validators.Jobs
             RuleFor(x => x.CategoryId)
                 .NotEmpty().WithMessage("CategoryId is required.");
 
-            // Validation for Image (JobImageCreateDto)
-            When(x => x.Image != null, () =>
+            // Validation for Images (List<JobImageCreateDto>)
+            RuleForEach(x => x.Images).ChildRules(image =>
             {
-                RuleFor(x => x.Image!.FilePath)
+                image.RuleFor(i => i.FilePath)
                     .NotEmpty().WithMessage("Image FilePath is required.")
                     .MaximumLength(500).WithMessage("Image FilePath cannot exceed 500 characters.");
 
-                RuleFor(x => x.Image!.FileName)
+                image.RuleFor(i => i.FileName)
                     .MaximumLength(255).WithMessage("Image FileName cannot exceed 255 characters.")
-                    .When(x => !string.IsNullOrEmpty(x.Image!.FileName));
+                    .When(i => !string.IsNullOrEmpty(i.FileName));
 
-                RuleFor(x => x.Image!.FileType)
+                image.RuleFor(i => i.FileType)
                     .MaximumLength(100).WithMessage("Image FileType cannot exceed 100 characters.")
-                    .When(x => !string.IsNullOrEmpty(x.Image!.FileType));
+                    .When(i => !string.IsNullOrEmpty(i.FileType));
 
-                RuleFor(x => x.Image!.FileSize)
+                image.RuleFor(i => i.FileSize)
                     .GreaterThanOrEqualTo(0).WithMessage("Image FileSize must be a positive number.")
-                    .When(x => x.Image!.FileSize.HasValue);
+                    .When(i => i.FileSize.HasValue);
 
-                RuleFor(x => x.Image!.Caption)
+                image.RuleFor(i => i.Caption)
                     .MaximumLength(300).WithMessage("Image Caption cannot exceed 300 characters.")
-                    .When(x => !string.IsNullOrEmpty(x.Image!.Caption));
+                    .When(i => !string.IsNullOrEmpty(i.Caption));
 
-                RuleFor(x => x.Image!.SortOrder)
+                image.RuleFor(i => i.SortOrder)
                     .GreaterThanOrEqualTo(0).WithMessage("Image SortOrder must be non-negative.");
 
-                RuleFor(x => x.Image!.IsActive)
+                image.RuleFor(i => i.IsActive)
                     .InclusiveBetween(0, 1).WithMessage("Image IsActive must be 0 or 1.");
-            });
+            }).When(x => x.Images != null && x.Images.Any());
         }
     }
 }

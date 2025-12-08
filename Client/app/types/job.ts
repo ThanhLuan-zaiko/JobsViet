@@ -26,7 +26,7 @@ export interface JobCreateRequest {
   skillsRequired?: string;
   categoryId: string; // This should be a valid GUID string
   companyId?: string;
-  image?: JobImageCreateRequest;
+  images?: JobImageCreateRequest[];
 }
 
 export interface JobDto {

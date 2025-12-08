@@ -314,7 +314,7 @@ async def get_job_image(user_id: str, filename: str):
 async def delete_candidate_image(
     candidate_id: str,
     filename: str,
-    credentials: HTTPAuthorizationCredentials = Depends(security)
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security_optional)
 ):
     """Delete candidate image."""
     file_path = UPLOAD_DIR / candidate_id / filename
@@ -331,7 +331,7 @@ async def delete_candidate_image(
 async def delete_employer_image(
     employer_id: str,
     filename: str,
-    credentials: HTTPAuthorizationCredentials = Depends(security)
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security_optional)
 ):
     """Delete employer image."""
     file_path = UPLOAD_DIR / employer_id / filename

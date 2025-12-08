@@ -550,7 +550,8 @@ CREATE OR REPLACE PACKAGE AppSecurity AS
 
   FUNCTION HasPermission(pUserId IN RAW, pPermKey IN VARCHAR2) RETURN NUMBER;
 END AppSecurity;
-/
+
+
 CREATE OR REPLACE PACKAGE BODY AppSecurity AS
   FUNCTION HasPermission(pUserId IN RAW, pPermKey IN VARCHAR2) RETURN NUMBER IS
     vCount NUMBER := 0;
@@ -582,8 +583,7 @@ CREATE OR REPLACE PACKAGE BODY AppSecurity AS
       RETURN 0;
   END HasPermission;
 END AppSecurity;
-/
-SHOW ERRORS PACKAGE AppSecurity
+
 
 ------------------------------------------------------------
 -- AUDIT LOG TABLE + PROCEDURE (autonomous transaction)
@@ -640,19 +640,14 @@ EXCEPTION
         NULL; -- last resort: avoid raising from logging failures
     END;
 END LogAudit;
-/
-SHOW ERRORS PROCEDURE LogAudit
 
 ------------------------------------------------------------
 -- PROCEDURE: PauseJobByUser
--- Chỉ Moderator/Admin (hoặc ai có quyền PauseJobs) mới được tạm dừng job.
--- Nếu không có quyền => raise exception.
--- Ghi log audit nếu thành công.
+-- Only Moderator/Admin can pause a job.
+-- If no permission => raise exception.
+-- Audit log if successful.
 ------------------------------------------------------------
-CREATE OR REPLACE PROCEDURE PauseJobByUser (
-  pJobId     IN RAW,
-  pUserId    IN RAW
-) IS
+CREATE OR REPLACE PROCEDURE PauseJobByUser(pJobId IN RAW, pUserId IN RAW) IS
   vHasPermission NUMBER;
   vCurrentStatus VARCHAR2(20);
 BEGIN
@@ -681,8 +676,7 @@ BEGIN
   -- Ghi log audit
   LogAudit(pUserId, 'PauseJobManual', 'Job', pJobId, 'Tạm dừng thủ công bởi người dùng có quyền.');
 END PauseJobByUser;
-/
-SHOW ERRORS PROCEDURE PauseJobByUser
+
 
 INSERT INTO Roles (Name, Description)
 VALUES ('User', 'Người dùng thông thường');

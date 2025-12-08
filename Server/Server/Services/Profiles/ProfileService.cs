@@ -791,6 +791,55 @@ namespace Server.Services.Profiles
                 UpdatedAt = updatedImage.UpdatedAt
             };
         }
+        public async Task DeleteCandidateProfileImageAsync(Guid imageId, Guid userId)
+        {
+            var image = await _unitOfWork.ProfileRepository.GetCandidateProfileImageByIdAsync(imageId);
+            if (image == null)
+                throw new Exception("Image not found");
+
+            if (image.UploadedByUserId != userId)
+                throw new Exception("Unauthorized to delete this image");
+
+            // Delete physical file from Images Service
+            if (!string.IsNullOrEmpty(image.FileName))
+            {
+                 try
+                 {
+                     await DeleteCandidateImageFromImagesServiceAsync(image.CandidateId.ToString(), image.FileName);
+                 }
+                 catch (Exception ex)
+                 {
+                     Console.WriteLine($"Warning: Failed to delete image {image.FileName} from Images service: {ex.Message}");
+                 }
+            }
+
+            await _unitOfWork.ProfileRepository.DeleteCandidateProfileImageAsync(image);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        private async Task DeleteCandidateImageFromImagesServiceAsync(string candidateId, string fileName)
+        {
+            var imagesServiceUrl = _configuration["ImagesService:Url"];
+            if (string.IsNullOrEmpty(imagesServiceUrl))
+            {
+                imagesServiceUrl = _configuration["ImagesService:BaseUrl"];
+            }
+            
+            if (string.IsNullOrEmpty(imagesServiceUrl))
+                throw new Exception("Images service URL not configured");
+
+            var requestUrl = $"{imagesServiceUrl}/images/candidate/{candidateId}/{fileName}";
+            var request = new HttpRequestMessage(HttpMethod.Delete, requestUrl);
+
+            var response = await _httpClient.SendAsync(request);
+            
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return;
+            }
+            
+            response.EnsureSuccessStatusCode();
+        }
 
         public async Task<EmployerProfileImageDto> UpdateEmployerProfileImageAsync(Guid imageId, EmployerProfileImageCreateDto dto)
         {
@@ -810,6 +859,7 @@ namespace Server.Services.Profiles
 
             var updatedImage = await _unitOfWork.ProfileRepository.UpdateEmployerProfileImageAsync(existingImage);
             await _unitOfWork.SaveChangesAsync();
+
             return new EmployerProfileImageDto
             {
                 ImageId = updatedImage.ImageId,
@@ -935,6 +985,79 @@ namespace Server.Services.Profiles
             return responseContent;
         }
 
+        public async Task DeleteEmployerProfileImageAsync(Guid imageId, Guid userId)
+        {
+            var image = await _unitOfWork.ProfileRepository.GetEmployerProfileImageByIdAsync(imageId);
+            if (image == null)
+                throw new Exception("Image not found");
+
+            if (image.UploadedByUserId != userId)
+                throw new Exception("Unauthorized to delete this image");
+
+             // Delete physical file from Images Service
+            if (!string.IsNullOrEmpty(image.FileName))
+            {
+                 try
+                 {
+                     await DeleteEmployerImageFromImagesServiceAsync(image.EmployerId.ToString(), image.FileName);
+                 }
+                 catch (Exception ex)
+                 {
+                     Console.WriteLine($"Warning: Failed to delete image {image.FileName} from Images service: {ex.Message}");
+                 }
+            }
+
+            await _unitOfWork.ProfileRepository.DeleteEmployerProfileImageAsync(image);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task DeleteCompanyImageAsync(Guid imageId, Guid userId)
+        {
+            var image = await _unitOfWork.ProfileRepository.GetCompanyImageByIdAsync(imageId);
+            if (image == null)
+                throw new Exception("Image not found");
+
+            if (image.UploadedByUserId != userId)
+                throw new Exception("Unauthorized to delete this image");
+
+             // Delete physical file from Images Service
+            if (!string.IsNullOrEmpty(image.FileName))
+            {
+                 try
+                 {
+                     await DeleteCompanyImageFromImagesServiceAsync(image.CompanyId.ToString(), image.FileName);
+                 }
+                 catch (Exception ex)
+                 {
+                     Console.WriteLine($"Warning: Failed to delete image {image.FileName} from Images service: {ex.Message}");
+                 }
+            }
+
+            await _unitOfWork.ProfileRepository.DeleteCompanyImageAsync(image);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        private async Task DeleteEmployerImageFromImagesServiceAsync(string employerId, string fileName)
+        {
+             var imagesServiceUrl = _configuration["ImagesService:Url"];
+            if (string.IsNullOrEmpty(imagesServiceUrl))
+            {
+                imagesServiceUrl = _configuration["ImagesService:BaseUrl"];
+            }
+            
+            if (string.IsNullOrEmpty(imagesServiceUrl))
+                throw new Exception("Images service URL not configured");
+
+            var requestUrl = $"{imagesServiceUrl}/images/employer/{employerId}/{fileName}";
+            var request = new HttpRequestMessage(HttpMethod.Delete, requestUrl);
+
+            var response = await _httpClient.SendAsync(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return;
+            }
+            response.EnsureSuccessStatusCode();
+        }
         private class ImageUploadResponse
         {
             public string? image_url { get; set; }

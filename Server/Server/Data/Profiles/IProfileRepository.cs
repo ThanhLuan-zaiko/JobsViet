@@ -42,6 +42,9 @@ namespace Server.Data.Profiles
         Task<List<CandidateProfileImage>> GetCandidateProfileImagesAsync(Guid candidateId);
         Task<List<EmployerProfileImage>> GetEmployerProfileImagesAsync(Guid employerId);
         Task<List<CompanyImage>> GetCompanyImagesAsync(Guid companyId);
+        Task DeleteCandidateProfileImageAsync(CandidateProfileImage image);
+        Task DeleteEmployerProfileImageAsync(EmployerProfileImage image);
+        Task DeleteCompanyImageAsync(CompanyImage image);
 
         // User
         Task<Server.Models.Auth.User?> GetUserByIdAsync(Guid userId);

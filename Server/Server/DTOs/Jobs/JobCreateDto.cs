@@ -55,7 +55,7 @@ namespace Server.DTOs.Jobs
         // Optional: CompanyId if user has employer profile
         public Guid? CompanyId { get; set; }
 
-        public JobImageCreateDto? Image { get; set; }
+        public List<JobImageCreateDto>? Images { get; set; }
     }
 
     // Custom validation attribute for future date

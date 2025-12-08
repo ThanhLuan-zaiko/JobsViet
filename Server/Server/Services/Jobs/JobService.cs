@@ -236,23 +236,28 @@ namespace Server.Services.Jobs
 
             await _unitOfWork.JobRepository.CreateJobAsync(job);
 
-            // Handle image if provided
-            if (jobCreateDto.Image != null)
+            // Handle images if provided
+            if (jobCreateDto.Images != null && jobCreateDto.Images.Any())
             {
-                var jobImage = _mapper.Map<JobImage>(jobCreateDto.Image);
-                jobImage.JobImageId = Guid.NewGuid();
-                jobImage.JobId = job.JobId;
-                jobImage.UploadedByUserId = userId;
-                jobImage.CreatedAt = DateTime.UtcNow;
+                var sortOrder = 0;
+                foreach (var imageDto in jobCreateDto.Images)
+                {
+                    var jobImage = _mapper.Map<JobImage>(imageDto);
+                    jobImage.JobImageId = Guid.NewGuid();
+                    jobImage.JobId = job.JobId;
+                    jobImage.UploadedByUserId = userId;
+                    jobImage.SortOrder = sortOrder++;
+                    jobImage.CreatedAt = DateTime.UtcNow;
 
-                await _unitOfWork.JobRepository.CreateJobImageAsync(jobImage);
+                    await _unitOfWork.JobRepository.CreateJobImageAsync(jobImage);
+                }
             }
 
             await _unitOfWork.SaveChangesAsync();
 
-            // Fetch the created job with Company included
-            var createdJob = await _unitOfWork.JobRepository.GetJobByGuidAsync(job.JobGuid);
-            var jobDto = _mapper.Map<JobDto>(createdJob);
+            // Fetch the created job with full details (Company, EmployerProfile, Images)
+            // using GetJobAsync which includes all related data for SignalR broadcast
+            var jobDto = await GetJobAsync(job.JobGuid);
             return jobDto;
         }
 
@@ -305,6 +310,4 @@ namespace Server.Services.Jobs
             await _unitOfWork.SaveChangesAsync();
         }
     }
-
-
 }

@@ -234,5 +234,23 @@ namespace Server.Data.Profiles
         {
             return await _context.Users.FindAsync(userId);
         }
+        public async Task DeleteCandidateProfileImageAsync(CandidateProfileImage image)
+        {
+            _context.CandidateProfileImages.Remove(image);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteEmployerProfileImageAsync(EmployerProfileImage image)
+        {
+            _context.EmployerProfileImages.Remove(image);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteCompanyImageAsync(CompanyImage image)
+        {
+            _context.CompanyImages.Remove(image);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

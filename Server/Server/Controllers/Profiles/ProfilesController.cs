@@ -459,5 +459,73 @@ namespace Server.Controllers.Profiles
             var images = await _profileService.GetCompanyImagesAsync(companyId);
             return Ok(images);
         }
+        [HttpDelete("candidate/images/{imageId}")]
+        public async Task<IActionResult> DeleteCandidateProfileImage(Guid imageId)
+        {
+            await HttpContext.Session.LoadAsync();
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
+                return Unauthorized("Invalid user ID");
+
+            try
+            {
+                await _profileService.DeleteCandidateProfileImageAsync(imageId, userId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                 if (ex.Message.Contains("Unauthorized"))
+                    return Forbid();
+                if (ex.Message.Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("employer/images/{imageId}")]
+        public async Task<IActionResult> DeleteEmployerProfileImage(Guid imageId)
+        {
+            await HttpContext.Session.LoadAsync();
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
+                return Unauthorized("Invalid user ID");
+
+            try
+            {
+                await _profileService.DeleteEmployerProfileImageAsync(imageId, userId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                 if (ex.Message.Contains("Unauthorized"))
+                    return Forbid();
+                if (ex.Message.Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("company/images/{imageId}")]
+        public async Task<IActionResult> DeleteCompanyImage(Guid imageId)
+        {
+            await HttpContext.Session.LoadAsync();
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
+                return Unauthorized("Invalid user ID");
+
+            try
+            {
+                await _profileService.DeleteCompanyImageAsync(imageId, userId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                 if (ex.Message.Contains("Unauthorized"))
+                    return Forbid();
+                if (ex.Message.Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
