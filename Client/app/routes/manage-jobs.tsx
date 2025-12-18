@@ -118,15 +118,26 @@ export default function ManageJobs() {
   useEffect(() => {
     // Listen for JobUpdated
     const unsubscribeUpdated = subscribe("JobUpdated", (updatedJobDto: any) => {
-      console.log("SignalR JobUpdated payload:", updatedJobDto);
+
+      // Skip if payload is null or empty
+      if (!updatedJobDto) {
+        return;
+      }
+
       setJobs((prevJobs) => {
-        const incomingId = updatedJobDto.jobId || updatedJobDto.JobId;
-        const jobIndex = prevJobs.findIndex((j) => j.jobId === incomingId);
+        const incomingJobId = updatedJobDto.jobId || updatedJobDto.JobId;
+
+        // Skip update if jobId is invalid
+        if (!incomingJobId) {
+          return prevJobs;
+        }
+
+        const jobIndex = prevJobs.findIndex((j) => j && j.jobId === incomingJobId);
 
         const updatedJob = {
-          id: updatedJobDto.jobId || updatedJobDto.JobId,
+          id: incomingJobId,
           guid: updatedJobDto.jobGuid || updatedJobDto.JobGuid,
-          jobId: updatedJobDto.jobId || updatedJobDto.JobId,
+          jobId: incomingJobId,
           title: updatedJobDto.title || updatedJobDto.Title,
           company: updatedJobDto.companyName || updatedJobDto.CompanyName || updatedJobDto.company?.name || updatedJobDto.Company?.Name || "Công ty ẩn danh",
           location: updatedJobDto.companyLocation || updatedJobDto.CompanyLocation || updatedJobDto.company?.address || updatedJobDto.Company?.Address || "Không rõ",
@@ -145,8 +156,6 @@ export default function ManageJobs() {
           postedByUserId: updatedJobDto.postedByUserId || updatedJobDto.PostedByUserId
         };
 
-        console.log("SignalR Mapped Job:", updatedJob);
-
         let newJobs = [...prevJobs];
 
         if (jobIndex !== -1) {
@@ -164,8 +173,11 @@ export default function ManageJobs() {
 
     // Listen for JobDeleted
     const unsubscribeDeleted = subscribe("JobDeleted", (jobId: string) => {
+      if (!jobId) {
+        return;
+      }
       // jobId could be GUID string, just compare directly
-      setJobs((prevJobs) => prevJobs.filter((j) => j.jobId !== jobId && j.jobId !== jobId));
+      setJobs((prevJobs) => prevJobs.filter((j) => j && j.jobId !== jobId));
     });
 
     return () => {
@@ -213,37 +225,42 @@ export default function ManageJobs() {
           { withCredentials: true }
         );
 
-        console.log("MyJobs API Response:", response.data);
-
         // Map API response to Job interface
-        const mappedJobs = response.data.map((item: any) => {
-          console.log("Mapping item:", item);
+        const mappedJobs = response.data
+          .map((item: any) => {
 
-          const mappedItem = {
-            id: item.jobId || item.JobId,
-            guid: item.jobGuid || item.JobGuid,
-            jobId: item.jobId || item.JobId,
-            title: item.title || item.Title,
-            company: item.companyName || item.CompanyName || item.company?.name || item.Company?.Name || "Công ty ẩn danh",
-            location: item.companyLocation || item.CompanyLocation || item.company?.address || item.Company?.Address || "Không rõ",
-            salary:
-              ((item.salaryFrom ?? item.SalaryFrom) !== undefined && (item.salaryTo ?? item.SalaryTo) !== undefined)
-                ? `${(item.salaryFrom ?? item.SalaryFrom).toLocaleString()} - ${(item.salaryTo ?? item.SalaryTo).toLocaleString()} VND`
-                : "Thỏa thuận",
-            description: item.description || item.Description || "",
-            imageUrl:
-              (item.images && item.images.length > 0)
-                ? `${import.meta.env.VITE_IMAGES_SERVICE || "http://127.0.0.1:8000"}${item.images[0].filePath || item.images[0].FilePath}`
-                : (item.Images && item.Images.length > 0)
-                  ? `${import.meta.env.VITE_IMAGES_SERVICE || "http://127.0.0.1:8000"}${item.Images[0].filePath || item.Images[0].FilePath}`
-                  : "https://via.placeholder.com/150",
-            status: (item.hiringStatus === "OPEN" || item.HiringStatus === "OPEN") ? "active" : "inactive",
-            postedByUserId: item.postedByUserId || item.PostedByUserId
-          };
+            const jobId = item.jobId || item.JobId;
 
-          console.log("Mapped item result:", mappedItem);
-          return mappedItem;
-        });
+            // Skip items without valid jobId
+            if (!jobId) {
+              return null;
+            }
+
+            const mappedItem = {
+              id: jobId,
+              guid: item.jobGuid || item.JobGuid,
+              jobId: jobId,
+              title: item.title || item.Title,
+              company: item.companyName || item.CompanyName || item.company?.name || item.Company?.Name || "Công ty ẩn danh",
+              location: item.companyLocation || item.CompanyLocation || item.company?.address || item.Company?.Address || "Không rõ",
+              salary:
+                ((item.salaryFrom ?? item.SalaryFrom) !== undefined && (item.salaryTo ?? item.SalaryTo) !== undefined)
+                  ? `${(item.salaryFrom ?? item.SalaryFrom).toLocaleString()} - ${(item.salaryTo ?? item.SalaryTo).toLocaleString()} VND`
+                  : "Thỏa thuận",
+              description: item.description || item.Description || "",
+              imageUrl:
+                (item.images && item.images.length > 0)
+                  ? `${import.meta.env.VITE_IMAGES_SERVICE || "http://127.0.0.1:8000"}${item.images[0].filePath || item.images[0].FilePath}`
+                  : (item.Images && item.Images.length > 0)
+                    ? `${import.meta.env.VITE_IMAGES_SERVICE || "http://127.0.0.1:8000"}${item.Images[0].filePath || item.Images[0].FilePath}`
+                    : "https://via.placeholder.com/150",
+              status: (item.hiringStatus === "OPEN" || item.HiringStatus === "OPEN") ? "active" : "inactive",
+              postedByUserId: item.postedByUserId || item.PostedByUserId
+            };
+
+            return mappedItem;
+          })
+          .filter((item: any) => item !== null); // Remove null items
 
         setJobs(mappedJobs);
       } catch (error) {
@@ -266,7 +283,7 @@ export default function ManageJobs() {
     navigate(`/post-job?edit=true&id=${id}`);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id: string | number) => {
     setModalState({
       isOpen: true,
       type: "delete",
@@ -290,7 +307,13 @@ export default function ManageJobs() {
     });
   };
 
-  const handleToggleStatus = async (id: string) => {
+  const handleToggleStatus = async (id: string | number) => {
+    if (!id) {
+      console.error("handleToggleStatus called with invalid id:", id);
+      setNotification({ message: "Lỗi: ID không hợp lệ", type: "error" });
+      return;
+    }
+
     try {
       await axios.patch(
         `${import.meta.env.VITE_API_BASE_URL}/jobs/${id}/status`,
@@ -300,6 +323,7 @@ export default function ManageJobs() {
       // No need to manually update state, SignalR will handle it
       setNotification({ message: "Đã cập nhật trạng thái tin", type: "success" });
     } catch (error) {
+      console.error("Toggle status error:", error);
       setNotification({ message: "Cập nhật trạng thái thất bại", type: "error" });
     }
   };

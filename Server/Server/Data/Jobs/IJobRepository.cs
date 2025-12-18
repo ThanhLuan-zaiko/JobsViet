@@ -8,6 +8,8 @@ namespace Server.Data.Jobs
         Task<(List<Job> Jobs, int TotalCount)> GetJobsAsync(int page, int pageSize, string? search, string? category);
         Task<Job?> GetJobByGuidAsync(Guid jobGuid);
         Task<Job?> GetJobByIdAsync(Guid jobId);
+        Task<Job?> GetJobByIdIncludingInactiveAsync(Guid jobId);
+        Task<Job?> GetJobByGuidIncludingInactiveAsync(Guid jobGuid);
         Task CreateJobAsync(Job job);
         Task CreateJobImageAsync(JobImage jobImage);
         Task<JobImage?> GetJobImageByIdAsync(Guid imageId);

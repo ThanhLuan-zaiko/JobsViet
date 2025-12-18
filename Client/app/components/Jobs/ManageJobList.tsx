@@ -4,6 +4,7 @@ import ManageJobCard from "./ManageJobCard";
 interface Job {
   id: string;
   guid: string;
+  jobId: string | number;
   title: string;
   company: string;
   location: string;
@@ -18,8 +19,8 @@ interface ManageJobListProps {
   currentPage: number;
   itemsPerPage: number;
   onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
-  onToggleStatus: (id: string) => void;
+  onDelete: (id: string | number) => void;
+  onToggleStatus: (id: string | number) => void;
 }
 
 const ManageJobList: React.FC<ManageJobListProps> = ({
@@ -30,20 +31,15 @@ const ManageJobList: React.FC<ManageJobListProps> = ({
   onDelete,
   onToggleStatus,
 }) => {
-  console.log("ManageJobList received jobs:", jobs);
-  console.log("First job sample:", jobs[0]);
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedJobs = jobs.slice(startIndex, endIndex);
-
-  console.log("Paginated jobs:", paginatedJobs);
+  // Filter out any null or undefined jobs just to be safe
+  const validJobs = jobs.filter(job => job && job.jobId);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {paginatedJobs.map((job) => (
+      {validJobs.map((job) => (
         <ManageJobCard
-          key={job.id}
+          key={job.jobId}
           job={job}
           onEdit={onEdit}
           onDelete={onDelete}

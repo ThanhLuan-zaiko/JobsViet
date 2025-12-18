@@ -416,6 +416,33 @@ namespace Server.Services.Jobs
                 throw new Exception("Unauthorized to delete this job");
             }
 
+            // Delete all job images first (to avoid foreign key constraint violation)
+            var jobImages = await _unitOfWork.JobRepository.GetJobImagesByJobIdAsync(jobId);
+            foreach (var image in jobImages)
+            {
+                // Delete physical file from images service
+                try
+                {
+                    var imagesServiceUrl = _configuration["ImagesService:Url"] ?? "http://127.0.0.1:8000";
+                    var client = _httpClientFactory.CreateClient();
+                    var deleteUrl = $"{imagesServiceUrl}{image.FilePath}";
+                    var response = await client.DeleteAsync(deleteUrl);
+                    
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        _logger.LogWarning("Failed to delete physical image file: {Url}. Status: {Status}", deleteUrl, response.StatusCode);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error deleting physical image file for job {JobId}", jobId);
+                }
+
+                // Delete from database
+                await _unitOfWork.JobRepository.DeleteJobImageAsync(image);
+            }
+
+            // Now delete the job
             await _unitOfWork.JobRepository.DeleteJobAsync(job);
             await _unitOfWork.SaveChangesAsync();
             
@@ -477,7 +504,7 @@ namespace Server.Services.Jobs
 
         public async Task<JobDto> ToggleJobStatusAsync(Guid jobId, Guid userId)
         {
-            var job = await _unitOfWork.JobRepository.GetJobByIdAsync(jobId);
+            var job = await _unitOfWork.JobRepository.GetJobByIdIncludingInactiveAsync(jobId);
             if (job == null) throw new Exception("Job not found");
 
             if (job.PostedByUserId != userId) throw new Exception("Unauthorized to update this job");
@@ -499,9 +526,23 @@ namespace Server.Services.Jobs
 
             InvalidateJobListCache();
 
-            var updatedJobDto = await GetJobAsync(job.JobGuid);
+            // Use the new method that includes inactive jobs
+            var updatedJob = await _unitOfWork.JobRepository.GetJobByGuidIncludingInactiveAsync(job.JobGuid);
+            if (updatedJob == null) throw new Exception("Job not found after update");
+            
+            var updatedJobDto = _mapper.Map<JobDto>(updatedJob);
+            updatedJobDto.PostedByUserId = updatedJob.PostedByUserId;
+            updatedJobDto.Images = await GetJobImagesAsync(updatedJobDto.JobId);
+            
+            // Load company if available
+            if (updatedJob.Company != null)
+            {
+                updatedJobDto.Company = _mapper.Map<CompanyDto>(updatedJob.Company);
+            }
+            
             await _hubContext.Clients.All.SendAsync("JobUpdated", updatedJobDto);
             return updatedJobDto;
         }
+
     }
 }

@@ -5,6 +5,7 @@ import { FaEdit, FaTrash, FaPowerOff, FaEye } from "react-icons/fa";
 interface Job {
   id: string;
   guid: string;
+  jobId: string | number;
   title: string;
   company: string;
   location: string;
@@ -17,8 +18,8 @@ interface Job {
 interface ManageJobCardProps {
   job: Job;
   onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
-  onToggleStatus: (id: string) => void;
+  onDelete: (id: string | number) => void;
+  onToggleStatus: (id: string | number) => void;
 }
 
 const ManageJobCard: React.FC<ManageJobCardProps> = ({
@@ -83,7 +84,7 @@ const ManageJobCard: React.FC<ManageJobCardProps> = ({
           </button>
 
           <button
-            onClick={() => onToggleStatus(job.id)}
+            onClick={() => onToggleStatus(job.jobId)}
             className={`p-2 rounded-full transition-all ${job.status === "active"
               ? "text-green-600 hover:bg-green-50 hover:text-green-700"
               : "text-gray-400 hover:bg-gray-100 hover:text-gray-600"
@@ -94,7 +95,7 @@ const ManageJobCard: React.FC<ManageJobCardProps> = ({
           </button>
 
           <button
-            onClick={() => onDelete(job.id)}
+            onClick={() => onDelete(job.jobId)}
             className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-all"
             title="Xóa tin"
           >

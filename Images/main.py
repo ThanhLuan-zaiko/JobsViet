@@ -28,7 +28,7 @@ security_optional = HTTPBearer(auto_error=False)
 
 # Configuration
 UPLOAD_DIR = Path("uploads")
-ALLOWED_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.webp'}
+ALLOWED_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.jfif', '.webp'}
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 
 # Ensure upload directory exists
@@ -42,9 +42,23 @@ class ImageUploadResponse(BaseModel):
 
 def validate_image_file(file: UploadFile) -> None:
     """Validate uploaded image file."""
+    import logging
+    logger = logging.getLogger(__name__)
+    
+    # Check if file and filename exist
+    if not file or not file.filename:
+        logger.error(f"No file or filename provided. File: {file}, Filename: {file.filename if file else 'N/A'}")
+        raise HTTPException(
+            status_code=400,
+            detail="No file provided or invalid file upload."
+        )
+    
     # Check file extension
     file_ext = Path(file.filename).suffix.lower()
+    logger.info(f"Validating file: {file.filename}, extension: {file_ext}")
+    
     if file_ext not in ALLOWED_EXTENSIONS:
+        logger.error(f"File extension not allowed: {file_ext}")
         raise HTTPException(
             status_code=400,
             detail=f"File type not allowed. Allowed types: {', '.join(ALLOWED_EXTENSIONS)}"
@@ -54,16 +68,32 @@ def validate_image_file(file: UploadFile) -> None:
     file.file.seek(0, 2)  # Seek to end
     file_size = file.file.tell()
     file.file.seek(0)  # Seek back to beginning
+    
+    logger.info(f"File size: {file_size} bytes")
 
     if file_size > MAX_FILE_SIZE:
+        logger.error(f"File size too large: {file_size} > {MAX_FILE_SIZE}")
         raise HTTPException(
             status_code=400,
             detail=f"File size too large. Maximum size: {MAX_FILE_SIZE} bytes"
         )
+    
+    if file_size == 0:
+        logger.error("File size is 0 bytes")
+        raise HTTPException(
+            status_code=400,
+            detail="File is empty. Please select a valid image file."
+        )
 
     # Validate MIME type
     mime_type, _ = mimetypes.guess_type(file.filename)
-    if mime_type not in ['image/png', 'image/jpeg', 'image/webp']:
+    logger.info(f"MIME type: {mime_type}")
+    
+    # MIME type validation - allow None for .jfif files as they may not be recognized
+    # Also allow image/jpeg for .jfif files
+    allowed_mime_types = ['image/png', 'image/jpeg', 'image/webp', 'image/pjpeg']
+    if mime_type is not None and mime_type not in allowed_mime_types:
+        logger.error(f"Invalid MIME type: {mime_type}")
         raise HTTPException(
             status_code=400,
             detail="Invalid MIME type. Only PNG, JPEG, and WebP images are allowed."
@@ -74,7 +104,9 @@ def validate_image_file(file: UploadFile) -> None:
         image = Image.open(file.file)
         image.verify()  # Verify it's a valid image
         file.file.seek(0)  # Reset file pointer
-    except Exception:
+        logger.info("Image validation successful")
+    except Exception as e:
+        logger.error(f"Image validation failed: {str(e)}")
         raise HTTPException(
             status_code=400,
             detail="Invalid image file. The file may be corrupted or not a valid image."

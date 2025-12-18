@@ -94,6 +94,25 @@ namespace Server.Data.Jobs
                 .FirstOrDefaultAsync();
         }
 
+        // Get job by ID without IsActive filter (for owner/admin operations)
+        public async Task<Job?> GetJobByIdIncludingInactiveAsync(Guid jobId)
+        {
+            return await _context.Jobs
+                .Where(j => j.JobId == jobId)
+                .Include(j => j.Company)
+                .FirstOrDefaultAsync();
+        }
+
+        // Get job by GUID without IsActive filter (for owner/admin operations)
+        public async Task<Job?> GetJobByGuidIncludingInactiveAsync(Guid jobGuid)
+        {
+            return await _context.Jobs
+                .Where(j => j.JobGuid == jobGuid)
+                .Include(j => j.Company)
+                .FirstOrDefaultAsync();
+        }
+
+
         public async Task DeleteJobImageAsync(JobImage jobImage)
         {
             _context.JobImages.Remove(jobImage);
