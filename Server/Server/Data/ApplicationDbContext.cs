@@ -3,6 +3,7 @@ using Server.Models;
 using Server.Models.Auth;
 using Server.Models.Jobs;
 using Server.Models.Profiles;
+using Server.Models.Blogs;
 
 namespace Server.Data.Jobs
 {
@@ -33,6 +34,10 @@ namespace Server.Data.Jobs
         // Notification and Message entities
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Message> Messages { get; set; }
+
+        // Blog entities
+        public DbSet<Blog> Blogs { get; set; }
+        public DbSet<BlogImage> BlogImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -313,6 +318,50 @@ namespace Server.Data.Jobs
                 entity.Property(e => e.Content).HasColumnName("CONTENT").IsRequired().HasMaxLength(2000);
                 entity.Property(e => e.IsRead).HasColumnName("ISREAD");
                 entity.Property(e => e.CreatedAt).HasColumnName("CREATEDAT");
+            });
+
+            // Blog configuration
+            modelBuilder.Entity<Blog>(entity =>
+            {
+                entity.ToTable("BLOGS");
+                entity.HasKey(e => e.BlogId);
+                entity.Property(e => e.BlogId).HasColumnName("BLOGID");
+                entity.Property(e => e.AuthorUserId).HasColumnName("AUTHORUSERID");
+                entity.Property(e => e.Title).HasColumnName("TITLE").IsRequired().HasMaxLength(300);
+                entity.Property(e => e.Content).HasColumnName("CONTENT").IsRequired();
+                entity.Property(e => e.IsPublished).HasColumnName("ISPUBLISHED");
+                entity.Property(e => e.CreatedAt).HasColumnName("CREATEDAT");
+                entity.Property(e => e.UpdatedAt).HasColumnName("UPDATEDAT");
+            
+                entity.HasOne(b => b.Author)
+                      .WithMany()
+                      .HasForeignKey(b => b.AuthorUserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // BlogImage configuration
+            modelBuilder.Entity<BlogImage>(entity =>
+            {
+                entity.ToTable("BLOGIMAGES");
+                entity.HasKey(e => e.BlogImageId);
+                entity.Property(e => e.BlogImageId).HasColumnName("BLOGIMAGEID");
+                entity.Property(e => e.BlogId).HasColumnName("BLOGID");
+                entity.Property(e => e.FilePath).HasColumnName("FILEPATH").IsRequired().HasMaxLength(500);
+                entity.Property(e => e.FileName).HasColumnName("FILENAME").HasMaxLength(255);
+                entity.Property(e => e.FileType).HasColumnName("FILETYPE").HasMaxLength(100);
+                entity.Property(e => e.FileSize).HasColumnName("FILESIZE");
+                entity.Property(e => e.Caption).HasColumnName("CAPTION").HasMaxLength(300);
+                entity.Property(e => e.SortOrder).HasColumnName("SORTORDER");
+                entity.Property(e => e.IsPrimary).HasColumnName("ISPRIMARY");
+                entity.Property(e => e.IsActive).HasColumnName("ISACTIVE");
+                entity.Property(e => e.UploadedByUserId).HasColumnName("UPLOADEDBYUSERID");
+                entity.Property(e => e.CreatedAt).HasColumnName("CREATEDAT");
+                entity.Property(e => e.UpdatedAt).HasColumnName("UPDATEDAT");
+
+                entity.HasOne(bi => bi.Blog)
+                      .WithMany(b => b.Images)
+                      .HasForeignKey(bi => bi.BlogId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }

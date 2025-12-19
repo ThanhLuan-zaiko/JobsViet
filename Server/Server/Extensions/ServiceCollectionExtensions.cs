@@ -14,6 +14,7 @@ using Server.Middleware;
 using Server.Services;
 using Server.Services.Auth;
 using Server.Services.Jobs;
+using Server.Services.Blogs;
 using Server.Services.Profiles;
 using Server.Validators.Auth;
 using StackExchange.Redis;
@@ -128,6 +129,7 @@ namespace Server.Extensions
         {
             services.AddHttpClient();
             services.AddScoped<IJobService, JobService>();
+            services.AddScoped<IBlogService, BlogService>();
             services.AddScoped<IJobCategoryService, JobCategoryService>();
             services.AddScoped<IApplicationService, ApplicationService>();
             services.AddScoped<IAuthService, AuthService>();

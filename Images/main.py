@@ -425,6 +425,87 @@ async def delete_company_image(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete image: {str(e)}")
 
+@app.post("/upload/blog/{blog_id}", response_model=ImageUploadResponse)
+async def upload_blog_image(
+    blog_id: str,
+    file: UploadFile = File(...)
+):
+    """Upload image for blog."""
+    # Validate file
+    validate_image_file(file)
+
+    # Create user directory
+    user_dir = create_user_directory(blog_id)
+
+    # Generate unique filename
+    file_ext = Path(file.filename).suffix.lower()
+    unique_filename = f"{uuid.uuid4()}{file_ext}"
+    file_path = user_dir / unique_filename
+
+    # Read file content
+    file_content = await file.read()
+
+    # Convert to WebP
+    webp_content = convert_to_webp(file_content)
+
+    # Save WebP file
+    webp_filename = f"{uuid.uuid4()}.webp"
+    webp_path = user_dir / webp_filename
+
+    with open(webp_path, "wb") as f:
+        f.write(webp_content)
+
+    # Return response
+    return ImageUploadResponse(
+        image_url=f"/images/blog/{blog_id}/{webp_filename}",
+        file_name=webp_filename,
+        file_size=len(webp_content),
+        mime_type="image/webp"
+    )
+
+@app.get("/images/blog/{blog_id}/{filename}")
+async def get_blog_image(blog_id: str, filename: str):
+    """Serve blog image."""
+    file_path = UPLOAD_DIR / blog_id / filename
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Image not found")
+
+    return FileResponse(
+        path=file_path,
+        media_type="image/webp",
+        filename=filename
+    )
+
+@app.delete("/images/blog/{blog_id}/{filename}")
+async def delete_blog_image(
+    blog_id: str,
+    filename: str,
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security_optional)
+):
+    """Delete blog image."""
+    file_path = UPLOAD_DIR / blog_id / filename
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Image not found")
+
+    try:
+        # Delete the image file
+        file_path.unlink()
+        
+        # Check if the directory is empty and remove it if so
+        blog_dir = UPLOAD_DIR / blog_id
+        if blog_dir.exists():
+            try:
+                # Try to remove the directory - will raise OSError if not empty
+                blog_dir.rmdir()
+                return {"message": "Image deleted successfully and directory removed"}
+            except OSError:
+                # Directory is not empty, which is fine
+                pass
+                
+        return {"message": "Image deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete image: {str(e)}")
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

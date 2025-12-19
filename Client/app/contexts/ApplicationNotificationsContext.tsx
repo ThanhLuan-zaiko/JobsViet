@@ -14,6 +14,7 @@ import type {
   EmployerApplicationsSummary,
   JobApplicationCount,
 } from "../types/applications";
+import axios from "axios";
 
 interface ApplicationNotificationsContextType {
   jobCounts: JobApplicationCount[];
@@ -66,13 +67,15 @@ export const ApplicationNotificationsProvider: React.FC<
     }
 
     try {
-      const response = await fetch(`${baseUrl}/applications/employer/summary`, {
-        credentials: "include",
-      });
+      const response = await axios.get<EmployerApplicationsSummary>(
+        `${baseUrl}/applications/employer/summary`,
+        {
+          withCredentials: true,
+        }
+      );
 
-      if (response.ok) {
-        const data = (await response.json()) as EmployerApplicationsSummary;
-        setSummary(data);
+      if (response.status === 200) {
+        setSummary(response.data);
       }
     } catch (error) {
     }
@@ -83,16 +86,16 @@ export const ApplicationNotificationsProvider: React.FC<
       if (!isEmployer || !jobId) return;
 
       try {
-        const response = await fetch(
+        const response = await axios.post(
           `${baseUrl}/applications/employer/jobs/${jobId}/mark-read`,
+          {},
           {
-            method: "POST",
-            credentials: "include",
+            withCredentials: true,
           }
         );
 
-        if (response.ok) {
-          const data = await response.json();
+        if (response.status === 200) {
+          const data = response.data;
           if (data?.summary) {
             setSummary(data.summary as EmployerApplicationsSummary);
           } else {
@@ -116,13 +119,16 @@ export const ApplicationNotificationsProvider: React.FC<
     if (!isEmployer) return;
 
     try {
-      const response = await fetch(`${baseUrl}/applications/employer/mark-all-read`, {
-        method: "POST",
-        credentials: "include",
-      });
+      const response = await axios.post(
+        `${baseUrl}/applications/employer/mark-all-read`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
 
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status === 200) {
+        const data = response.data;
         if (data?.summary) {
           setSummary(data.summary as EmployerApplicationsSummary);
         } else {
