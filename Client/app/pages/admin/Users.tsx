@@ -10,6 +10,12 @@ import {
 } from "react-icons/hi2";
 import { useNavigate } from "react-router";
 
+export const meta = () => {
+    return [
+        { title: "JobsViet Admin - Quản lý người dùng" }
+    ];
+};
+
 export default function AdminUsers() {
     const navigate = useNavigate();
     const [users, setUsers] = useState<AdminUser[]>([]);

@@ -34,6 +34,13 @@ import {
     HiOutlineShieldCheck
 } from "react-icons/hi2";
 
+export const meta = () => {
+    return [
+        { title: "JobsViet Admin - Dashboard" },
+        { name: "description", content: "Bảng điều khiển quản trị JobsViet" }
+    ];
+};
+
 const CHART_COLORS = ["#6366f1", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"];
 
 export default function AdminDashboard() {

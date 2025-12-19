@@ -17,6 +17,12 @@ import Notification from "./components/Message/Notification";
 import { useAuth } from "./contexts/AuthContext";
 import BanListener from "./components/Auth/BanListener";
 
+export const meta: Route.MetaFunction = () => [
+  { title: "JobsViet - Kết nối cơ hội việc làm" },
+  { name: "description", content: "Nền tảng tìm kiếm việc làm chuyên nghiệp tại Việt Nam." },
+  { rel: "icon", type: "image/png", href: "/LogoJobsViet.png" },
+];
+
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -28,11 +34,12 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
+  { rel: "icon", type: "image/png", href: "/LogoJobsViet.png" },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="vi">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

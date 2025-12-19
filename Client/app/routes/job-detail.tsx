@@ -226,10 +226,10 @@ const ImageGalleryModal: React.FC<{
 
 export function meta() {
   return [
-    { title: "JobsViet - Job Details" },
+    { title: "JobsViet - Chi tiết tuyển dụng" },
     {
       name: "description",
-      content: "View detailed job information on JobsViet!",
+      content: "Xem thông tin việc làm chi tiết trên JobsViet!",
     },
   ];
 }

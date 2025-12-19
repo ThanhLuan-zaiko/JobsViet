@@ -14,10 +14,12 @@ namespace Server.Controllers
     public class AdminController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public AdminController(ApplicationDbContext context)
+        public AdminController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         [HttpGet("stats")]
@@ -277,12 +279,15 @@ namespace Server.Controllers
                 var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
                 if (user == null) return NotFound(new { Message = "Không tìm thấy người dùng" });
 
+                var imageServiceUrl = _configuration["ImagesService:Url"]?.TrimEnd('/') ?? "http://127.0.0.1:8000";
+
                 var detail = new AdminUserDetailDto
                 {
                     UserId = user.UserId,
                     UserName = user.UserName,
                     Email = user.Email,
                     IsActive = user.IsActive,
+                    Role = user.Role,
                     CreatedAt = user.CreatedAt
                 };
 
@@ -293,15 +298,39 @@ namespace Server.Controllers
                         .Include(p => p.EmployerCompanies)
                         .ThenInclude(ec => ec.Company)
                         .FirstOrDefaultAsync(p => p.UserId == id);
+                    
                     if (empProfile != null)
                     {
+                        var profileImg = await _context.EmployerProfileImages
+                            .Where(i => i.EmployerId == empProfile.EmployerId && i.IsPrimary == true && i.IsActive == true)
+                            .FirstOrDefaultAsync();
+
+                        if (profileImg != null)
+                        {
+                            detail.AvatarUrl = $"{imageServiceUrl}{profileImg.FilePath}";
+                        }
+
                         detail.Profile = new AdminUserProfileInfoDto
                         {
                             FullName = empProfile.DisplayName,
                             Phone = empProfile.ContactPhone,
                             Industry = empProfile.Industry,
                             Bio = empProfile.Bio,
-                            CompanyName = empProfile.EmployerCompanies.FirstOrDefault(ec => ec.IsPrimary == true)?.Company?.Name
+                            LinkedInProfile = empProfile.LinkedInProfile,
+                            Website = empProfile.Website,
+                            YearsOfExperience = empProfile.YearsOfExperience,
+                            Position = empProfile.Position,
+                            Companies = empProfile.EmployerCompanies.Select(ec => new AdminUserCompanyDto
+                            {
+                                CompanyId = ec.CompanyId,
+                                Name = ec.Company?.Name,
+                                Website = ec.Company?.Website,
+                                LogoUrl = ec.Company != null ? $"{imageServiceUrl}{ec.Company.LogoURL}" : null,
+                                Industry = ec.Company?.Industry,
+                                CompanySize = ec.Company?.CompanySize,
+                                Address = ec.Company?.Address,
+                                IsPrimary = ec.IsPrimary ?? false
+                            }).ToList()
                         };
                     }
                 }
@@ -310,20 +339,58 @@ namespace Server.Controllers
                     var candProfile = await _context.CandidateProfiles.FirstOrDefaultAsync(p => p.UserId == id);
                     if (candProfile != null)
                     {
+                        var profileImg = await _context.CandidateProfileImages
+                            .Where(i => i.CandidateId == candProfile.CandidateId && i.IsPrimary == true && i.IsActive == true)
+                            .FirstOrDefaultAsync();
+
+                        if (profileImg != null)
+                        {
+                            detail.AvatarUrl = $"{imageServiceUrl}{profileImg.FilePath}";
+                        }
+
+                        var portfolioImgs = await _context.CandidateProfileImages
+                            .Where(i => i.CandidateId == candProfile.CandidateId && i.IsPrimary == false && i.IsActive == true)
+                            .Select(i => $"{imageServiceUrl}{i.FilePath}")
+                            .ToListAsync();
+
                         detail.Profile = new AdminUserProfileInfoDto
                         {
                             FullName = candProfile.FullName,
                             Phone = candProfile.Phone,
                             Address = candProfile.Address,
                             Bio = candProfile.Bio,
+                            Gender = candProfile.Gender,
+                            DateOfBirth = candProfile.DateOfBirth,
                             Headline = candProfile.Headline,
-                            Skills = candProfile.Skills
+                            Skills = candProfile.Skills,
+                            EducationLevel = candProfile.EducationLevel,
+                            ExperienceYears = candProfile.ExperienceYears,
+                            LinkedInProfile = candProfile.LinkedInProfile,
+                            PortfolioURL = candProfile.PortfolioURL,
+                            PortfolioImages = portfolioImgs
                         };
+
+                        // Load Applications (only for candidates)
+                        detail.Applications = await _context.Applications
+                            .Where(a => a.CandidateId == candProfile.CandidateId)
+                            .OrderByDescending(a => a.AppliedAt)
+                            .Select(a => new AdminUserApplicationDto
+                            {
+                                ApplicationId = a.ApplicationId,
+                                AppliedAt = a.AppliedAt,
+                                Status = a.Status,
+                                IsViewedByEmployer = a.IsViewedByEmployer,
+                                JobGuid = _context.Jobs.Where(j => j.JobId == a.JobId).Select(j => j.JobGuid).FirstOrDefault(),
+                                JobTitle = _context.Jobs.Where(j => j.JobId == a.JobId).Select(j => j.Title).FirstOrDefault(),
+                                CompanyName = _context.Jobs.Where(j => j.JobId == a.JobId).Include(j => j.Company).Select(j => j.Company != null ? j.Company.Name : "N/A").FirstOrDefault()
+                            })
+                            .ToListAsync();
                     }
                 }
 
                 // Load Blogs
                 detail.Blogs = await _context.Blogs
+                    .Include(b => b.Images)
                     .Where(b => b.AuthorUserId == id)
                     .OrderByDescending(b => b.CreatedAt)
                     .Select(b => new AdminUserBlogDto
@@ -331,11 +398,13 @@ namespace Server.Controllers
                         BlogId = b.BlogId,
                         Title = b.Title,
                         IsPublished = b.IsPublished,
-                        CreatedAt = b.CreatedAt
+                        CreatedAt = b.CreatedAt,
+                        ImageUrl = b.Images.Where(i => i.IsPrimary == true).Select(i => $"{imageServiceUrl}{i.FilePath}").FirstOrDefault()
                     }).ToListAsync();
 
                 // Load Jobs
                 detail.Jobs = await _context.Jobs
+                    .Include(j => j.Company)
                     .Where(j => j.PostedByUserId == id)
                     .OrderByDescending(j => j.CreatedAt)
                     .Select(j => new AdminUserJobDto
@@ -344,7 +413,12 @@ namespace Server.Controllers
                         JobGuid = j.JobGuid,
                         Title = j.Title,
                         IsActive = j.IsActive,
-                        CreatedAt = j.CreatedAt
+                        CreatedAt = j.CreatedAt,
+                        CompanyLogoUrl = j.Company != null ? $"{imageServiceUrl}{j.Company.LogoURL}" : null,
+                        HiringStatus = j.HiringStatus,
+                        SalaryFrom = j.SalaryFrom,
+                        SalaryTo = j.SalaryTo,
+                        DeadlineDate = j.DeadlineDate
                     }).ToListAsync();
 
                 return Ok(detail);

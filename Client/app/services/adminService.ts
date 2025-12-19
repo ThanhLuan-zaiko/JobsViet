@@ -40,20 +40,44 @@ export interface AdminUser {
 }
 
 export interface AdminUserDetail extends AdminUser {
+    role?: string;
+    avatarUrl?: string;
     profile?: {
         fullName?: string;
         phone?: string;
         address?: string;
         bio?: string;
+        gender?: string;
+        dateOfBirth?: string;
+        // Candidate
         headline?: string;
         skills?: string;
+        educationLevel?: string;
+        experienceYears?: number;
+        linkedInProfile?: string;
+        portfolioURL?: string;
+        portfolioImages?: string[];
+        // Employer
         industry?: string;
-        companyName?: string;
+        website?: string;
+        yearsOfExperience?: number;
+        position?: string;
+        companies: Array<{
+            companyId: string;
+            name?: string;
+            website?: string;
+            logoUrl?: string;
+            industry?: string;
+            companySize?: string;
+            address?: string;
+            isPrimary: boolean;
+        }>;
     };
     blogs: Array<{
         blogId: string;
         title: string;
         isPublished: boolean;
+        imageUrl?: string;
         createdAt: string;
     }>;
     jobs: Array<{
@@ -61,7 +85,21 @@ export interface AdminUserDetail extends AdminUser {
         jobGuid: string;
         title: string;
         isActive: number;
+        companyLogoUrl?: string;
+        hiringStatus?: string;
+        salaryFrom?: number;
+        salaryTo?: number;
+        deadlineDate?: string;
         createdAt: string;
+    }>;
+    applications?: Array<{
+        applicationId: string;
+        jobGuid: string;
+        jobTitle?: string;
+        companyName?: string;
+        status?: string;
+        isViewedByEmployer: boolean;
+        appliedAt: string;
     }>;
 }
 

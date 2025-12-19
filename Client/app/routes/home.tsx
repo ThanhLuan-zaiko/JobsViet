@@ -9,10 +9,10 @@ import { useSignalR } from "../contexts/SignalRContext";
 
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "JobsViet - Find Your Dream Job" },
+    { title: "JobsViet - Kết nối tài năng, bứt phá sự nghiệp" },
     {
       name: "description",
-      content: "Welcome to JobsViet, your platform for job searching!",
+      content: "Chào mừng bạn đến với JobsViet, nền tảng tìm kiếm việc làm hàng đầu!",
     },
   ];
 }
@@ -62,7 +62,7 @@ export default function Home() {
           jobDto.images?.find((img: any) => img.isPrimary) ||
           jobDto.images?.[0];
         const imageUrl = primaryImage
-          ? `${import.meta.env.VITE_IMAGES_SERVICE || "http://127.0.0.1:8000"}${primaryImage.filePath}`
+          ? `${import.meta.env.VITE_IMAGES_SERVICE || "http://127.0.0.1:8000"}${primaryImage.filePath} `
           : "https://via.placeholder.com/300x200?text=Job+Image";
 
         const newJob: Job = {
