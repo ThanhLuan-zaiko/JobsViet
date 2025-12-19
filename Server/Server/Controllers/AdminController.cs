@@ -15,11 +15,13 @@ namespace Server.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<AdminController> _logger;
 
-        public AdminController(ApplicationDbContext context, IConfiguration configuration)
+        public AdminController(ApplicationDbContext context, IConfiguration configuration, ILogger<AdminController> logger)
         {
             _context = context;
             _configuration = configuration;
+            _logger = logger;
         }
 
         [HttpGet("stats")]
@@ -475,6 +477,206 @@ namespace Server.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, new { Message = "Lỗi khi cập nhật trạng thái", Error = ex.Message });
+            }
+        }
+        [HttpGet("jobs")]
+        public async Task<IActionResult> GetJobs([FromQuery] int page = 1, [FromQuery] int pageSize = 25, [FromQuery] string? search = null)
+        {
+            try
+            {
+                _logger.LogInformation("Admin fetching jobs: Page {Page}, PageSize {PageSize}, Search '{Search}'", page, pageSize, search);
+
+                var baseQuery = _context.Jobs.Include(j => j.Company).AsNoTracking();
+
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    var searchLower = search.ToLower();
+                    baseQuery = baseQuery.Where(j => j.Title.ToLower().Contains(searchLower) || (j.Company != null && j.Company.Name.ToLower().Contains(searchLower)));
+                }
+
+                var totalCount = await baseQuery.CountAsync();
+                _logger.LogInformation("Total jobs found in DB: {Count}", totalCount);
+
+                var rawJobs = await baseQuery
+                    .OrderByDescending(j => j.CreatedAt)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                // Fetch Category names separately to avoid ORA-12704 character set mismatch in complex joins
+                var categoryIds = rawJobs.Select(j => j.CategoryId).Where(id => id.HasValue).Select(id => id!.Value).Distinct().ToList();
+                var categories = await _context.JobCategories
+                    .Where(c => categoryIds.Contains(c.CategoryId))
+                    .ToDictionaryAsync(c => c.CategoryId, c => c.Name);
+
+                // Fetch User emails separately
+                var userIds = rawJobs.Select(j => j.PostedByUserId).Distinct().ToList();
+                var userEmails = await _context.Users
+                    .Where(u => userIds.Contains(u.UserId))
+                    .ToDictionaryAsync(u => u.UserId, u => u.Email);
+
+                var imageServiceUrl = _configuration["ImagesService:Url"]?.TrimEnd('/') ?? "http://127.0.0.1:8000";
+
+                var jobs = rawJobs.Select(j => new AdminJobDto
+                {
+                    JobId = j.JobId,
+                    JobGuid = j.JobGuid,
+                    Title = j.Title,
+                    CompanyName = j.Company?.Name ?? "N/A",
+                    CompanyLogoUrl = !string.IsNullOrEmpty(j.Company?.LogoURL) ? $"/images{j.Company.LogoURL}" : null,
+                    CategoryName = j.CategoryId.HasValue && categories.TryGetValue(j.CategoryId.Value, out var catName) ? catName : "N/A",
+                    PostedByEmail = userEmails.TryGetValue(j.PostedByUserId, out var email) ? email : "N/A",
+                    IsActive = j.IsActive,
+                    CreatedAt = j.CreatedAt,
+                    HiringStatus = j.HiringStatus,
+                    SalaryFrom = j.SalaryFrom,
+                    SalaryTo = j.SalaryTo,
+                    DeadlineDate = j.DeadlineDate
+                }).ToList();
+
+                _logger.LogInformation("Returning {Count} jobs for admin page {Page}", jobs.Count, page);
+
+                return Ok(new
+                {
+                    items = jobs,
+                    totalCount = totalCount,
+                    page = page,
+                    pageSize = pageSize
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in AdminController.GetJobs");
+                return StatusCode(500, new { message = "Lỗi khi lấy danh sách bài đăng", error = ex.Message });
+            }
+        }
+
+        [HttpGet("jobs/{id}")]
+        public async Task<IActionResult> GetJobDetails(Guid id)
+        {
+            try
+            {
+                var job = await _context.Jobs
+                    .Include(j => j.Company)
+                    .FirstOrDefaultAsync(j => j.JobId == id);
+
+                if (job == null) return NotFound(new { message = "Không tìm thấy bài đăng" });
+
+                var imageServiceUrl = _configuration["ImagesService:Url"]?.TrimEnd('/') ?? "http://127.0.0.1:8000";
+                
+                // Helper to construct logo URL - using /images prefix to leverage frontend proxy
+                string? GetLogoUrl(string? rawPath) => !string.IsNullOrEmpty(rawPath) ? $"/images{rawPath}" : null;
+
+                var category = await _context.JobCategories.FirstOrDefaultAsync(c => c.CategoryId == job.CategoryId);
+                var poster = await _context.Users.FirstOrDefaultAsync(u => u.UserId == job.PostedByUserId);
+
+                var detail = new AdminJobDetailDto
+                {
+                    JobId = job.JobId,
+                    JobGuid = job.JobGuid,
+                    Title = job.Title,
+                    Description = job.Description,
+                    EmploymentType = job.EmploymentType,
+                    SalaryFrom = job.SalaryFrom,
+                    SalaryTo = job.SalaryTo,
+                    IsActive = job.IsActive,
+                    CreatedAt = job.CreatedAt,
+                    HiringStatus = job.HiringStatus,
+                    PositionsNeeded = job.PositionsNeeded,
+                    PositionsFilled = job.PositionsFilled,
+                    DeadlineDate = job.DeadlineDate,
+                    MinAge = job.MinAge,
+                    MaxAge = job.MaxAge,
+                    RequiredExperienceYears = job.RequiredExperienceYears,
+                    RequiredDegree = job.RequiredDegree,
+                    GenderPreference = job.GenderPreference,
+                    SkillsRequired = job.SkillsRequired,
+                    CategoryName = category?.Name ?? "N/A",
+                    PostedByEmail = poster?.Email ?? "N/A",
+                    Company = job.Company != null ? new AdminJobCompanyDto
+                    {
+                        CompanyId = job.Company.CompanyId,
+                        Name = job.Company.Name,
+                        LogoUrl = GetLogoUrl(job.Company.LogoURL),
+                        Website = job.Company.Website,
+                        Industry = job.Company.Industry,
+                        CompanySize = job.Company.CompanySize
+                    } : null
+                };
+
+                // Load Applications
+                detail.Applications = await _context.Applications
+                    .Where(a => a.JobId == job.JobId)
+                    .OrderByDescending(a => a.AppliedAt)
+                    .Select(a => new AdminJobApplicationDto
+                    {
+                        ApplicationId = a.ApplicationId,
+                        CandidateId = a.CandidateId,
+                        CandidateName = _context.CandidateProfiles.Where(cp => cp.CandidateId == a.CandidateId).Select(cp => cp.FullName).FirstOrDefault(),
+                        CandidateEmail = _context.Users.Where(u => u.UserId == _context.CandidateProfiles.Where(cp => cp.CandidateId == a.CandidateId).Select(cp => cp.UserId).FirstOrDefault()).Select(u => u.Email).FirstOrDefault(),
+                        Status = a.Status,
+                        AppliedAt = a.AppliedAt,
+                        IsViewedByEmployer = a.IsViewedByEmployer
+                    }).ToListAsync();
+
+                return Ok(detail);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching job details for {JobId}", id);
+                return StatusCode(500, new { message = "Lỗi khi lấy chi tiết bài đăng", error = ex.Message });
+            }
+        }
+
+        [HttpPatch("jobs/{id}/status")]
+        public async Task<IActionResult> ToggleJobStatus(Guid id)
+        {
+            try
+            {
+                var job = await _context.Jobs.FirstOrDefaultAsync(j => j.JobId == id);
+                if (job == null) return NotFound(new { Message = "Không tìm thấy bài đăng" });
+
+                job.IsActive = job.IsActive == 1 ? 0 : 1;
+                await _context.SaveChangesAsync();
+
+                return Ok(new { Message = $"Đã {(job.IsActive == 1 ? "hiển thị" : "ẩn")} bài đăng thành công", IsActive = job.IsActive });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Lỗi khi cập nhật trạng thái bài đăng", Error = ex.Message });
+            }
+        }
+
+        [HttpDelete("jobs/{id}")]
+        public async Task<IActionResult> DeleteJob(Guid id)
+        {
+            try
+            {
+                var job = await _context.Jobs.FirstOrDefaultAsync(j => j.JobId == id);
+                if (job == null) return NotFound(new { Message = "Không tìm thấy bài đăng" });
+
+                // Delete associated images first if any
+                var images = await _context.JobImages.Where(i => i.JobId == id).ToListAsync();
+                if (images.Any())
+                {
+                    _context.JobImages.RemoveRange(images);
+                }
+
+                // Delete associated applications
+                var apps = await _context.Applications.Where(a => a.JobId == id).ToListAsync();
+                if (apps.Any())
+                {
+                    _context.Applications.RemoveRange(apps);
+                }
+
+                _context.Jobs.Remove(job);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { Message = "Xóa bài đăng thành công" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Lỗi khi xóa bài đăng", Error = ex.Message });
             }
         }
     }

@@ -39,6 +39,22 @@ export interface AdminUser {
     createdAt: string;
 }
 
+export interface AdminJob {
+    jobId: string;
+    jobGuid: string;
+    title: string;
+    companyName: string;
+    companyLogoUrl?: string;
+    categoryName?: string;
+    postedByEmail?: string;
+    isActive: number;
+    createdAt: string;
+    hiringStatus?: string;
+    salaryFrom?: number;
+    salaryTo?: number;
+    deadlineDate?: string;
+}
+
 export interface AdminUserDetail extends AdminUser {
     role?: string;
     avatarUrl?: string;
@@ -103,6 +119,36 @@ export interface AdminUserDetail extends AdminUser {
     }>;
 }
 
+export interface AdminJobDetail extends AdminJob {
+    description?: string;
+    employmentType?: string;
+    positionsNeeded?: number;
+    positionsFilled?: number;
+    minAge?: number;
+    maxAge?: number;
+    requiredExperienceYears?: number;
+    requiredDegree?: string;
+    genderPreference?: string;
+    skillsRequired?: string;
+    company?: {
+        companyId: string;
+        name?: string;
+        logoUrl?: string;
+        website?: string;
+        industry?: string;
+        companySize?: string;
+    };
+    applications: Array<{
+        applicationId: string;
+        candidateId: string;
+        candidateName?: string;
+        candidateEmail?: string;
+        status?: string;
+        appliedAt: string;
+        isViewedByEmployer: boolean;
+    }>;
+}
+
 export const adminService = {
     getStats: async (): Promise<AdminDashboardStats> => {
         const response = await api.get("/v1.0/admin/stats");
@@ -125,8 +171,25 @@ export const adminService = {
     updateUserRole: async (id: string, role: string): Promise<void> => {
         await api.put(`/v1.0/admin/users/${id}/role`, { role });
     },
-    toggleUserStatus: async (id: string): Promise<boolean> => {
+    updateUserStatus: async (id: string): Promise<boolean> => {
         const response = await api.put(`/v1.0/admin/users/${id}/status`);
         return response.data.isActive;
+    },
+    getJobs: async (page: number = 1, pageSize: number = 25, search?: string): Promise<{ items: AdminJob[], totalCount: number, page: number, pageSize: number }> => {
+        const response = await api.get("/v1.0/admin/jobs", {
+            params: { page, pageSize, search }
+        });
+        return response.data;
+    },
+    getJobDetails: async (id: string): Promise<AdminJobDetail> => {
+        const response = await api.get(`/v1.0/admin/jobs/${id}`);
+        return response.data;
+    },
+    toggleJobStatus: async (id: string): Promise<number> => {
+        const response = await api.patch(`/v1.0/admin/jobs/${id}/status`);
+        return response.data.isActive;
+    },
+    deleteJob: async (id: string): Promise<void> => {
+        await api.delete(`/v1.0/admin/jobs/${id}`);
     }
 };

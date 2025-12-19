@@ -22,5 +22,7 @@ export default [
     route("dashboard", "pages/admin/Dashboard.tsx", { id: "admin-dashboard" }),
     route("users", "pages/admin/Users.tsx", { id: "admin-users" }),
     route("users/:id", "pages/admin/UserDetail.tsx"),
+    route("jobs", "pages/admin/Jobs.tsx", { id: "admin-jobs" }),
+    route("jobs/:id", "pages/admin/JobDetail.tsx"),
   ]),
 ] satisfies RouteConfig;

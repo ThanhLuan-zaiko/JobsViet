@@ -31,10 +31,10 @@ const Sidebar: React.FC = () => {
 
   const userMenus = [
     { to: "/", icon: <FaHome />, label: "Trang chủ" },
-    { to: "/trending", icon: <FaFire />, label: "Thịnh hành" },
+    // { to: "/trending", icon: <FaFire />, label: "Thịnh hành" },
     { to: "/history", icon: <FaHistory />, label: "Lịch sử ứng tuyển" },
     { to: "/suggested", icon: <FaRegLightbulb />, label: "Việc gợi ý" },
-    { to: "/following", icon: <FaHeart />, label: "Công ty theo dõi" },
+    // { to: "/following", icon: <FaHeart />, label: "Công ty theo dõi" },
   ];
 
   const employerMenus = [
@@ -74,8 +74,8 @@ const Sidebar: React.FC = () => {
         key={menu.to}
         to={menu.to}
         className={`flex items-center justify-between p-2 rounded-lg transition-colors duration-200 ${active
-            ? "bg-blue-100 text-blue-600 font-semibold"
-            : "hover:bg-gray-100 text-gray-700"
+          ? "bg-blue-100 text-blue-600 font-semibold"
+          : "hover:bg-gray-100 text-gray-700"
           }`}
       >
         <div className="flex items-center space-x-3">

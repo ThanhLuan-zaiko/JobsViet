@@ -20,6 +20,7 @@ export function meta({ }: Route.MetaArgs) {
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = parseInt(searchParams.get("page") || "1");
+  const searchQuery = searchParams.get("search") || "";
   const itemsPerPage = 10;
 
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -35,7 +36,7 @@ export default function Home() {
       setError(null);
       try {
         const { jobs: fetchedJobs, totalCount: fetchedTotalCount } =
-          await fetchJobs(currentPage, itemsPerPage);
+          await fetchJobs(currentPage, itemsPerPage, searchQuery);
         setJobs(fetchedJobs);
         setTotalCount(fetchedTotalCount);
       } catch (err) {
@@ -46,7 +47,7 @@ export default function Home() {
     };
 
     loadJobs();
-  }, [currentPage]);
+  }, [currentPage, searchQuery]);
 
   // Listen for new job events from SignalR
   useEffect(() => {

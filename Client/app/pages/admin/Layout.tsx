@@ -36,8 +36,8 @@ export default function AdminLayout() {
         { name: "Tổng quan", path: "/admin", icon: <HiOutlineHome className="w-5 h-5" /> },
         { name: "Người dùng", path: "/admin/users", icon: <HiOutlineUsers className="w-5 h-5" /> },
         { name: "Công việc", path: "/admin/jobs", icon: <HiOutlineBriefcase className="w-5 h-5" /> },
-        { name: "Ứng tuyển", path: "/admin/applications", icon: <HiOutlineDocumentText className="w-5 h-5" /> },
-        { name: "Cấu hình", path: "/admin/settings", icon: <HiOutlineCog6Tooth className="w-5 h-5" /> },
+        // { name: "Ứng tuyển", path: "/admin/applications", icon: <HiOutlineDocumentText className="w-5 h-5" /> },
+        // { name: "Cấu hình", path: "/admin/settings", icon: <HiOutlineCog6Tooth className="w-5 h-5" /> },
     ];
 
     return (
