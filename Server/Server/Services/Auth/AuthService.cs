@@ -18,27 +18,38 @@ namespace Server.Services.Auth
 
         public async Task<User?> AuthenticateAsync(string email, string password)
         {
+            var (user, _) = await AuthenticateForLoginAsync(email, password);
+            return user;
+        }
+
+        public async Task<(User? User, string? ErrorCode)> AuthenticateForLoginAsync(string email, string password)
+        {
             try
             {
                 var user = await _unitOfWork.Context.Users
-                    .FirstOrDefaultAsync(u => u.Email == email && u.IsActive);
+                    .FirstOrDefaultAsync(u => u.Email == email);
 
                 if (user == null)
                 {
-                    return null;
+                    return (null, "USER_NOT_FOUND");
                 }
 
                 if (!VerifyPassword(password, user.PasswordHash))
                 {
-                    return null;
+                    return (null, "INVALID_PASSWORD");
                 }
 
-                return user;
+                if (!user.IsActive)
+                {
+                    return (null, "USER_BANNED");
+                }
+
+                return (user, null);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Authentication error for {email}: {ex.Message}");
-                return null;
+                return (null, "SYSTEM_ERROR");
             }
         }
 

@@ -132,13 +132,6 @@ export const ApplicationNotificationsProvider: React.FC<
     refreshSummary();
   }, [refreshSummary]);
 
-  // Join user-specific SignalR group when connected and authenticated
-  useEffect(() => {
-    if (!isEmployer || !isConnected || !userId) return;
-
-    joinUserGroup(userId);
-  }, [isEmployer, isConnected, userId, joinUserGroup]);
-
   useEffect(() => {
     if (!isEmployer) return;
 

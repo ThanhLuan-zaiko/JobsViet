@@ -12,6 +12,7 @@ import {
   HubConnectionBuilder,
   LogLevel,
 } from "@microsoft/signalr";
+import { useAuth } from "./AuthContext";
 
 interface SignalRContextType {
   connection: HubConnection | null;
@@ -37,8 +38,12 @@ const normalizeEventName = (eventName: string) =>
 export const SignalRProvider: React.FC<SignalRProviderProps> = ({
   children,
 }) => {
+  const { user } = useAuth();
   const [connection, setConnection] = useState<HubConnection | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [reconnectCount, setReconnectCount] = useState(0);
+
+  const userId = user?.userId || (user as any)?.UserId;
 
   const handlersRef = useRef<
     Map<string, Set<(...args: any[]) => void>>
@@ -126,7 +131,7 @@ export const SignalRProvider: React.FC<SignalRProviderProps> = ({
     async (userId: string) => {
       if (!connectionRef.current || !userId) return;
       try {
-        await connectionRef.current.invoke("JoinUserGroup", userId);
+        await connectionRef.current.invoke("JoinUserGroup", userId.toLowerCase());
       } catch (err) {
       }
     },
@@ -137,7 +142,7 @@ export const SignalRProvider: React.FC<SignalRProviderProps> = ({
     async (userId: string) => {
       if (!connectionRef.current || !userId) return;
       try {
-        await connectionRef.current.invoke("LeaveUserGroup", userId);
+        await connectionRef.current.invoke("LeaveUserGroup", userId.toLowerCase());
       } catch (err) {
       }
     },
@@ -161,7 +166,10 @@ export const SignalRProvider: React.FC<SignalRProviderProps> = ({
       });
 
       newConnection.onreconnected(() => {
-        if (isMounted) setIsConnected(true);
+        if (isMounted) {
+          setIsConnected(true);
+          setReconnectCount(prev => prev + 1);
+        }
       });
 
       try {
@@ -200,6 +208,14 @@ export const SignalRProvider: React.FC<SignalRProviderProps> = ({
       });
     };
   }, [connection]);
+
+  // Automatically join/leave user group based on auth status and connection status
+  useEffect(() => {
+    if (isConnected && userId) {
+      console.log(`[SignalR] Joining group for user: ${userId} (reconnectCount: ${reconnectCount})`);
+      joinUserGroup(userId);
+    }
+  }, [isConnected, userId, reconnectCount, joinUserGroup]);
 
   return (
     <SignalRContext.Provider

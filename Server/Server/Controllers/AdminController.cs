@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
 using Server.Data.Jobs;
 using Server.DTOs.Admin;
 
@@ -191,8 +192,6 @@ namespace Server.Controllers
                 try
                 {
                     using var client = new HttpClient();
-                    // Just a simple ping to the images service base URL
-                    // Assume it's at http://localhost:8000 for now, or get from config
                     var sw = System.Diagnostics.Stopwatch.StartNew();
                     var response = await client.GetAsync("http://localhost:8000/docs");
                     sw.Stop();
@@ -232,5 +231,182 @@ namespace Server.Controllers
                 return StatusCode(500, new { Message = "Lỗi khi kiểm tra sức khỏe hệ thống", Error = ex.Message });
             }
         }
+
+        [HttpGet("users")]
+        public async Task<IActionResult> GetUsers([FromQuery] int page = 1, [FromQuery] int pageSize = 25)
+        {
+            try
+            {
+                var query = _context.Users
+                    .Where(u => u.Role != "Admin");
+
+                var totalCount = await query.CountAsync();
+                
+                var users = await query
+                    .OrderByDescending(u => u.CreatedAt)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(u => new AdminUserDto
+                    {
+                        UserId = u.UserId,
+                        UserName = u.UserName,
+                        Email = u.Email,
+                        IsActive = u.IsActive,
+                        CreatedAt = u.CreatedAt
+                    }).ToListAsync();
+
+                return Ok(new
+                {
+                    Items = users,
+                    TotalCount = totalCount,
+                    Page = page,
+                    PageSize = pageSize
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Lỗi khi lấy danh sách người dùng", Error = ex.Message });
+            }
+        }
+
+        [HttpGet("users/{id}/details")]
+        public async Task<IActionResult> GetUserDetails(Guid id)
+        {
+            try
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
+                if (user == null) return NotFound(new { Message = "Không tìm thấy người dùng" });
+
+                var detail = new AdminUserDetailDto
+                {
+                    UserId = user.UserId,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    IsActive = user.IsActive,
+                    CreatedAt = user.CreatedAt
+                };
+
+                // Load Profile
+                if (user.Role == "Employer")
+                {
+                    var empProfile = await _context.EmployerProfiles
+                        .Include(p => p.EmployerCompanies)
+                        .ThenInclude(ec => ec.Company)
+                        .FirstOrDefaultAsync(p => p.UserId == id);
+                    if (empProfile != null)
+                    {
+                        detail.Profile = new AdminUserProfileInfoDto
+                        {
+                            FullName = empProfile.DisplayName,
+                            Phone = empProfile.ContactPhone,
+                            Industry = empProfile.Industry,
+                            Bio = empProfile.Bio,
+                            CompanyName = empProfile.EmployerCompanies.FirstOrDefault(ec => ec.IsPrimary == true)?.Company?.Name
+                        };
+                    }
+                }
+                else
+                {
+                    var candProfile = await _context.CandidateProfiles.FirstOrDefaultAsync(p => p.UserId == id);
+                    if (candProfile != null)
+                    {
+                        detail.Profile = new AdminUserProfileInfoDto
+                        {
+                            FullName = candProfile.FullName,
+                            Phone = candProfile.Phone,
+                            Address = candProfile.Address,
+                            Bio = candProfile.Bio,
+                            Headline = candProfile.Headline,
+                            Skills = candProfile.Skills
+                        };
+                    }
+                }
+
+                // Load Blogs
+                detail.Blogs = await _context.Blogs
+                    .Where(b => b.AuthorUserId == id)
+                    .OrderByDescending(b => b.CreatedAt)
+                    .Select(b => new AdminUserBlogDto
+                    {
+                        BlogId = b.BlogId,
+                        Title = b.Title,
+                        IsPublished = b.IsPublished,
+                        CreatedAt = b.CreatedAt
+                    }).ToListAsync();
+
+                // Load Jobs
+                detail.Jobs = await _context.Jobs
+                    .Where(j => j.PostedByUserId == id)
+                    .OrderByDescending(j => j.CreatedAt)
+                    .Select(j => new AdminUserJobDto
+                    {
+                        JobId = j.JobId,
+                        JobGuid = j.JobGuid,
+                        Title = j.Title,
+                        IsActive = j.IsActive,
+                        CreatedAt = j.CreatedAt
+                    }).ToListAsync();
+
+                return Ok(detail);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Lỗi khi lấy chi tiết người dùng", Error = ex.Message });
+            }
+        }
+
+        [HttpPut("users/{id}/role")]
+        public async Task<IActionResult> UpdateUserRole(Guid id, [FromBody] UpdateRoleDto dto)
+        {
+            try
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
+                if (user == null) return NotFound(new { Message = "Không tìm thấy người dùng" });
+
+                user.Role = dto.Role;
+                await _context.SaveChangesAsync();
+
+                return Ok(new { Message = "Cập nhật vai trò thành công" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Lỗi khi cập nhật vai trò", Error = ex.Message });
+            }
+        }
+
+        [HttpPut("users/{id}/status")]
+        public async Task<IActionResult> UpdateUserStatus(Guid id, [FromServices] Microsoft.AspNetCore.SignalR.IHubContext<Server.Hubs.JobsHub> hubContext)
+        {
+            try
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
+                if (user == null) return NotFound(new { Message = "Không tìm thấy người dùng" });
+
+                user.IsActive = !user.IsActive;
+                await _context.SaveChangesAsync();
+
+                // Notify user via SignalR
+                var userGroup = $"user_{id.ToString("D").ToLower()}";
+                if (!user.IsActive)
+                {
+                    await hubContext.Clients.Group(userGroup).SendAsync("userbanned", "Tài khoản của bạn đã bị khóa bởi quản trị viên.");
+                }
+                else
+                {
+                    await hubContext.Clients.Group(userGroup).SendAsync("useractivated", "Tài khoản của bạn đã được kích hoạt lại.");
+                }
+
+                return Ok(new { Message = $"Đã {(user.IsActive ? "kích hoạt" : "khóa")} tài khoản thành công", IsActive = user.IsActive });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Lỗi khi cập nhật trạng thái", Error = ex.Message });
+            }
+        }
+    }
+
+    public class UpdateRoleDto
+    {
+        public string Role { get; set; } = string.Empty;
     }
 }

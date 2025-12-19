@@ -20,5 +20,7 @@ export default [
   route("admin", "pages/admin/Layout.tsx", [
     index("pages/admin/Dashboard.tsx"),
     route("dashboard", "pages/admin/Dashboard.tsx", { id: "admin-dashboard" }),
+    route("users", "pages/admin/Users.tsx", { id: "admin-users" }),
+    route("users/:id", "pages/admin/UserDetail.tsx"),
   ]),
 ] satisfies RouteConfig;

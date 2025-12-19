@@ -15,6 +15,7 @@ import { SignalRProvider } from "./contexts/SignalRContext";
 import { ApplicationNotificationsProvider } from "./contexts/ApplicationNotificationsContext";
 import Notification from "./components/Message/Notification";
 import { useAuth } from "./contexts/AuthContext";
+import BanListener from "./components/Auth/BanListener";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -52,6 +53,7 @@ function AppContent() {
 
   return (
     <>
+      <BanListener />
       <Outlet />
       {notification && (
         <Notification

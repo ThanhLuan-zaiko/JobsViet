@@ -23,7 +23,7 @@ namespace Server.Hubs
                 if (!string.IsNullOrEmpty(userIdStr))
                 {
                     // Add user to their personal group for targeted notifications
-                    await Groups.AddToGroupAsync(Context.ConnectionId, $"user_{userIdStr}");
+                    await Groups.AddToGroupAsync(Context.ConnectionId, $"user_{userIdStr.ToLower()}");
                     _logger.LogInformation("User {UserId} connected to SignalR with connection {ConnectionId}", userIdStr, Context.ConnectionId);
                     
                     // Add to role-specific group
@@ -49,7 +49,7 @@ namespace Server.Hubs
                 
                 if (!string.IsNullOrEmpty(userIdStr))
                 {
-                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"user_{userIdStr}");
+                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"user_{userIdStr.ToLower()}");
                     _logger.LogInformation("User {UserId} disconnected from SignalR", userIdStr);
                     
                     if (!string.IsNullOrEmpty(userRole))
@@ -67,8 +67,8 @@ namespace Server.Hubs
         {
             if (string.IsNullOrEmpty(userId)) return;
             
-            await Groups.AddToGroupAsync(Context.ConnectionId, $"user_{userId}");
-            _logger.LogInformation("Connection {ConnectionId} joined user group {UserId}", Context.ConnectionId, userId);
+            await Groups.AddToGroupAsync(Context.ConnectionId, $"user_{userId.ToLower()}");
+            _logger.LogInformation("Connection {ConnectionId} joined user group {UserId}", Context.ConnectionId, userId.ToLower());
         }
 
         // Client can call this to leave a user group
@@ -76,8 +76,8 @@ namespace Server.Hubs
         {
             if (string.IsNullOrEmpty(userId)) return;
             
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"user_{userId}");
-            _logger.LogInformation("Connection {ConnectionId} left user group {UserId}", Context.ConnectionId, userId);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"user_{userId.ToLower()}");
+            _logger.LogInformation("Connection {ConnectionId} left user group {UserId}", Context.ConnectionId, userId.ToLower());
         }
     }
 }

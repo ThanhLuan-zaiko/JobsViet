@@ -48,7 +48,17 @@ namespace Server.Controllers
                     });
                 }
 
-                var user = await _authService.AuthenticateAsync(request.Email, request.Password);
+                var (user, errorCode) = await _authService.AuthenticateForLoginAsync(request.Email, request.Password);
+                
+                if (errorCode == "USER_BANNED")
+                {
+                    return Ok(new AuthResponse
+                    {
+                        Message = "Tài khoản của bạn đã bị cấm",
+                        MessageType = "error"
+                    });
+                }
+
                 if (user == null)
                 {
                     return Ok(new AuthResponse
