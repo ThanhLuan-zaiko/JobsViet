@@ -16,7 +16,7 @@ import { useSignalR } from "../contexts/SignalRContext";
 import type { ApplicationNotification, StatusNotification, CandidateApplicationItem, PersistedNotification } from "../types/applications";
 import { STATUS_LABELS, STATUS_COLORS } from "../types/applications";
 import { Link } from "react-router";
-import axios from "axios";
+import { api } from "../services/api";
 
 const NotificationBell: React.FC = () => {
   const {
@@ -30,7 +30,6 @@ const NotificationBell: React.FC = () => {
   const { subscribe } = useSignalR();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5174/api/v1.0";
 
   // Profile detection
   const [hasEmployerProfile, setHasEmployerProfile] = useState(false);
@@ -52,15 +51,14 @@ const NotificationBell: React.FC = () => {
     if (!user) return;
 
     try {
-      const response = await axios.get<PersistedNotification[]>(
-        `${baseUrl}/notifications`,
-        { withCredentials: true }
+      const response = await api.get<PersistedNotification[]>(
+        "/v1.0/notifications"
       );
-      setPersistedNotifications(response.data);
-      setPersistedUnread(response.data.filter(n => !n.isRead).length);
+      setPersistedNotifications(response.data || []);
+      setPersistedUnread((response.data || []).filter(n => !n.isRead).length);
     } catch (error) {
     }
-  }, [user, baseUrl]);
+  }, [user]);
 
   // Check for profiles on mount
   useEffect(() => {
@@ -69,7 +67,7 @@ const NotificationBell: React.FC = () => {
     const checkProfiles = async () => {
       try {
         // Check employer profile
-        await axios.get(`${baseUrl}/applications/employer/summary`, { withCredentials: true });
+        await api.get("/v1.0/applications/employer/summary");
         setHasEmployerProfile(true);
       } catch {
         setHasEmployerProfile(false);
@@ -77,11 +75,11 @@ const NotificationBell: React.FC = () => {
 
       try {
         // Check candidate profile by fetching applications
-        const response = await axios.get<CandidateApplicationItem[]>(`${baseUrl}/applications/candidate`, { withCredentials: true });
+        const response = await api.get<CandidateApplicationItem[]>("/v1.0/applications/candidate");
         setHasCandidateProfile(true);
 
         // Get recent status updates (last 24h or last 10)
-        const recentApps = response.data
+        const recentApps = (response.data || [])
           .filter(app => app.status !== "APPLIED" && app.updatedAt)
           .sort((a, b) => new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime())
           .slice(0, 10);
@@ -100,7 +98,7 @@ const NotificationBell: React.FC = () => {
         setCandidateNotifications(notifications);
         // Consider unread as those updated in last 24 hours
         const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
-        setCandidateUnread(notifications.filter(n => new Date(n.updatedAt).getTime() > oneDayAgo).length);
+        setCandidateUnread((notifications || []).filter(n => new Date(n.updatedAt).getTime() > oneDayAgo).length);
       } catch {
         setHasCandidateProfile(false);
       }
@@ -110,7 +108,7 @@ const NotificationBell: React.FC = () => {
     };
 
     checkProfiles();
-  }, [user, baseUrl, fetchPersistedNotifications]);
+  }, [user, fetchPersistedNotifications]);
 
   // Subscribe to candidate status updates via SignalR
   useEffect(() => {
@@ -174,7 +172,7 @@ const NotificationBell: React.FC = () => {
 
   const handlePersistedNotificationClick = async (notificationId: string) => {
     try {
-      await axios.post(`${baseUrl}/notifications/${notificationId}/read`, {}, { withCredentials: true });
+      await api.post(`/v1.0/notifications/${notificationId}/read`, {});
       setPersistedNotifications(prev =>
         prev.map(n => n.notificationId === notificationId ? { ...n, isRead: true } : n)
       );
@@ -184,10 +182,10 @@ const NotificationBell: React.FC = () => {
   };
 
   // Filter persisted notifications for candidate tab (Status Updates)
-  const candidateStatusNotifications = persistedNotifications.filter(
+  const candidateStatusNotifications = (persistedNotifications || []).filter(
     n => n.type === "ApplicationStatus"
   );
-  const candidateStatusUnread = candidateStatusNotifications.filter(n => !n.isRead).length;
+  const candidateStatusUnread = (candidateStatusNotifications || []).filter(n => !n.isRead).length;
 
   const totalUnread = persistedUnread + (hasEmployerProfile ? employerUnread : 0);
 

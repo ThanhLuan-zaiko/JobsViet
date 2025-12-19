@@ -17,14 +17,14 @@ axios.interceptors.response.use(
 interface AuthContextType {
   user: UserDto | null;
   notification: NotificationType | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<UserDto | null>;
   register: (
     email: string,
     password: string,
     confirmPassword: string,
     role: string,
     name: string
-  ) => Promise<void>;
+  ) => Promise<UserDto | null>;
   changePassword: (
     oldPassword: string,
     newPassword: string,
@@ -55,9 +55,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 
   useEffect(() => {
-    // Check for existing session on app load
-    // Always call /auth/me - the session cookie (.JobViet.Session) is HttpOnly
-    // so JavaScript cannot read it, but it will be sent automatically with withCredentials: true
     const checkAuthStatus = async () => {
       try {
         const response = await axios.get(
@@ -77,7 +74,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     checkAuthStatus();
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<UserDto | null> => {
     try {
       const response = await axios.post<AuthResponse>(
         `${import.meta.env.VITE_API_BASE_URL}/auth/login`,
@@ -93,12 +90,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (userData) {
         setUser(userData);
         setNotification({ message, type: messageType });
+        return userData;
       } else {
         setUser(null);
         setNotification({ message, type: messageType });
+        return null;
       }
     } catch (error) {
       setUser(null);
+      return null;
     }
   };
 
@@ -108,7 +108,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     confirmPassword: string,
     role: string,
     name: string
-  ) => {
+  ): Promise<UserDto | null> => {
     try {
       const response = await axios.post<AuthResponse>(
         `${import.meta.env.VITE_API_BASE_URL}/auth/register`,
@@ -127,12 +127,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (userData) {
         setUser(userData);
         setNotification({ message, type: messageType });
+        return userData;
       } else {
         setUser(null); // Clear user state on register failure
         setNotification({ message, type: messageType });
+        return null;
       }
     } catch (error) {
       setUser(null); // Clear user state on error
+      return null;
     }
   };
 

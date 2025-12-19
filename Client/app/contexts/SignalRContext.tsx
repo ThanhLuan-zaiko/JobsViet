@@ -148,9 +148,7 @@ export const SignalRProvider: React.FC<SignalRProviderProps> = ({
     let isMounted = true;
 
     const createConnection = async () => {
-      const baseUrl =
-        import.meta.env.VITE_API_BASE_URL || "http://localhost:5174/api/v1.0";
-      const hubUrl = `${baseUrl.replace("/api/v1.0", "")}/jobsHub`;
+      const hubUrl = "/jobsHub";
 
       const newConnection = new HubConnectionBuilder()
         .withUrl(hubUrl, { withCredentials: true })

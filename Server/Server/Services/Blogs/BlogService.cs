@@ -155,7 +155,7 @@ namespace Server.Services.Blogs
              var image = await _context.BlogImages.Include(bi => bi.Blog).FirstOrDefaultAsync(bi => bi.BlogImageId == imageId);
              if (image == null) return false;
 
-             if (image.UploadedByUserId != userId && image.Blog.AuthorUserId != userId)
+             if (image.UploadedByUserId != userId && (image.Blog == null || image.Blog.AuthorUserId != userId))
                  throw new UnauthorizedAccessException("You don't have permission to delete this image.");
 
              // Delete physical file from Python service

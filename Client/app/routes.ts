@@ -15,4 +15,10 @@ export default [
   route("/blogs/new", "routes/blogs/new.tsx"),
   route("/blogs/:id", "routes/blogs/$id.tsx"),
   route("/blogs/:id/edit", "routes/blogs/$id.edit.tsx"),
+
+  // Admin Routes
+  route("admin", "pages/admin/Layout.tsx", [
+    index("pages/admin/Dashboard.tsx"),
+    route("dashboard", "pages/admin/Dashboard.tsx", { id: "admin-dashboard" }),
+  ]),
 ] satisfies RouteConfig;

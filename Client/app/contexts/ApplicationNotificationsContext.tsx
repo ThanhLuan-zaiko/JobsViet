@@ -14,7 +14,7 @@ import type {
   EmployerApplicationsSummary,
   JobApplicationCount,
 } from "../types/applications";
-import axios from "axios";
+import { api } from "../services/api";
 
 interface ApplicationNotificationsContextType {
   jobCounts: JobApplicationCount[];
@@ -57,8 +57,6 @@ export const ApplicationNotificationsProvider: React.FC<
   const [summary, setSummary] =
     useState<EmployerApplicationsSummary>(emptySummary);
 
-  const baseUrl =
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:5174/api/v1.0";
 
   const refreshSummary = useCallback(async () => {
     if (!isEmployer) {
@@ -67,37 +65,31 @@ export const ApplicationNotificationsProvider: React.FC<
     }
 
     try {
-      const response = await axios.get<EmployerApplicationsSummary>(
-        `${baseUrl}/applications/employer/summary`,
-        {
-          withCredentials: true,
-        }
+      const response = await api.get<EmployerApplicationsSummary>(
+        "/v1.0/applications/employer/summary"
       );
 
       if (response.status === 200) {
-        setSummary(response.data);
+        setSummary(response.data || emptySummary);
       }
     } catch (error) {
     }
-  }, [baseUrl, isEmployer]);
+  }, [isEmployer]);
 
   const markJobAsRead = useCallback(
     async (jobId: string) => {
       if (!isEmployer || !jobId) return;
 
       try {
-        const response = await axios.post(
-          `${baseUrl}/applications/employer/jobs/${jobId}/mark-read`,
-          {},
-          {
-            withCredentials: true,
-          }
+        const response = await api.post(
+          `/v1.0/applications/employer/jobs/${jobId}/mark-read`,
+          {}
         );
 
         if (response.status === 200) {
           const data = response.data;
           if (data?.summary) {
-            setSummary(data.summary as EmployerApplicationsSummary);
+            setSummary((data.summary || emptySummary) as EmployerApplicationsSummary);
           } else {
             await refreshSummary();
           }
@@ -105,7 +97,7 @@ export const ApplicationNotificationsProvider: React.FC<
       } catch (error) {
       }
     },
-    [baseUrl, isEmployer, refreshSummary]
+    [isEmployer, refreshSummary]
   );
 
   const markNotificationAsRead = useCallback(
@@ -119,25 +111,22 @@ export const ApplicationNotificationsProvider: React.FC<
     if (!isEmployer) return;
 
     try {
-      const response = await axios.post(
-        `${baseUrl}/applications/employer/mark-all-read`,
-        {},
-        {
-          withCredentials: true,
-        }
+      const response = await api.post(
+        "/v1.0/applications/employer/mark-all-read",
+        {}
       );
 
       if (response.status === 200) {
         const data = response.data;
         if (data?.summary) {
-          setSummary(data.summary as EmployerApplicationsSummary);
+          setSummary((data.summary || emptySummary) as EmployerApplicationsSummary);
         } else {
           await refreshSummary();
         }
       }
     } catch (error) {
     }
-  }, [baseUrl, isEmployer, refreshSummary]);
+  }, [isEmployer, refreshSummary]);
 
   useEffect(() => {
     refreshSummary();
@@ -207,9 +196,9 @@ export const ApplicationNotificationsProvider: React.FC<
 
   const value = useMemo(
     () => ({
-      jobCounts: summary.jobCounts,
-      notifications: summary.recentNotifications,
-      totalUnread: summary.totalUnread,
+      jobCounts: summary?.jobCounts || [],
+      notifications: summary?.recentNotifications || [],
+      totalUnread: summary?.totalUnread || 0,
       refreshSummary,
       markJobAsRead,
       markNotificationAsRead,

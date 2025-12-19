@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { FaUser, FaTimes, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useAuth } from "../contexts/AuthContext";
 import LoggedInUserIcon from "./LoggedInUserIcon";
+import { useNavigate } from "react-router";
 
 const UserIcon: React.FC = () => {
   const { user, login, register, logout } = useAuth();
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
   const [formData, setFormData] = useState({
@@ -104,9 +106,13 @@ const UserIcon: React.FC = () => {
 
     setIsLoading(true);
     try {
-      await login(formData.email, formData.password);
+      const user = await login(formData.email, formData.password);
       setIsModalOpen(false);
       setFormData({ email: "", password: "", confirmPassword: "", name: "" });
+
+      if (user && user.role === "Admin") {
+        navigate("/admin");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -121,7 +127,7 @@ const UserIcon: React.FC = () => {
 
     setIsLoading(true);
     try {
-      await register(
+      const user = await register(
         formData.email,
         formData.password,
         formData.confirmPassword,
@@ -130,6 +136,10 @@ const UserIcon: React.FC = () => {
       );
       setIsModalOpen(false);
       setFormData({ email: "", password: "", confirmPassword: "", name: "" });
+
+      if (user && user.role === "Admin") {
+        navigate("/admin");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -159,21 +169,19 @@ const UserIcon: React.FC = () => {
             <div className="flex border-b">
               <button
                 onClick={() => setActiveTab("login")}
-                className={`flex-1 py-3 px-4 text-center font-medium ${
-                  activeTab === "login"
+                className={`flex-1 py-3 px-4 text-center font-medium ${activeTab === "login"
                     ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-500 hover:text-gray-700"
-                }`}
+                  }`}
               >
                 Đăng nhập
               </button>
               <button
                 onClick={() => setActiveTab("register")}
-                className={`flex-1 py-3 px-4 text-center font-medium ${
-                  activeTab === "register"
+                className={`flex-1 py-3 px-4 text-center font-medium ${activeTab === "register"
                     ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-500 hover:text-gray-700"
-                }`}
+                  }`}
               >
                 Đăng ký
               </button>
